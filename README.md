@@ -19,6 +19,9 @@ docs/                 All project documentation
 
 Start with [setup](docs/setup.md), [agents](docs/agents.md), [data locations](docs/datasets.md) and [architecture / A0 next steps](docs/architecture.md). See the [documentation index](docs/README.md) for the authoritative API and team plans.
 
+Backend work on `sam/backend` follows the [backend handoff](docs/backend-handoff.md),
+including portable startup, explicit request recovery and Docker verification.
+
 See the [current TODO](docs/TODO.md) for remaining work. The
 [Docker guide](docs/docker.md) covers external runtime configuration and persistent
 state. [Regional verification](docs/regional-verification.md) covers crater-scale

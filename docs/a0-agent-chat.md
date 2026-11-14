@@ -133,8 +133,10 @@ Timeouts/unknown charges retain reservations. Do not delete the ledger to bypass
 the configured limits.
 
 Other models need an explicit supported adapter rather than a silent switch.
-Chat message IDs prevent duplicate automatic generation; replaying a
-failed/in-progress ID produces a conflict instead of another paid call.
+Chat message IDs prevent duplicate automatic generation. A running request
+returns a conflict; a failed request repeats its saved error without another
+model call. Known rejections support explicit versioned retries; timeouts and
+abandoned requests remain unknown. See the [backend recovery protocol](backend-handoff.md).
 
 ## API additions
 
@@ -146,6 +148,8 @@ failed/in-progress ID produces a conflict instead of another paid call.
   optional validated revision result/metadata and usage.
 - `GET /api/v1/routes/{route_id}/chat`: bounded persisted current/ancestor history
   (latest 40 messages across at most 12 parent revisions).
+- `GET /api/v1/routes/{route_id}/chat/attempts/{request_id}`: durable chat outcome and retry eligibility.
+- `GET /api/v1/routes/requests/{request_id}`: status for a computed plan sent with an optional `Idempotency-Key`.
 
 Route metadata now includes nullable `rationale`, `usage` and `parent_route_id`.
 Older stored records parse with default values. Regenerate browser types and

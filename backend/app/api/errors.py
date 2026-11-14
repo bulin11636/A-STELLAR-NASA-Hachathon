@@ -11,10 +11,15 @@ logger = logging.getLogger(__name__)
 
 
 class ApiProblem(Exception):
-    def __init__(self, status: int, code: str, message: str):
+    def __init__(self, status: int, code: str, message: str, *, details=None,
+                 retry_safe=False, outcome_unknown=False, retry_after_seconds=None):
         self.status = status
         self.code = code
         self.message = message
+        self.details = details
+        self.retry_safe = retry_safe
+        self.outcome_unknown = outcome_unknown
+        self.retry_after_seconds = retry_after_seconds
 
 
 def error_response(status: int, code: str, message: str, details=None) -> JSONResponse:
@@ -25,7 +30,7 @@ def error_response(status: int, code: str, message: str, details=None) -> JSONRe
 def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiProblem)
     async def domain_error(_request: Request, error: ApiProblem):
-        return error_response(error.status, error.code, error.message)
+        return error_response(error.status, error.code, error.message, error.details)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(_request: Request, error: RequestValidationError):

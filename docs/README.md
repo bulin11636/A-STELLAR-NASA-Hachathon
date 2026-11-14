@@ -3,6 +3,8 @@
 | Guide | Contents |
 | --- | --- |
 | [Current TODO](TODO.md) | Known defects, model-assisted A0, route chat/preferences, planning rationale, broader ROI and Docker env-file roadmap |
+| [Backend handoff](backend-handoff.md) | Current scope, portable startup, request status/retry protocol and Docker acceptance |
+| [Backend reliability checkpoint](backend-verification.md) | Observed backend/browser checks, preserved evidence and remaining Docker/live acceptance |
 | [A0 agent and chat guide](a0-agent-chat.md) | Start the metered A0 workflow, enter ordered stops, inspect dynamic DEM routes and use persistent chat revisions |
 | [Earlier ROI/chat checkpoint](a0-agent-chat-verification.md) | Historical delivery, browser evidence and the HTTP 429 live-provider blocker |
 | [Setup](setup.md) | Installation, development and tests |

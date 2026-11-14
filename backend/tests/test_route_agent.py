@@ -144,7 +144,9 @@ def test_unrecognized_model_waypoint_and_failed_provider_preserve_old_route(tmp_
         bad=client.post(url,json=dict(message='Visit the unnamed hill',request_id='unknown-000000001'))
         assert bad.status_code==422 and bad.json()['error']['code']=='UNRESOLVED_WAYPOINT'
         assert planning.store.get(result.route_id).result==result
-        assert client.post(url,json=dict(message='Visit the unnamed hill',request_id='unknown-000000001')).status_code==409
+        replay=client.post(url,json=dict(message='Visit the unnamed hill',request_id='unknown-000000001'))
+        assert replay.status_code==422 and replay.json()['error']['code']=='UNRESOLVED_WAYPOINT'
+        assert replay.json()['error']['details'][0]['retry_allowed']=='false'
     assert provider.totals()['attempts']==1
 
 
@@ -229,7 +231,11 @@ def test_route_provider_failures_never_retry_or_change_the_previous_route(tmp_pa
         response = client.post(url,json=request)
         assert response.status_code == 503
         assert response.json()['error']['code'] in ('A0_PROVIDER_ERROR','A0_TIMEOUT')
-        assert client.post(url,json=request).status_code == 409
+        replay=client.post(url,json=request)
+        assert replay.status_code == 503 and replay.json()['error']['code']==response.json()['error']['code']
+        state=client.get(url+'/attempts/'+request['request_id']).json()
+        assert state['state']==('unknown' if failure in ('timeout','missing_usage') else 'failed')
+        assert state['retry_allowed'] is False
         assert client.get('/api/v1/routes/'+previous.route_id).json()['result'] == previous.model_dump(mode='json')
     assert len(calls) == 1 and provider.totals()['attempts'] == 1
 

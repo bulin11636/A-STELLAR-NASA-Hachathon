@@ -30,6 +30,12 @@ container-visible paths such as `/datasets/...`; a single verified snapshot
 under the DEM's sibling `evidence/` directory is also discoverable automatically.
 No credential value is passed as a command-line argument or Compose build input.
 
+For an isolated acceptance run with no model generation, use
+`python scripts/verify_docker.py --synthetic`. See the
+[backend handoff](backend-handoff.md) for real-data acceptance and the distinction
+between fixture preparation and an actual image run. The normal image tag can
+be overridden with `A_STELLAR_IMAGE`; the verifier uses a unique test tag.
+
 For offline terrain planning, add `--mode deterministic`. For another HTTP port,
 add `--port 8081`. Use `--dry-run` to validate mount inputs without starting Docker,
 and `--no-build` to reuse an existing image.

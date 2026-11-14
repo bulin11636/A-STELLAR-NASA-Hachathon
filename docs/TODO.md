@@ -8,6 +8,8 @@
 
 ## Route revisions and chat
 
+- [ ] Connect explicit request status/retry controls and optional planning Idempotency-Key in the frontend without automatic model retries.
+
 - [ ] Support explicit avoidance areas with typed geometry, bounded masks and independent validation.
 - [ ] Define optional visits, soft preferences and unspecified visit order without weakening required constraints.
 - [ ] Add cooperative cancellation for specialist/model/planning work and expose progress without applying stale results.
@@ -23,7 +25,6 @@
 
 - [ ] Establish independent NASA map/wire/DEM controls with justified tolerances.
 - [ ] Resolve the source-radius discrepancy and NASA latitude semantics.
-- [x] Implement and unit-test the documented planetocentric/planetographic coordinate adapter; it does not establish map registration. See [coordinate-map-display.md](coordinate-map-display.md).
 - [ ] Verify computed NASA route alignment and tile behavior in a real browser after registration is established.
 
 ## Specialist evidence
@@ -38,9 +39,8 @@
 
 ## Provider integration and quality
 
-- [ ] Complete a successful live-provider planning/chat workflow after the existing HTTP 429 blocker is resolved.
+- [ ] Complete a successful live-provider planning/chat acceptance run with a configured test account.
 - [ ] Evaluate live-model interpretation of additions, removals, ambiguous places and multi-stop reordering.
 - [ ] Support explicitly configured model adapters and validate their capabilities before use.
 - [ ] Replace the conservative serialized-input guard with tested tokenizer-based context accounting.
 - [ ] Migrate deprecated React renderer tests to a maintained DOM testing approach.
-- [ ] Reconcile remote frontend branch ancestry while preserving integrated source and local work.
