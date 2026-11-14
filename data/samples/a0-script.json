@@ -1,0 +1,6 @@
+[
+  {"action": "execute", "tools": ["estimate_radiation", "find_science_sites", "inspect_rover_history"], "rationale": "Gather radiation, science and historical evidence before evaluating route prerequisites.", "evidence_ids": ["e0001"]},
+  {"action": "execute", "tools": ["analyze_terrain", "analyze_thermal"], "rationale": "Check the remaining terrain and thermal requirements; missing data must remain explicit.", "evidence_ids": ["e0002", "e0003", "e0004"]},
+  {"action": "execute", "tools": ["plan_route"], "rationale": "Request the deterministic planning prerequisite assessment; no computed route is assumed.", "evidence_ids": ["e0005", "e0006"]},
+  {"action": "finish", "tools": [], "rationale": "The planning prerequisite result is unavailable; report the scenario evidence and remaining blockers.", "evidence_ids": ["e0002", "e0007"]}
+]

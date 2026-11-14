@@ -1,0 +1,7 @@
+{
+  "region_id": "jezero",
+  "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+  "start": { "longitude": 77.42, "latitude": 18.44 },
+  "goal": { "longitude": 77.48, "latitude": 18.46 },
+  "mode": "safest"
+}

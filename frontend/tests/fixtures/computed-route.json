@@ -1,0 +1,306 @@
+{
+  "result": {
+    "status": "success",
+    "route_id": "route-11111111111111111111111111111111",
+    "region_id": "jezero",
+    "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+    "mode": "shortest",
+    "source": "computed",
+    "route": [
+      {
+        "longitude": 77.44334275495297,
+        "latitude": 18.454670301267946
+      },
+      {
+        "longitude": 77.44334275495297,
+        "latitude": 18.454670301267946
+      },
+      {
+        "longitude": 77.44369848346791,
+        "latitude": 18.454164183122202
+      },
+      {
+        "longitude": 77.44405421198286,
+        "latitude": 18.45365806497646
+      },
+      {
+        "longitude": 77.44440994049782,
+        "latitude": 18.453151946830715
+      },
+      {
+        "longitude": 77.44476566901277,
+        "latitude": 18.45264582868497
+      },
+      {
+        "longitude": 77.44512139752771,
+        "latitude": 18.452139710539228
+      },
+      {
+        "longitude": 77.44547712604268,
+        "latitude": 18.452139710539228
+      },
+      {
+        "longitude": 77.44583285455762,
+        "latitude": 18.452139710539228
+      },
+      {
+        "longitude": 77.44618858307257,
+        "latitude": 18.451633592393485
+      },
+      {
+        "longitude": 77.44618858307257,
+        "latitude": 18.451633592393485
+      }
+    ],
+    "metrics": {
+      "distance_m": 256.3330765287707,
+      "estimated_time_min": null,
+      "risk_score": null
+    },
+    "warnings": [
+      "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+      "Thermal, radiation, optical obstacles, geology and rover observations are unassessed; optional workers were not invoked.",
+      "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+    ]
+  },
+  "metadata": {
+    "schema_version": "1",
+    "route_id": "route-11111111111111111111111111111111",
+    "created_at": "2026-11-14T00:00:00Z",
+    "request": {
+      "region_id": "jezero",
+      "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+      "start": {
+        "longitude": 77.44334275495297,
+        "latitude": 18.454670301267946
+      },
+      "goal": {
+        "longitude": 77.44618858307257,
+        "latitude": 18.451633592393485
+      },
+      "mode": "shortest",
+      "waypoints": []
+    },
+    "coordinator": {
+      "agent_id": "A0",
+      "public_name": "Mission Orchestration and Route Planning Coordinator",
+      "responsibility": "Validate mission inputs and available data, dispatch registered analysis tools, request deterministic fusion/planning/validation, preserve provenance, persist results and explain unmet requirements.",
+      "implementation_version": "python-a0-v1"
+    },
+    "scope": {
+      "region_id": "jezero",
+      "roi_id": "synthetic-roi",
+      "dataset_version": "2e5a282f3e7f73509d4de3dbc4a59c467dbc148976e4a230a3a1d0eba2bb663d",
+      "bounds": {
+        "west": 77.44245343366558,
+        "east": 77.4474336328749,
+        "south": 18.449862178883382,
+        "north": 18.4559355966323
+      }
+    },
+    "sources": [
+      {
+        "dataset_id": "synthetic-plane",
+        "source_url": null,
+        "input_filename": "synthetic.tif",
+        "sha256": "2e5a282f3e7f73509d4de3dbc4a59c467dbc148976e4a230a3a1d0eba2bb663d",
+        "instrument": null,
+        "mission": null,
+        "acquisition_time": null,
+        "provenance_record_id": "route-11111111111111111111111111111111:provenance"
+      }
+    ],
+    "grid": {
+      "grid_id": "grid-350f40199d7af695edd9e2e4",
+      "source_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
+      "planning_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
+      "wire_convention": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+      "affine": [
+        20.0,
+        0.0,
+        4354020.0,
+        0.0,
+        -30.0,
+        1093970.0
+      ],
+      "affine_order": "a,b,c,d,e,f; x=a*column+b*row+c; y=d*column+e*row+f",
+      "width": 14,
+      "height": 12,
+      "source_resolution": [
+        20.0,
+        30.0
+      ],
+      "planning_resolution_m": [
+        20.0,
+        30.0
+      ],
+      "vertical_units": "m",
+      "vertical_scale": 1.0,
+      "vertical_offset": 0.0,
+      "nodata": "-9999.0",
+      "mask_artifact_ids": {
+        "coverage": "route-11111111111111111111111111111111:grid#coverage",
+        "unknown": "route-11111111111111111111111111111111:grid#unknown",
+        "blocked": "route-11111111111111111111111111111111:grid#blocked"
+      }
+    },
+    "policy": {
+      "policy_id": "terrain-research-v1",
+      "slope_threshold_deg": 15.0,
+      "unknown_handling": "impassable",
+      "connectivity": 8,
+      "corner_cutting": "prohibited",
+      "endpoint_rule": "Exact endpoints; closed-cell segment intersections including corner touches; no smoothing.",
+      "cost_formula": "edge_length_m * mean(1 + weight*(slope_deg/threshold_deg)^2); endpoint connectors use endpoint cell penalty",
+      "parameters": {
+        "weight": 0.0
+      },
+      "limits": {
+        "max_grid_cells": 262144,
+        "max_expanded_nodes": 200000,
+        "max_elapsed_seconds": 5.0
+      }
+    },
+    "planner": {
+      "algorithm": "astar",
+      "implementation_version": "astar-v1",
+      "heuristic": "Euclidean metric distance; minimum penalty is one",
+      "objective_cost": 256.3330765287707,
+      "objective_units": "m",
+      "expanded_nodes": 25,
+      "elapsed_ms": 0.17537299936520867,
+      "distance_convention": "Native projected planar polyline including endpoint connectors"
+    },
+    "validation": {
+      "status": "passed",
+      "validator_version": "closed-cell-box-v1",
+      "checks": [
+        "source version unchanged",
+        "all segments inside ROI",
+        "all touched cells covered, known and allowed",
+        "no blocked diagonal corners",
+        "exact endpoints",
+        "emitted wire geometry revalidated"
+      ],
+      "control_fixture_ids": [
+        "native-sphere-eqc-analytic-v1"
+      ],
+      "tolerances": {
+        "wire_metric_roundtrip_m": 0.00001
+      },
+      "map_alignment": "unverified"
+    },
+    "workers": [
+      {
+        "agent_id": "A1",
+        "public_name": "Surface Traversability and Terrain Hazard Agent",
+        "responsibility": "Derive slope and supported terrain descriptors from a DEM; supply metric costs, coverage, unknown and blocked masks. Optical obstacle analysis requires aligned imagery.",
+        "requested": true,
+        "status": "ready",
+        "evidence_kind": "observed",
+        "dataset_ids": [
+          "synthetic-plane"
+        ],
+        "artifact_ids": [
+          "route-11111111111111111111111111111111:grid"
+        ],
+        "warnings": [
+          "Optical obstacles are unassessed."
+        ],
+        "unassessed_constraints": [
+          "optical obstacles"
+        ]
+      },
+      {
+        "agent_id": "A2",
+        "public_name": "Thermal Environment and Exposure Context Agent",
+        "responsibility": "Describe day/night thermal observations, units, times and coverage. Calibrated constraints require separate validation.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Thermal Environment and Exposure Context Agent"
+        ]
+      },
+      {
+        "agent_id": "A3",
+        "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
+        "responsibility": "Evaluate explicitly configured dose scenarios against a mission duration and user-supplied budget, retaining assumptions and uncertainty.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Radiation Exposure and Mission Dose Assessment Agent"
+        ]
+      },
+      {
+        "agent_id": "A4",
+        "public_name": "Geological Context and Science Opportunity Agent",
+        "responsibility": "Associate source-attributed sampling POIs with regional geology, retain ambiguity and explain scientific relevance. Priority scoring requires a documented rubric.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Geological Context and Science Opportunity Agent"
+        ]
+      },
+      {
+        "agent_id": "A6",
+        "public_name": "Rover Traverse and Observation Evidence Agent",
+        "responsibility": "Normalize historical rover positions and segments, compute supported proximity measures and attach verified observation references. Historical traversal does not establish astronaut safety.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Rover Traverse and Observation Evidence Agent"
+        ]
+      }
+    ],
+    "artifacts": {
+      "grid": {
+        "artifact_id": "route-11111111111111111111111111111111:grid",
+        "sha256": "79a47ae336249716a5bc414a1628045be031e4e14cbfaeb7d0aa1a4bada07131"
+      },
+      "validation": {
+        "artifact_id": "route-11111111111111111111111111111111:validation",
+        "sha256": "8f9e151f2efdc5f944dcddebf9647dd932435ab677f2a1998898a2b04e26cce7"
+      },
+      "provenance": {
+        "artifact_id": "route-11111111111111111111111111111111:provenance",
+        "sha256": "a2a8e6e8b1a5e297549d94e6bab9f8492aba7dd89b7a6d0ff69bad88e71571b3"
+      }
+    },
+    "warnings": [
+      "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+      "Thermal, radiation, optical obstacles, geology and rover observations are unassessed; optional workers were not invoked.",
+      "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+    ],
+    "rationale": null,
+    "usage": null,
+    "parent_route_id": null
+  }
+}

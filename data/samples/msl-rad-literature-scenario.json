@@ -1,0 +1,33 @@
+{
+  "format_version": "a3-constant-rate-v1",
+  "scenario_id": "msl-rad-historical-surface-replay-v1",
+  "region_id": "jezero",
+  "roi_id": "jezero-evidence-preview-v1",
+  "dataset_version": "a3-literature-scenario-v1",
+  "source": {
+    "dataset_id": "ICES-2016-437:Reitz-et-al:surface-dose-equivalent",
+    "source_url": "https://elib.dlr.de/106090/1/ME-SBA-2016-Reitz_MSL-RAD_ICES_2016.pdf",
+    "mission": "Mars Science Laboratory / Curiosity, Gale Crater",
+    "instrument": "Radiation Assessment Detector (RAD)"
+  },
+  "source_locator": "Reitz et al., ICES-2016-437, abstract on PDF page 2 and Figure 3 caption on PDF page 6; surface dose equivalent, not cruise rate.",
+  "source_observation_period": "2012-08-07 through 2013-06-01; historical Gale Crater measurements summarized by the authors.",
+  "quantity": "dose_equivalent",
+  "rate": 0.64,
+  "rate_uncertainty": 0.12,
+  "rate_unit": "mSv/day",
+  "uncertainty_description": "Published plus/minus rate is used only as a sensitivity half-width. It is not a validated confidence interval or worst-case bound for Jezero, solar events, shielding or human organ dose.",
+  "assumptions": [
+    "Replay a constant historical RAD dose-equivalent rate for the supplied duration; day means 24 Earth hours, not a Martian sol.",
+    "Applying the Gale Crater rate to a Jezero-labeled scenario is an explicit hypothetical transfer, not a measured Jezero rate.",
+    "The 1440-minute duration cap is a demonstration scope choice, not a validated EVA duration or biological exposure limit."
+  ],
+  "limitations": [
+    "No current solar-event forecast, solar-cycle correction, altitude/pressure transfer, spacecraft/suit shielding correction or organ-dose model is supplied.",
+    "Published uncertainty does not quantify the additional uncertainty of transferring location, epoch or shielding conditions.",
+    "The downloaded sol-1 absorbed-dose product is inspected separately; it is not used to calculate or calibrate this literature scenario.",
+    "No per-cell radiation raster or terrain-risk reduction is supplied; a scenario budget pass is not an astronaut safety determination."
+  ],
+  "max_duration_min": 1440.0,
+  "budget_policy": "scenario_band_v1"
+}

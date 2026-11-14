@@ -1,0 +1,1144 @@
+{
+  "$defs": {
+    "Artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "sha256"
+      ],
+      "title": "Artifact",
+      "type": "object"
+    },
+    "Bounds": {
+      "additionalProperties": false,
+      "properties": {
+        "west": {
+          "title": "West",
+          "type": "number"
+        },
+        "east": {
+          "title": "East",
+          "type": "number"
+        },
+        "south": {
+          "title": "South",
+          "type": "number"
+        },
+        "north": {
+          "title": "North",
+          "type": "number"
+        }
+      },
+      "required": [
+        "west",
+        "east",
+        "south",
+        "north"
+      ],
+      "title": "Bounds",
+      "type": "object"
+    },
+    "Coordinator": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "const": "A0",
+          "default": "A0",
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "public_name": {
+          "title": "Public Name",
+          "type": "string"
+        },
+        "responsibility": {
+          "title": "Responsibility",
+          "type": "string"
+        },
+        "implementation_version": {
+          "title": "Implementation Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent_id",
+        "public_name",
+        "responsibility",
+        "implementation_version"
+      ],
+      "title": "Coordinator",
+      "type": "object"
+    },
+    "GridMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "grid_id": {
+          "title": "Grid Id",
+          "type": "string"
+        },
+        "source_crs": {
+          "title": "Source Crs",
+          "type": "string"
+        },
+        "planning_crs": {
+          "title": "Planning Crs",
+          "type": "string"
+        },
+        "wire_convention": {
+          "const": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+          "title": "Wire Convention",
+          "type": "string"
+        },
+        "affine": {
+          "maxItems": 6,
+          "minItems": 6,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Affine",
+          "type": "array"
+        },
+        "affine_order": {
+          "const": "a,b,c,d,e,f; x=a*column+b*row+c; y=d*column+e*row+f",
+          "title": "Affine Order",
+          "type": "string"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "source_resolution": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Source Resolution",
+          "type": "array"
+        },
+        "planning_resolution_m": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Planning Resolution M",
+          "type": "array"
+        },
+        "vertical_units": {
+          "const": "m",
+          "title": "Vertical Units",
+          "type": "string"
+        },
+        "vertical_scale": {
+          "title": "Vertical Scale",
+          "type": "number"
+        },
+        "vertical_offset": {
+          "title": "Vertical Offset",
+          "type": "number"
+        },
+        "nodata": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Nodata"
+        },
+        "mask_artifact_ids": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Mask Artifact Ids",
+          "type": "object"
+        }
+      },
+      "required": [
+        "grid_id",
+        "source_crs",
+        "planning_crs",
+        "wire_convention",
+        "affine",
+        "affine_order",
+        "width",
+        "height",
+        "source_resolution",
+        "planning_resolution_m",
+        "vertical_units",
+        "vertical_scale",
+        "vertical_offset",
+        "nodata",
+        "mask_artifact_ids"
+      ],
+      "title": "GridMetadata",
+      "type": "object"
+    },
+    "Limits": {
+      "additionalProperties": false,
+      "properties": {
+        "max_grid_cells": {
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "title": "Max Grid Cells",
+          "type": "integer"
+        },
+        "max_expanded_nodes": {
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "title": "Max Expanded Nodes",
+          "type": "integer"
+        },
+        "max_elapsed_seconds": {
+          "exclusiveMinimum": 0,
+          "maximum": 30,
+          "title": "Max Elapsed Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "max_grid_cells",
+        "max_expanded_nodes",
+        "max_elapsed_seconds"
+      ],
+      "title": "Limits",
+      "type": "object"
+    },
+    "MarsCoordinate": {
+      "additionalProperties": false,
+      "description": "Named API fields; east-positive [0,360), planetocentric [-90,90].",
+      "properties": {
+        "longitude": {
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Longitude",
+          "type": "number"
+        },
+        "latitude": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "Latitude",
+          "type": "number"
+        }
+      },
+      "required": [
+        "longitude",
+        "latitude"
+      ],
+      "title": "MarsCoordinate",
+      "type": "object"
+    },
+    "PlanRouteRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "region_id": {
+          "minLength": 1,
+          "title": "Region Id",
+          "type": "string"
+        },
+        "coordinate_system": {
+          "minLength": 1,
+          "title": "Coordinate System",
+          "type": "string"
+        },
+        "start": {
+          "$ref": "#/$defs/MarsCoordinate"
+        },
+        "goal": {
+          "$ref": "#/$defs/MarsCoordinate"
+        },
+        "mode": {
+          "enum": [
+            "shortest",
+            "safest"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "waypoints": {
+          "items": {
+            "$ref": "#/$defs/MarsCoordinate"
+          },
+          "maxItems": 16,
+          "title": "Waypoints",
+          "type": "array"
+        }
+      },
+      "required": [
+        "region_id",
+        "coordinate_system",
+        "start",
+        "goal",
+        "mode",
+        "waypoints"
+      ],
+      "title": "PlanRouteRequest",
+      "type": "object"
+    },
+    "PlanRouteResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "success",
+          "default": "success",
+          "title": "Status",
+          "type": "string"
+        },
+        "route_id": {
+          "minLength": 1,
+          "title": "Route Id",
+          "type": "string"
+        },
+        "region_id": {
+          "const": "jezero",
+          "default": "jezero",
+          "title": "Region Id",
+          "type": "string"
+        },
+        "coordinate_system": {
+          "const": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+          "default": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+          "title": "Coordinate System",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "shortest",
+            "safest"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "mock",
+            "computed"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "route": {
+          "items": {
+            "$ref": "#/$defs/MarsCoordinate"
+          },
+          "minItems": 2,
+          "title": "Route",
+          "type": "array"
+        },
+        "metrics": {
+          "$ref": "#/$defs/RouteMetrics"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "route_id",
+        "region_id",
+        "coordinate_system",
+        "mode",
+        "source",
+        "route",
+        "metrics",
+        "warnings"
+      ],
+      "title": "PlanRouteResponse",
+      "type": "object"
+    },
+    "Planner": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "astar",
+          "default": "astar",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "implementation_version": {
+          "title": "Implementation Version",
+          "type": "string"
+        },
+        "heuristic": {
+          "title": "Heuristic",
+          "type": "string"
+        },
+        "objective_cost": {
+          "minimum": 0,
+          "title": "Objective Cost",
+          "type": "number"
+        },
+        "objective_units": {
+          "title": "Objective Units",
+          "type": "string"
+        },
+        "expanded_nodes": {
+          "minimum": 0,
+          "title": "Expanded Nodes",
+          "type": "integer"
+        },
+        "elapsed_ms": {
+          "minimum": 0,
+          "title": "Elapsed Ms",
+          "type": "number"
+        },
+        "distance_convention": {
+          "title": "Distance Convention",
+          "type": "string"
+        }
+      },
+      "required": [
+        "algorithm",
+        "implementation_version",
+        "heuristic",
+        "objective_cost",
+        "objective_units",
+        "expanded_nodes",
+        "elapsed_ms",
+        "distance_convention"
+      ],
+      "title": "Planner",
+      "type": "object"
+    },
+    "Policy": {
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "slope_threshold_deg": {
+          "exclusiveMaximum": 90,
+          "exclusiveMinimum": 0,
+          "title": "Slope Threshold Deg",
+          "type": "number"
+        },
+        "unknown_handling": {
+          "const": "impassable",
+          "default": "impassable",
+          "title": "Unknown Handling",
+          "type": "string"
+        },
+        "connectivity": {
+          "const": 8,
+          "default": 8,
+          "title": "Connectivity",
+          "type": "integer"
+        },
+        "corner_cutting": {
+          "const": "prohibited",
+          "default": "prohibited",
+          "title": "Corner Cutting",
+          "type": "string"
+        },
+        "endpoint_rule": {
+          "title": "Endpoint Rule",
+          "type": "string"
+        },
+        "cost_formula": {
+          "title": "Cost Formula",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Parameters",
+          "type": "object"
+        },
+        "limits": {
+          "$ref": "#/$defs/Limits"
+        }
+      },
+      "required": [
+        "policy_id",
+        "slope_threshold_deg",
+        "unknown_handling",
+        "connectivity",
+        "corner_cutting",
+        "endpoint_rule",
+        "cost_formula",
+        "parameters",
+        "limits"
+      ],
+      "title": "Policy",
+      "type": "object"
+    },
+    "Rationale": {
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "facts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Facts",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "model_commentary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Commentary"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "summary",
+        "facts",
+        "limitations",
+        "model_commentary",
+        "evidence_ids"
+      ],
+      "title": "Rationale",
+      "type": "object"
+    },
+    "RouteMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1",
+          "default": "1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "route_id": {
+          "title": "Route Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/$defs/PlanRouteRequest"
+        },
+        "coordinator": {
+          "$ref": "#/$defs/Coordinator"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/Source"
+          },
+          "minItems": 1,
+          "title": "Sources",
+          "type": "array"
+        },
+        "grid": {
+          "$ref": "#/$defs/GridMetadata"
+        },
+        "policy": {
+          "$ref": "#/$defs/Policy"
+        },
+        "planner": {
+          "$ref": "#/$defs/Planner"
+        },
+        "validation": {
+          "$ref": "#/$defs/Validation"
+        },
+        "workers": {
+          "items": {
+            "$ref": "#/$defs/Worker"
+          },
+          "title": "Workers",
+          "type": "array"
+        },
+        "artifacts": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Artifact"
+          },
+          "title": "Artifacts",
+          "type": "object"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Warnings",
+          "type": "array"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Rationale"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "usage": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Usage"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "parent_route_id": {
+          "anyOf": [
+            {
+              "pattern": "^route-[a-f0-9]{32}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Route Id"
+        }
+      },
+      "required": [
+        "schema_version",
+        "route_id",
+        "created_at",
+        "request",
+        "coordinator",
+        "scope",
+        "sources",
+        "grid",
+        "policy",
+        "planner",
+        "validation",
+        "workers",
+        "artifacts",
+        "warnings",
+        "rationale",
+        "usage",
+        "parent_route_id"
+      ],
+      "title": "RouteMetadata",
+      "type": "object"
+    },
+    "RouteMetrics": {
+      "additionalProperties": false,
+      "properties": {
+        "distance_m": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Distance M"
+        },
+        "estimated_time_min": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Estimated Time Min"
+        },
+        "risk_score": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Risk Score"
+        }
+      },
+      "required": [
+        "distance_m",
+        "estimated_time_min",
+        "risk_score"
+      ],
+      "title": "RouteMetrics",
+      "type": "object"
+    },
+    "Scope": {
+      "additionalProperties": false,
+      "properties": {
+        "region_id": {
+          "const": "jezero",
+          "default": "jezero",
+          "title": "Region Id",
+          "type": "string"
+        },
+        "roi_id": {
+          "title": "Roi Id",
+          "type": "string"
+        },
+        "dataset_version": {
+          "title": "Dataset Version",
+          "type": "string"
+        },
+        "bounds": {
+          "$ref": "#/$defs/Bounds"
+        }
+      },
+      "required": [
+        "region_id",
+        "roi_id",
+        "dataset_version",
+        "bounds"
+      ],
+      "title": "Scope",
+      "type": "object"
+    },
+    "Source": {
+      "additionalProperties": false,
+      "properties": {
+        "dataset_id": {
+          "title": "Dataset Id",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Url"
+        },
+        "input_filename": {
+          "title": "Input Filename",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "instrument": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Instrument"
+        },
+        "mission": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Mission"
+        },
+        "acquisition_time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Acquisition Time"
+        },
+        "provenance_record_id": {
+          "title": "Provenance Record Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset_id",
+        "source_url",
+        "input_filename",
+        "sha256",
+        "instrument",
+        "mission",
+        "acquisition_time",
+        "provenance_record_id"
+      ],
+      "title": "Source",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "default": "gpt-6.1-sol",
+          "title": "Model",
+          "type": "string"
+        },
+        "reasoning_effort": {
+          "default": "medium",
+          "title": "Reasoning Effort",
+          "type": "string"
+        },
+        "calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Calls",
+          "type": "integer"
+        },
+        "input_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "cached_input_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Cached Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        },
+        "reasoning_tokens": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reasoning Tokens",
+          "type": "integer"
+        },
+        "estimated_cost_usd": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Estimated Cost Usd",
+          "type": "number"
+        },
+        "price_version": {
+          "default": "2026-11-14-standard-short-context",
+          "title": "Price Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model",
+        "reasoning_effort",
+        "calls",
+        "input_tokens",
+        "cached_input_tokens",
+        "output_tokens",
+        "reasoning_tokens",
+        "estimated_cost_usd",
+        "price_version"
+      ],
+      "title": "Usage",
+      "type": "object"
+    },
+    "Validation": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "const": "passed",
+          "default": "passed",
+          "title": "Status",
+          "type": "string"
+        },
+        "validator_version": {
+          "title": "Validator Version",
+          "type": "string"
+        },
+        "checks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "control_fixture_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Control Fixture Ids",
+          "type": "array"
+        },
+        "tolerances": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Tolerances",
+          "type": "object"
+        },
+        "map_alignment": {
+          "enum": [
+            "verified",
+            "unverified"
+          ],
+          "title": "Map Alignment",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "validator_version",
+        "checks",
+        "control_fixture_ids",
+        "tolerances",
+        "map_alignment"
+      ],
+      "title": "Validation",
+      "type": "object"
+    },
+    "Worker": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "enum": [
+            "A1",
+            "A2",
+            "A3",
+            "A4",
+            "A6"
+          ],
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "public_name": {
+          "title": "Public Name",
+          "type": "string"
+        },
+        "responsibility": {
+          "title": "Responsibility",
+          "type": "string"
+        },
+        "requested": {
+          "title": "Requested",
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "partial",
+            "failed",
+            "unavailable",
+            "unassessed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_kind": {
+          "enum": [
+            "observed",
+            "scenario",
+            "mock",
+            "unavailable"
+          ],
+          "title": "Evidence Kind",
+          "type": "string"
+        },
+        "dataset_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dataset Ids",
+          "type": "array"
+        },
+        "artifact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Ids",
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "unassessed_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unassessed Constraints",
+          "type": "array"
+        }
+      },
+      "required": [
+        "agent_id",
+        "public_name",
+        "responsibility",
+        "requested",
+        "status",
+        "evidence_kind",
+        "dataset_ids",
+        "artifact_ids",
+        "warnings",
+        "unassessed_constraints"
+      ],
+      "title": "Worker",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "message_id": {
+      "title": "Message Id",
+      "type": "string"
+    },
+    "route_id": {
+      "title": "Route Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "user_message": {
+      "title": "User Message",
+      "type": "string"
+    },
+    "assistant_message": {
+      "title": "Assistant Message",
+      "type": "string"
+    },
+    "result": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PlanRouteResponse"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "metadata": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RouteMetadata"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "usage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Usage"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "message_id",
+    "route_id",
+    "created_at",
+    "user_message",
+    "assistant_message",
+    "result",
+    "metadata",
+    "usage"
+  ],
+  "title": "ChatResponse",
+  "type": "object"
+}

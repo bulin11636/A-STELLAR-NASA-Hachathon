@@ -1,0 +1,147 @@
+{
+  "kind": "factual-source-verification-record; no raw imagery or measurements bundled",
+  "verified_on": "2026-11-12",
+  "processing_version": "a6-observations-v1",
+  "traverse_snapshot": "jezero-evidence-e4de0e69b0db0fd4",
+  "ancillary_sources": {
+    "observations.csv": {
+      "source_url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/data_ancillary/observations.csv",
+      "bytes": 11587320,
+      "downloaded_at": "2026-11-12T13:53:33.070288+00:00",
+      "sha256": "df6afa4c4375cd47a0efbdc324326f28428724fc3c1f602540d51522ad256951"
+    },
+    "observations.csv.xml": {
+      "source_url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/data_ancillary/observations.csv.xml",
+      "bytes": 5913,
+      "downloaded_at": "2026-11-12T13:53:30.634289+00:00",
+      "sha256": "ead4268e435df4ec215302dac772727cd7f9babc9b04ce3c836441a77b48b116"
+    },
+    "sclk_table.csv": {
+      "source_url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/data_ancillary/sclk_table.csv",
+      "bytes": 18163971,
+      "downloaded_at": "2026-11-12T13:53:37.033163+00:00",
+      "sha256": "b771796bd0ecb1c75e451065aa094838fae6966bb628aceae32cc15360473654"
+    },
+    "sclk_table.csv.xml": {
+      "source_url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/data_ancillary/sclk_table.csv.xml",
+      "bytes": 9922,
+      "downloaded_at": "2026-11-12T13:53:33.452418+00:00",
+      "sha256": "19bb89f940cc8ce65c44e33da545a6262ebd360d5aa4743752ce6f918c24fd55"
+    }
+  },
+  "observations": 364412,
+  "status_counts": {
+    "ambiguous": 2,
+    "missing_position": 4570,
+    "unknown_rmc": 68042,
+    "unmatched": 85252,
+    "exact": 206546
+  },
+  "duplicates_removed": 70,
+  "observation_time_end": "2026-06-21T23:27:41Z",
+  "archive_search_url": "https://pds-imaging.jpl.nasa.gov/api/search/atlas/_search",
+  "image_manifest_sha256": "c36b2e3d5c5622c8f8cfdcb9206e214fb617c480c0b2a5169b527b3c39279bc3",
+  "verified_images": [
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_n0030110ncam00304_01_195j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_01_195J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_01_195J03.png",
+      "label_sha256": "daea4754b50245a24316ae746f308da1ff28fa29e1e617ed8aa17c72f37de548",
+      "browse_sha256": "6c0a06f5eab992983f56d920d140310528f890600d4441991557a04db5b98bc3",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    },
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_n0030110ncam00304_04_195j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_04_195J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_04_195J03.png",
+      "label_sha256": "08cfc49114b583768bfb6aa8dee9c453c1d9b8782b04b796be9390024615a29f",
+      "browse_sha256": "78d944b02370d91f917f138182e07ba53c014c0af4414e8b1410a48920d835dd",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    },
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_n0030110ncam00304_07_195j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_07_195J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_07_195J03.png",
+      "label_sha256": "a5236611e11b6dd5096b4e7c0af8941393a2f390f3712cec3436a67af5f74b36",
+      "browse_sha256": "f97c34d9085b2dee2f5c3e847e1b124b844e89b80c691571135ce4a144363ed6",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    },
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_n0030110ncam00304_10_195j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_10_195J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_N0030110NCAM00304_10_195J03.png",
+      "label_sha256": "61e5d5595a6f85fbddd0c6e8e7b82330b2d1625b604ff15a28e1ca53b87424a7",
+      "browse_sha256": "55517061bbb93eeacc2a3b5b1416bd4ba7a58625f15f82af56fb35f0481a48bf",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    },
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_t0030110ncam00304_01_500j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_01_500J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_01_500J03.png",
+      "label_sha256": "073324fe385cd87c6b522147a5cf7bfa636bfd23d321a0ec599ad5be5a155d9c",
+      "browse_sha256": "3b3858548c0e54a5d1641b2029cf55cf27c36e9a0e76887c8d5aabb591b66218",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    },
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_t0030110ncam00304_04_500j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_04_500J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_04_500J03.png",
+      "label_sha256": "b4fe83bc02ba4bdfee176a04effb639909f72db7f7045e99bcaf9e2783aac0f1",
+      "browse_sha256": "a33994011bde2f313614d9ca845722fdcda4e942e38b4d3832108759b37c8d58",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    },
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_t0030110ncam00304_07_500j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_07_500J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_07_500J03.png",
+      "label_sha256": "2e8655d157c8b9c37720c4b87ee0504ce7e2c355e534db71054919e206390312",
+      "browse_sha256": "330061abf465adb39895a5e3f458b4cc0ce0071918eb54f0b7b4fcea47f74b9c",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    },
+    {
+      "lidvid": "urn:nasa:pds:mars2020_navcam_ops_raw:data:nlf_0014_0668191860_522ecm_t0030110ncam00304_10_500j::3.0",
+      "sclk": "668191860.522",
+      "instrument": "NAVCAM_LEFT",
+      "stop_id": "3_110",
+      "sol": 14,
+      "label_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/data/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_10_500J03.xml",
+      "browse_url": "https://pds-imaging.jpl.nasa.gov/api/data/atlas:pds4:mars_2020:perseverance:/mars2020_navcam_ops_raw/browse/sol/00014/ids/edr/ncam/NLF_0014_0668191860_522ECM_T0030110NCAM00304_10_500J03.png",
+      "label_sha256": "47ddf98cc74c561fcfb1e390d83932f1bc5d77fbb48f8236122f2971ccecf3b0",
+      "browse_sha256": "4b86e3288b09439b8dbf71fd1501d26f0c9fa7522ad9acf70eb7289a95bd3ac4",
+      "verified_at": "2026-11-12T14:38:16.962881Z"
+    }
+  ],
+  "limits": [
+    "Observation localization requires the entire exposure inside a known static exact RMC interval; other matches stay unlocalized.",
+    "Only a bounded Navcam archive sample is verified; image availability can change. Mastcam-Z clock differences are not approximated.",
+    "Rover observations are historical evidence, not proof of astronaut safety or DEM/map registration."
+  ]
+}

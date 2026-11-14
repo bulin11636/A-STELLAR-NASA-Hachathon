@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a-stellar-backend"
+version = "0.1.0"
+requires-python = ">=3.10"
+description = "A-STELLAR API and deterministic worker foundation"
+dependencies = ["fastapi==0.162.2", "pydantic==2.14.3", "uvicorn==0.54.0"]
+
+[project.optional-dependencies]
+planning = ["numpy>=2.2.6,<3", "rasterio>=1.4.3,<2", "pyproj>=3.6.1,<4"]
+agentic = ["httpx==0.28.1"]
+dev = ["pytest==9.2.0", "httpx==0.28.1", "pyproj==3.6.1", "fiona==1.10.1", "shapely==2.0.7", "numpy==2.2.6", "langgraph==1.2.21"]
+a0 = ["langgraph==1.2.21", "httpx==0.28.1"]
+evidence = ["pyproj==3.6.1"]
+geology = ["pyproj==3.6.1", "fiona==1.10.1", "shapely==2.0.7", "numpy==2.2.6"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.setuptools.package-data]
+"app.coordinator" = ["skills/mission-coordinator/SKILL.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

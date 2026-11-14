@@ -1,0 +1,13 @@
+{
+  "goal": "Assess a six-hour Jezero excursion using the supplied 200 microSv scenario budget. Check terrain, thermal, science and rover-history evidence, and explain whether a route can actually be computed.",
+  "context": {
+    "mission_id": "a0-demo",
+    "region_id": "jezero",
+    "roi_id": "jezero-evidence-preview-v1",
+    "dataset_version": "a3-literature-scenario-v1",
+    "parameters": {"eva_duration_min": 360.0, "radiation_budget_usv": 200.0}
+  },
+  "objectives": ["terrain", "thermal", "radiation", "science", "rover_history", "route"],
+  "start": {"longitude": 77.4509, "latitude": 18.4446},
+  "goal_point": {"longitude": 77.4519, "latitude": 18.4456}
+}

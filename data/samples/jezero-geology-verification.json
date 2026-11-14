@@ -1,0 +1,33 @@
+{
+  "reference_only": true,
+  "verified_on": "2026-11-12",
+  "source_doi": "https://doi.org/10.3133/sim3464",
+  "geology_version": "a88bd53a5573743cc4a20036c10e585106d08a433ad2f34af269e9cea1529f87:sim3464-geology-v1",
+  "evidence_version": "jezero-evidence-e4de0e69b0db0fd4:roi-310abb69784d:evidence-v2",
+  "roi": {
+    "roi_id": "jezero-evidence-preview-v1",
+    "west": 77.15,
+    "east": 77.6,
+    "south": 18.2,
+    "north": 18.7
+  },
+  "screening_offset_m": 200.0,
+  "accepted_polygons": 1302,
+  "rejected_feature_ids": [
+    "666",
+    "1155"
+  ],
+  "inconsistent_unit_codes": [
+    "11",
+    "5"
+  ],
+  "science_site_records": 21,
+  "classification_counts": {
+    "ambiguous": 18,
+    "nominal_match": 3
+  },
+  "wmts_alignment_validated": false,
+  "dem_alignment_validated": false,
+  "priority_rubric_configured": false,
+  "note": "Nominal regional geology context only; source basemap offset is approximate and not corrected. Full reports and GIS remain in ignored storage."
+}

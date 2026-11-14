@@ -1,0 +1,50 @@
+name: a-stellar
+services:
+  app:
+    build:
+      context: .
+    image: a-stellar:local
+    init: true
+    user: "${A_STELLAR_RUNTIME_UID:-10001}:${A_STELLAR_RUNTIME_GID:-10001}"
+    ports:
+      - "127.0.0.1:${A_STELLAR_HTTP_PORT:-8080}:8000"
+    environment:
+      A_STELLAR_ENV_FILE: /run/a-stellar/runtime.env
+      A_STELLAR_A0_MODE: ${A_STELLAR_CONTAINER_A0_MODE:-agentic}
+      A_STELLAR_ROUTING_MODE: computed
+      A_STELLAR_DATASET_DIR: /datasets
+      A_STELLAR_PLANNING_PROFILE: /run/a-stellar/planning.json
+      A_STELLAR_ROUTE_STORE: /var/lib/a-stellar/routes
+      A_STELLAR_A0_USAGE_STORE: /var/lib/a-stellar/a0-usage
+      A_STELLAR_STATIC_DIR: /app/frontend/dist
+    volumes:
+      - type: bind
+        source: ${A_STELLAR_HOST_ENV_FILE:?Use scripts/run_docker.py --env-file PATH}
+        target: /run/a-stellar/runtime.env
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${A_STELLAR_HOST_PLANNING_PROFILE:?Provide a planning profile}
+        target: /run/a-stellar/planning.json
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${A_STELLAR_HOST_DATASET_DIR:?Provide a dataset directory}
+        target: /datasets
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: volume
+        source: application-state
+        target: /var/lib/a-stellar
+    restart: unless-stopped
+    stop_grace_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  application-state:

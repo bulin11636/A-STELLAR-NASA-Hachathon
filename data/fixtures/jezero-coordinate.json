@@ -1,0 +1,11 @@
+{
+  "name": "Perseverance landing location (published example)",
+  "source": "https://doi.org/10.1126/sciadv.abo4856",
+  "source_coordinates": { "longitude_east_degrees": 77.4509, "latitude_north_degrees": 18.4446 },
+  "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+  "coordinate_convention_validated": false,
+  "integration_only": true,
+  "assumed_map_view": [77.4509, 18.4446],
+  "expected_api_coordinate": { "longitude": 77.4509, "latitude": 18.4446 },
+  "note": "Checks arithmetic and named-field round-trip only. The published location is real, but equivalence of the loaded NASA WMTS native latitude and the API planetocentric latitude is not established. This fixture does not validate geospatial registration."
+}

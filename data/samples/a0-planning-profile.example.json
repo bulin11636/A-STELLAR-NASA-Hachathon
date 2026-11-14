@@ -1,0 +1,18 @@
+{
+  "dem": "M20_JezeroCrater_CTXDEM_20m.tif",
+  "dataset_id": "local-ctx-dem-unreceipted",
+  "roi_id": "ctx-jezero-demo-128-v1",
+  "window": [1210, 2440, 128, 128],
+  "vertical_units": "m",
+  "vertical_units_evidence": "Host interpretation of the local CTX DTM: provider vertical units are metres according to data/samples/download-manifest.json; the raster band has no unit tag and these local bytes have no acquisition receipt.",
+  "slope_threshold_deg": 15,
+  "terrain_weight": 4,
+  "dynamic_windowing": true,
+  "adaptive_resolution": true,
+  "max_resolution_factor": 16,
+  "limits": {
+    "max_grid_cells": 1000000,
+    "max_expanded_nodes": 500000,
+    "max_elapsed_seconds": 15
+  }
+}

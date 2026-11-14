@@ -1,0 +1,48 @@
+{
+  "kind": "factual source inspection; raw products not bundled",
+  "verified_on": "2026-11-12",
+  "processing_version": "a3-rdr-inspection-v1",
+  "dataset_id": "MSL-M-RAD-3-RDR-V1.0",
+  "product_id": "RAD_RDR_2012_220_02_25_0001_V00",
+  "source_urls": {
+    "DATA/SOL_00000_00089/RAD_RDR_2012_220_02_25_0001_V00.TXT": "https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/DATA/SOL_00000_00089/RAD_RDR_2012_220_02_25_0001_V00.TXT",
+    "DATA/SOL_00000_00089/RAD_RDR_2012_220_02_25_0001_V00.LBL": "https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/DATA/SOL_00000_00089/RAD_RDR_2012_220_02_25_0001_V00.LBL",
+    "DOCUMENT/RAD_RDR_SIS.PDF": "https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/DOCUMENT/RAD_RDR_SIS.PDF",
+    "ERRATA.TXT": "https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/ERRATA.TXT",
+    "DOCUMENT/TIMING_ERRORS.TXT": "https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/DOCUMENT/TIMING_ERRORS.TXT",
+    "CATALOG/RAD_INST.CAT": "https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/CATALOG/RAD_INST.CAT",
+    "CATALOG/RAD_RDR_DS.CAT": "https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/CATALOG/RAD_RDR_DS.CAT"
+  },
+  "source_sha256": {
+    "DATA/SOL_00000_00089/RAD_RDR_2012_220_02_25_0001_V00.TXT": "4d08d57a55b5c48a72eaf61c554e7ebf31d5a3d50f1f7b8327d9bab8d575fc87",
+    "DATA/SOL_00000_00089/RAD_RDR_2012_220_02_25_0001_V00.LBL": "6eb5e69243b26f845ebeda9575048ac92a72a6f2ae084431170452b4a328c25c",
+    "DOCUMENT/RAD_RDR_SIS.PDF": "3cfe8335d8c8d5c1ae6dd0b2775c57aa341ef2481f31f82d70593a3a51791239",
+    "ERRATA.TXT": "c30d3e6f47e0c7459a464305da61284ce450e5cb8a09715d137192a698e4b824",
+    "DOCUMENT/TIMING_ERRORS.TXT": "075f686e3a021e1275925aadc6e6eeb3359e120c83a18d5eeaa62c0378c27de6",
+    "CATALOG/RAD_INST.CAT": "65bb74da3735bd15d9613e51e85100849a6ecf5d9d3b516359ba0b702510453b",
+    "CATALOG/RAD_RDR_DS.CAT": "630924fbdfe6bdb8662860f6ca6b267a87ffa855b8a61d071a73866061650e1e"
+  },
+  "observation_count": 14,
+  "baseline_eligible": 0,
+  "start_time": "2012-08-07T02:25:43+00:00",
+  "last_observation_start": "2012-08-07T06:03:10+00:00",
+  "stop_time": null,
+  "native_dose_rate_unit": "microGy/hour",
+  "warnings": [
+    "Source record-count discrepancy: label 9898, actual 9897; all observations excluded from baseline use.",
+    "MSL RAD observations are historical Gale Crater detector absorbed-dose rates in microGy/hour, not Jezero EVA dose equivalent.",
+    "B and E are separate detector responses; they are not summed and no assumed Gy-to-Sv conversion is applied.",
+    "RDR rover coordinates are documented placeholders; no radiation raster or spatial registration is inferred.",
+    "Archive errata report timing/redundancy issues. Unknown stop time and exposure durations prevent continuous dose integration.",
+    "QC=0 means no issue flagged, not independent calibration validation. A single-sol subset is not a representative mission model."
+  ],
+  "scenario_reference": "msl-rad-literature-scenario.json",
+  "scenario_demo": {
+    "duration_min": 360.0,
+    "dose_usv": 160.0,
+    "sensitivity_half_width_usv": 30.0,
+    "budget_usv": 200.0,
+    "budget_source": "analyst-selected demonstration only; no medical or NASA limit",
+    "scenario_band_status": "pass"
+  }
+}

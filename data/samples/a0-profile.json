@@ -1,0 +1,9 @@
+{
+  "scope": {
+    "mission_id": "a0-profile",
+    "region_id": "jezero",
+    "roi_id": "jezero-evidence-preview-v1",
+    "dataset_version": "a3-literature-scenario-v1"
+  },
+  "radiation_scenario": "msl-rad-literature-scenario.json"
+}

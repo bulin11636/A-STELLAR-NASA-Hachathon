@@ -1,0 +1,12 @@
+{
+  "source_url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/data_localizations/best_tactical.csv",
+  "label_url": "https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/data_localizations/best_tactical.csv.xml",
+  "product_version": "16.0",
+  "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+  "record": { "site": 3, "drive": 110, "sol": 14 },
+  "source_projected": { "northing_m": 1093294.730, "easting_m": 4354497.517 },
+  "wire_coordinate": { "longitude": 77.450946754, "latitude": 18.444543383 },
+  "validation_scope": "PDS explicitly planetocentric fields and documented source projection to wire",
+  "wmts_alignment_validated": false,
+  "dem_alignment_validated": false
+}

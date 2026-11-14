@@ -1,0 +1,75 @@
+{
+  "format_version": "1",
+  "purpose": "Allowlisted scientific-product acquisition. Entries are added only after provider-record verification; a filename alone is not a product identity.",
+  "products": [
+    {
+      "id": "a1-ctx-jezero-dem-20m",
+      "status": "verified_downloadable",
+      "destination": "data/raw/dem/M20_JezeroCrater_CTXDEM_20m.tif",
+      "source_url": "https://planetarymaps.usgs.gov/mosaic/mars2020_trn/CTX/ScienceInvestigationMaps_JPL/M20_JezeroCrater_CTXDEM_20m.tif",
+      "provider_record_url": "https://astrogeology.usgs.gov/search/map/mars_2020_science_investigation_ctx_dem_mosaic",
+      "allowed_resolved_hosts": ["planetarymaps.usgs.gov", "asc-pds-services.s3.us-west-2.amazonaws.com"],
+      "provider_size": "87 MB",
+      "max_bytes": 150000000,
+      "large": false,
+      "identity": "Mars 2020 Science Investigation CTX DEM Mosaic",
+      "coverage": "Jezero crater; provider metadata: 17.58 to 19.29 degrees planetocentric latitude, 76.99 to 78.58 degrees east longitude",
+      "coordinate_system": "Local GeoTIFF inspection: Mars-2000 sphere Equirectangular, radius 3,396,190 m, standard parallel 18.4663 degrees, central meridian 0 degrees, metre Easting/Northing axes. Provider page summary separately lists radius 3,396,160 m; do not silently treat the summaries as identical.",
+      "resolution": "20 m/pixel",
+      "units": "GeoTIFF band unit tag is absent. Provider metadata says vertical coordinate units are metres; retain this as metadata-backed interpretation, not an embedded raster unit tag.",
+      "limitations": ["Verified product identity and metadata do not establish alignment to the application wire convention or a validated route grid.", "Local raster inspection found a radius discrepancy with the provider page summary; resolve transformation/canonical-grid policy before planner use."]
+    },
+    {
+      "id": "a2-themis-day-global-100m-v12",
+      "status": "verified_downloadable_prototype_only",
+      "destination": "data/raw/thermal/Mars_MO_THEMIS-IR-Day_mosaic_global_100m_v12.tif",
+      "source_url": "https://planetarymaps.usgs.gov/mosaic/Mars_MO_THEMIS-IR-Day_mosaic_global_100m_v12.tif",
+      "provider_record_url": "https://astrogeology.usgs.gov/search/map/mars_odyssey_themis_ir_day_global_mosaic_100m_v12",
+      "allowed_resolved_hosts": ["planetarymaps.usgs.gov"],
+      "provider_size": "21 GB",
+      "max_bytes": 23000000000,
+      "large": true,
+      "identity": "Mars Odyssey THEMIS-IR Day Global Mosaic 100m v12",
+      "coverage": "Global: -90 to 90 degrees planetocentric latitude and 0 to 360 degrees east longitude",
+      "coordinate_system": "Simple Cylindrical; planetocentric latitude; positive-east longitude; ellipsoid radii A=3,396,190 m and C=3,376,200 m",
+      "resolution": "100 m/pixel; 8-bit, one band",
+      "units": "Qualitative, stretched/blended visual representation of daytime temperatures; not calibrated temperature units",
+      "limitations": ["A2 may use this only as a prototype visual raster. It cannot substantiate observed thermometry, thermal inertia, EVA constraints, or astronaut safety."]
+    },
+    {
+      "id": "a4-usgs-sim3464-geology",
+      "status": "verified_downloadable",
+      "destination": "data/cache/a4-geology/sim3464/sim3464_database.zip",
+      "source_url": "https://pubs.usgs.gov/sim/3464/sim3464_database.zip",
+      "provider_record_url": "https://doi.org/10.3133/sim3464",
+      "allowed_resolved_hosts": ["pubs.usgs.gov"],
+      "provider_size": "349.3 MB",
+      "max_bytes": 500000000,
+      "large": false,
+      "identity": "USGS Scientific Investigations Map 3464 geodatabase",
+      "coverage": "Jezero crater and Nili Planum regional map: 17.7 to 18.7 degrees N and 76.8 to 77.8 degrees E",
+      "coordinate_system": "Archive-native CRS must be verified from included projection files after download; the A4 extractor requires a Mars-sphere Transverse Mercator CRS centered at 77.5 degrees E with metre axes.",
+      "resolution": "Regional vector geologic map published at 1:75,000; not a terrain-resolution raster",
+      "units": "Projected geometry axes in metres after CRS verification; unit labels are geologic map attributes, not terrain-risk scores",
+      "limitations": ["Regional geology provides science context only. It does not validate DEM/WMTS registration, rank targets, quantify terrain risk, or establish astronaut safety."]
+    },
+    {
+      "id": "a1-nes-jez-mid-dem",
+      "status": "unverified_url",
+      "inventory_filename": "NES_JEZ_MID_DEM_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018.tif",
+      "reason": "No official provider record and direct scientific-raster URL have been verified. Do not download a similarly named product."
+    },
+    {
+      "id": "a1-jez-hirise-soc-dtm",
+      "status": "unverified_url",
+      "inventory_filename": "JEZ_hirise_soc_006_DTM_MOLAtopography_DeltaGeoid_1m_Eqc_latTs0_lon0_blend40.tif",
+      "reason": "No official provider record and direct scientific-raster URL have been verified. Do not download a similarly named product."
+    },
+    {
+      "id": "a2-themis-night-global-100m-v2",
+      "status": "unverified_url",
+      "inventory_filename": "THEMIS_NightIR_ControlledMosaics_100m_v2_oct2018.tif",
+      "reason": "USGS verifies qualitative 100 m regional controlled night mosaics, but not this exact global filename/URL. Do not substitute a rendered tile or a regional mosaic silently."
+    }
+  ]
+}
