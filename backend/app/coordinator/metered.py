@@ -8,6 +8,7 @@ from pydantic import Field
 from app.api.errors import ApiProblem
 from app.contracts.api import ContractModel, MarsCoordinate, MAX_WAYPOINTS
 from app.contracts.routes import Usage
+from app.coordinator.provider_errors import describe_429
 
 
 class RouteDecision(ContractModel):
@@ -43,7 +44,19 @@ class MeteredProvider:
         self.path.parent.mkdir(parents=True,exist_ok=True)
         db=sqlite3.connect(self.path,timeout=10)
         db.execute('CREATE TABLE IF NOT EXISTS calls (id TEXT PRIMARY KEY, status TEXT, reserved REAL, actual REAL, usage TEXT)')
+        db.execute('CREATE TABLE IF NOT EXISTS provider_failures (call_id TEXT PRIMARY KEY, diagnostic TEXT NOT NULL)')
         return db
+
+    def last_failure(self):
+        """Read historic diagnostics without creating or changing a ledger."""
+        if not self.path.is_file():
+            return None
+        with sqlite3.connect(self.path.resolve().as_uri()+'?mode=ro',uri=True,timeout=3) as db:
+            exists = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='provider_failures'").fetchone()
+            if not exists:
+                return None  # Older HTTP-only records cannot recover the provider's error code.
+            row = db.execute('SELECT diagnostic FROM provider_failures ORDER BY rowid DESC LIMIT 1').fetchone()
+        return json.loads(row[0]) if row else None
 
     def totals(self):
         with self._connect() as db:
@@ -99,14 +112,14 @@ class MeteredProvider:
                             error_bytes.extend(block)
                             if len(error_bytes)>16000: break
                         try:
-                            error_code=json.loads(error_bytes).get('error',{}).get('code')
-                        except (ValueError,AttributeError):
-                            error_code=None
+                            error_body=json.loads(error_bytes)
+                        except ValueError:
+                            error_body=None
+                        diagnostic,message=describe_429(error_body,response.headers)
                         with self._connect() as db:
                             db.execute('UPDATE calls SET status=? WHERE id=?',('http_429',call_id))
-                        if error_code=='insufficient_quota':
-                            raise ApiProblem(503,'A0_QUOTA_EXHAUSTED','The A0 API account has insufficient quota. Codex subscription usage is separate; check the API account billing/limits. No automatic retry was made.')
-                        raise ApiProblem(503,'A0_RATE_OR_QUOTA_LIMIT','The A0 API returned HTTP 429 (rate or quota limit). The previous route is preserved; no automatic retry was made.')
+                            db.execute('INSERT INTO provider_failures VALUES (?,?)',(call_id,json.dumps(diagnostic,allow_nan=False)))
+                        raise ApiProblem(503,diagnostic['public_code'],message)
                     response.raise_for_status()
                     content=bytearray()
                     for block in response.iter_bytes():

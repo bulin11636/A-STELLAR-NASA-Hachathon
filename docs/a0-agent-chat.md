@@ -39,6 +39,11 @@ npm run dev -- --force
 Open the Vite URL, normally `http://127.0.0.1:5173`. Hard-reload after a dependency
 cache rebuild. Model/key configuration changes require a backend restart.
 
+In this two-terminal development setup, port 8000 serves the API and port 5173
+serves the UI. Opening `http://127.0.0.1:8000/` returns JSON `NOT_FOUND` unless a
+production frontend directory was explicitly configured. Check the API at
+`http://127.0.0.1:8000/api/v1/health`, and use the Vite URL for route planning.
+
 ## Use the UI
 
 1. Check **A0 mode** and the API attempt/cost display. Configuration presence is
@@ -99,7 +104,7 @@ blocked cells remain unavailable. Outside-source stops return
 `adaptive_resolution: false` to retain native-only allocation behavior.
 Disconnected native crops receive one full-source retry under the original
 node/time budget without another model call.
-Full-source/multi-resolution routing and combining the other DEMs remain pending.
+Refining excluded narrow passages and combining the other DEMs remain pending.
 
 ## Evidence and model usage
 

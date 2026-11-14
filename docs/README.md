@@ -7,6 +7,7 @@
 | [Earlier ROI/chat checkpoint](a0-agent-chat-verification.md) | Historical delivery, browser evidence and the HTTP 429 live-provider blocker |
 | [Setup](setup.md) | Installation, development and tests |
 | [Docker runtime](docker.md) | External configuration, read-only datasets, persistent state and readiness |
+| [Provider diagnostics](provider-troubleshooting.md) | Safe HTTP 429 classification and local/GET-only troubleshooting |
 | [Regional verification](regional-verification.md) | Adaptive crater-scale routing, multi-stop revisions and reproducible production browser checks |
 | [Architecture](architecture.md) | Current components, implementation stages and A0 gates |
 | [Agents](agents.md) | A1/A2 usage and A3/A4/A6 previews, results and limitations |

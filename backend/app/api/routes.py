@@ -72,6 +72,7 @@ async def agent_status(request: Request):
         reasoning_effort='medium',configured=bool(agent.settings.api_key),max_output_tokens=agent.settings.max_output_tokens)
     if agent.settings.enabled:
         result['budget']=await run_in_threadpool(agent.provider.totals)
+        result['last_provider_error']=await run_in_threadpool(agent.provider.last_failure)
     return result
 
 
