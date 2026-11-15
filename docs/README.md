@@ -26,6 +26,7 @@
 | [A1–A6 資料集下載清單（繁中）](A1-A6_資料集下載清單_繁中.md) | 官方資料來源、下載指令、大小、儲存位置與科學使用限制 |
 | [Frontend improvement TODO](FRONTEND_TODO.md) | English, prioritized frontend reliability, UX, accessibility, and test backlog |
 | [Frontend TODO（繁中對照）](FRONTEND_TODO_繁中.md) | Frontend backlog 的繁中討論版；產品 UI 仍維持英文 |
+| [P0 parallel implementation plan](P0_PARALLEL_IMPLEMENTATION_PLAN.md) | Sheng frontend and Sam backend workstreams, shared recovery contract, and joint acceptance |
 
 Setup guides and overlapping agent reports are merged here. Scientific fixtures live in `data/fixtures/`; documentation contains no datasets. The repository-root README is the entry point.
 
