@@ -24,6 +24,8 @@
 | [A0 verification report](a0-verification-report.md) | Actual resumed implementation, remote reconciliation, real DEM/API/restart results and pending display acceptance |
 | [繁體中文專案手冊](A-STELLAR_繁體中文專案手冊.md) | 專案架構、前後端啟動、設定、API、Docker 與測試導覽 |
 | [A1–A6 資料集下載清單（繁中）](A1-A6_資料集下載清單_繁中.md) | 官方資料來源、下載指令、大小、儲存位置與科學使用限制 |
+| [Frontend improvement TODO](FRONTEND_TODO.md) | English, prioritized frontend reliability, UX, accessibility, and test backlog |
+| [Frontend TODO（繁中對照）](FRONTEND_TODO_繁中.md) | Frontend backlog 的繁中討論版；產品 UI 仍維持英文 |
 
 Setup guides and overlapping agent reports are merged here. Scientific fixtures live in `data/fixtures/`; documentation contains no datasets. The repository-root README is the entry point.
 
