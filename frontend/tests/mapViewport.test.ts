@@ -15,6 +15,7 @@ test("mission viewport includes both stops instead of applying a fixed zoom", ()
   assert(extent);
   const start = apiCoordinateToMapView({ longitude: 77.2, latitude: 18.3 }, "wmts-display");
   const goal = apiCoordinateToMapView({ longitude: 77.6, latitude: 18.6 }, "wmts-display");
-  assert(extent[0] <= start[0] && extent[2] >= goal[0]);
-  assert(extent[1] <= start[1] && extent[3] >= goal[1]);
+  const epsilon = 1e-9;
+  assert(extent[0] <= Math.min(start[0], goal[0]) + epsilon && extent[2] >= Math.max(start[0], goal[0]) - epsilon);
+  assert(extent[1] <= Math.min(start[1], goal[1]) + epsilon && extent[3] >= Math.max(start[1], goal[1]) - epsilon);
 });

@@ -27,7 +27,7 @@ h2 { font-size: 1.1rem; margin: 0; }
 .info-heading { display: flex; align-items: center; justify-content: space-between; gap: .7rem; }
 .badge { border: 1px solid #687e8d; border-radius: 3px; color: #b9c5cc; padding: .05rem .4rem; font-size: .7rem; }
 .coordinates { padding: .85rem; background: #24323c; border: 1px solid #536573; border-radius: 4px; font-variant-numeric: tabular-nums; }
-.workspace-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .35rem; margin-top: 1rem; padding-bottom: .85rem; border-bottom: 1px solid #536573; }
+.workspace-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; margin-top: 1rem; padding-bottom: .85rem; border-bottom: 1px solid #536573; }
 .workspace-tabs button { padding: .45rem .3rem; font-size: .72rem; }
 .workspace-tabs button[aria-selected="true"] { border-color: #f5c27b; background: #3b454a; color: #ffe0b7; }
 .route-workspace { margin-top: 1rem; }
@@ -103,6 +103,8 @@ textarea { width: 100%; resize: vertical; padding: .55rem; font: inherit; color:
 .briefing-summary { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .3rem .8rem; }
 .briefing-summary dt { margin: 0; }
 .mission-briefing > p { color: #b9c5cc; }
+.a0-assistant { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid #536573; font-size: .78rem; }
+.a0-assistant > p { color: #b9c5cc; }
 @media (max-width: 800px) {
   .app-header { padding: 1rem; align-items: flex-start; flex-direction: column; gap: .5rem; }
   .explorer { grid-template-columns: 1fr; }

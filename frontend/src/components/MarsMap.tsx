@@ -22,9 +22,10 @@ import EvidenceDrawer from "./EvidenceDrawer.tsx";
 import MissionBriefing from "./MissionBriefing.tsx";
 import RouteAssessment from "./RouteAssessment.tsx";
 import SpecialistTrace from "./SpecialistTrace.tsx";
+import A0AssistantPanel from "./A0AssistantPanel.tsx";
 
 type Progress = { pending: number; loaded: number; missing: number; failed: number };
-type SidebarTab = "plan" | "route" | "briefing" | "evidence";
+type SidebarTab = "plan" | "route" | "briefing" | "evidence" | "a0";
 const initialProgress: Progress = { pending: 0, loaded: 0, missing: 0, failed: 0 };
 
 export default function MarsMap() {
@@ -301,11 +302,11 @@ export default function MarsMap() {
         <p>Drag to pan. Scroll, pinch, or use + / − to zoom. Focus the map to use arrow keys. Click to inspect a location.</p>
         <div className="coordinates" aria-live="polite">{coordinates ?? "Click the map to inspect coordinates."}</div>
         <div className="workspace-tabs" role="tablist" aria-label="Mission workspace">
-          {(["plan", "route", "briefing", "evidence"] as const).map((tab) => <button type="button" key={tab} id={`${tab}-tab`} role="tab"
-            aria-selected={sidebarTab === tab} aria-controls={`${tab}-panel`} onClick={() => setSidebarTab(tab)}>{tab[0].toUpperCase() + tab.slice(1)}</button>)}
+          {(["plan", "route", "briefing", "evidence", "a0"] as const).map((tab) => <button type="button" key={tab} id={`${tab}-tab`} role="tab"
+            aria-selected={sidebarTab === tab} aria-controls={`${tab}-panel`} onClick={() => setSidebarTab(tab)}>{tab === "a0" ? "A0 Assistant" : tab[0].toUpperCase() + tab.slice(1)}</button>)}
         </div>
         {sidebarTab === "plan" && <section id="plan-panel" role="tabpanel" aria-labelledby="plan-tab">
-        <RoutePlannerPanel planner={planner} mapReady={ready} planningRegion={planningRegion} planningError={planningError} onViewJezero={() => {
+        <RoutePlannerPanel planner={planner} mapReady={ready} planningRegion={planningRegion} planningError={planningError} showAssistant={false} onViewJezero={() => {
           mapRef.current?.getView().fit([76.7912789, 17.5791654, 77.7314417, 18.6926322], { padding: [32, 32, 32, 32], duration: 300 });
         }} />
         </section>}
@@ -333,6 +334,7 @@ export default function MarsMap() {
           start={planner.start} goal={planner.goal} route={planner.result} assessment={planner.metadata?.assessment ?? null} layers={layerDisplay}
           evidence={inspectedPoint ? evidenceAtPoint(inspectedPoint) : null} />
         </section>}
+        {sidebarTab === "a0" && <section id="a0-panel" role="tabpanel" aria-labelledby="a0-tab"><A0AssistantPanel planner={planner} /></section>}
         {sidebarTab === "evidence" && <>
         <dl>
           <dt>Coordinate system</dt><dd>Mars 2000 · NASA service label <code>urn:ogc:def:crs:EPSG::104905</code> (ESRI:104905 definition)</dd>

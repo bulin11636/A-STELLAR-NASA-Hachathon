@@ -17,12 +17,13 @@ function label(point: MarsCoordinate | null) {
   return point ? `${point.longitude.toFixed(6)}° E · ${point.latitude.toFixed(6)}° (API coordinates)` : "Not selected";
 }
 
-export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, planningRegion, planningError }: {
+export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, planningRegion, planningError, showAssistant = true }: {
   planner: ReturnType<typeof useRoutePlanner>;
   mapReady: boolean;
   onViewJezero: () => void;
   planningRegion?: PlanningRegion | null;
   planningError?: string | null;
+  showAssistant?: boolean;
 }) {
   return (
     <section className="route-planner" aria-labelledby="route-planner-title">
@@ -95,7 +96,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
       {planner.pendingKind ? <RequestRecovery label={planner.pendingKind === "chat" ? "Advanced A0" : "Planning"} status={planner.attemptStatus}
         busy={planner.status === "loading"} onRefresh={() => void planner.refreshAttempt()} onRetry={() => void planner.retry()} onRecover={() => void planner.recover()} />
         : planner.attemptStatus && <p role="status">Planning request: {planner.attemptStatus.state}.</p>}
-      {planner.advancedReply && <section aria-label="Advanced A0 response"><h3>A0 response</h3><p>{planner.advancedReply.assistant_message}</p>
+      {showAssistant && planner.advancedReply && <section aria-label="Advanced A0 response"><h3>A0 response</h3><p>{planner.advancedReply.assistant_message}</p>
         <SpecialistTrace traces={planner.advancedReply.specialist_trace} />
         {!planner.advancedReply.result && <p>Informational reply. The base route did not change.</p>}</section>}
       {planner.result && (
@@ -129,7 +130,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
           {planner.metadata && <RoutePreview result={planner.result} metadata={planner.metadata} />}
           {planner.metadata?.usage && <p>A0: {planner.metadata.usage.model} / {planner.metadata.usage.reasoning_effort} ·
             {planner.metadata.usage.input_tokens} input / {planner.metadata.usage.output_tokens} output tokens (including reasoning) · estimated ${planner.metadata.usage.estimated_cost_usd.toFixed(4)}</p>}
-          {planner.result.source === "computed" && <RouteChat routeId={planner.result.route_id} onRevision={planner.acceptRevision} refreshKey={planner.chatRefresh} disabled={planner.status === "loading" || !planner.metadata} selectionVersion={planner.draftVersion} advancedContext={planner.interfaceMode === "advanced" && planner.metadata && planner.analysisFocus.length ? buildAdvancedContext(planner.metadata.request.mode, planner.metadata.request.waypoints, planner.analysisFocus, planner.allowSupportedRevision) : undefined} />}
+          {showAssistant && planner.result.source === "computed" && <RouteChat routeId={planner.result.route_id} onRevision={planner.acceptRevision} refreshKey={planner.chatRefresh} disabled={planner.status === "loading" || !planner.metadata} selectionVersion={planner.draftVersion} advancedContext={planner.interfaceMode === "advanced" && planner.metadata && planner.analysisFocus.length ? buildAdvancedContext(planner.metadata.request.mode, planner.metadata.request.waypoints, planner.analysisFocus, planner.allowSupportedRevision) : undefined} />}
           <ul>{planner.result.warnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul>
         </section>
       )}
