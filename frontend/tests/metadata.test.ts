@@ -17,6 +17,8 @@ test("computed result and nested stored metadata decode while geographic display
   const { source } = createRouteOverlay();
   updateRouteOverlay(source, null, null, result);
   assert.equal(source.getFeatures().length, 0);
+  updateRouteOverlay(source, null, null, result, [], "verified");
+  assert.equal(source.getFeatures().length, 1);
   updateRouteOverlay(source, null, null, { ...result, source: "mock" });
   assert.equal(source.getFeatures().length, 1);
 });

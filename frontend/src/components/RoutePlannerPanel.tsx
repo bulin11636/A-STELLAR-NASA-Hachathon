@@ -101,7 +101,9 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
       {planner.result && (
         <section className="route-result" aria-label="Route result" aria-live="polite">
           <strong className="mock-badge">{planner.result.source === "mock" ? "MOCK / NOT SAFETY-VALIDATED" : "COMPUTED / RESEARCH TERRAIN ONLY"}</strong>
-          {planner.result.source === "computed" && <p className="notice">Computed geometry is withheld from the map: NASA map/wire/DEM registration is unverified.</p>}
+          {planner.result.source === "computed" && (planner.metadata?.validation.map_alignment === "verified"
+            ? <p role="status">Computed geometry is displayed on the NASA map for this independently verified route footprint.</p>
+            : <p className="notice">Computed geometry is withheld from the map: NASA map/wire/DEM registration is unverified.</p>)}
           <p>Route <code>{planner.result.route_id}</code> · source: {planner.result.source} · mode: {planner.result.mode}</p>
           <dl className="route-metrics">
             <dt>Distance (m)</dt><dd>{planner.result.metrics.distance_m?.toFixed(1) ?? "—"}</dd>

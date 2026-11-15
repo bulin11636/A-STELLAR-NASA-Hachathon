@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Map from "ol/Map.js";
 import View from "ol/View.js";
+import ScaleLine from "ol/control/ScaleLine.js";
+import { defaults as defaultControls } from "ol/control/defaults.js";
 import TileLayer from "ol/layer/Tile.js";
 import TileState from "ol/TileState.js";
 import { containsCoordinate, intersects } from "ol/extent.js";
@@ -137,6 +139,7 @@ export default function MarsMap() {
       map = new Map({
         target: target.current,
         layers: [basemap, evidence.traverseLayer, evidence.scienceLayer, overlay.layer],
+        controls: defaultControls().extend([new ScaleLine({ units: "metric", bar: true, steps: 4, text: true, minWidth: 110 })]),
         view: new View({
           projection, center: [0, 0], resolutions, extent: projection.getExtent(),
           constrainOnlyCenter: true, showFullExtent: true,
@@ -216,8 +219,9 @@ export default function MarsMap() {
   }, [layerDisplay, ready]);
 
   useEffect(() => {
-    if (overlayRef.current) updateRouteOverlay(overlayRef.current.source, planner.start, planner.goal, planner.result, planner.interfaceMode === "advanced" ? planner.waypoints : []);
-  }, [ready, planner.start, planner.goal, planner.result, planner.interfaceMode, planner.waypoints]);
+    if (overlayRef.current) updateRouteOverlay(overlayRef.current.source, planner.start, planner.goal, planner.result,
+      planner.interfaceMode === "advanced" ? planner.waypoints : [], planner.metadata?.validation.map_alignment);
+  }, [ready, planner.start, planner.goal, planner.result, planner.metadata?.validation.map_alignment, planner.interfaceMode, planner.waypoints]);
 
   const tileIssue = progress.failed > 0 || progress.missing > 0;
   const status = error ? error : !ready ? "Loading NASA WMTS metadata…"

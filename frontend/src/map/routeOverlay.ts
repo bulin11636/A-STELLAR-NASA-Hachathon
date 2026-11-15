@@ -4,7 +4,7 @@ import MultiLineString from "ol/geom/MultiLineString.js";
 import VectorLayer from "ol/layer/Vector.js";
 import VectorSource from "ol/source/Vector.js";
 import { Circle, Fill, Stroke, Style, Text } from "ol/style.js";
-import { MAP_REGISTRATION_VALIDATED, apiCoordinateToMapView, routeToMapSegments } from "../geo/marsCoordinates.ts";
+import { apiCoordinateToMapView, routeToMapSegments } from "../geo/marsCoordinates.ts";
 import type { MarsCoordinate, PlanRouteResponse } from "../types/api.ts";
 
 const lineStyles = [
@@ -30,9 +30,9 @@ export function createRouteOverlay() {
   return { source, layer };
 }
 
-export function updateRouteOverlay(source: VectorSource, start: MarsCoordinate | null, goal: MarsCoordinate | null, result: PlanRouteResponse | null, waypoints: MarsCoordinate[] = []) {
+export function updateRouteOverlay(source: VectorSource, start: MarsCoordinate | null, goal: MarsCoordinate | null, result: PlanRouteResponse | null, waypoints: MarsCoordinate[] = [], mapAlignment: "verified" | "unverified" | undefined = undefined) {
   source.clear();
-  if (result && (result.source === "mock" || MAP_REGISTRATION_VALIDATED)) {
+  if (result && (result.source === "mock" || mapAlignment === "verified")) {
     source.addFeature(new Feature({ kind: "route", geometry: new MultiLineString(routeToMapSegments(result.route, "wmts-display")) }));
   }
   waypoints.forEach((point, index) => source.addFeature(new Feature({ kind: "waypoint", label: `W${index + 1}`,
