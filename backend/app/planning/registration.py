@@ -92,7 +92,10 @@ def asset(root,name,expected):
 
 
 def validate_controls(grid,path,route,*,allow_synthetic=False):
-    result=MapRegistration(source_sha256=grid.source_hash)
+    # Surface the requested NASA target even before an operator has supplied
+    # controls. It makes a pending registration auditable without implying that
+    # the DEM and imagery align.
+    result=MapRegistration(source_sha256=grid.source_hash,wmts_layer=grid.profile.wmts_layer,wmts_crs=NASA_CRS)
     if path is None:
         return result.model_copy(update={'reasons':['Independent NASA WMTS/wire/DEM feature measurements have not been configured.']})
     try:

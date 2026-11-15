@@ -5,7 +5,10 @@ import WMTS, { optionsFromCapabilities } from "ol/source/WMTS.js";
 import WMTSTileGrid from "ol/tilegrid/WMTS.js";
 import type { Extent } from "ol/extent.js";
 
-export const LAYER_ID = "Mars_MGS_MOLA_ClrShade_merge_global_463m";
+// A NASA Jezero mosaic gives the registration workflow suitable imagery for
+// the local 20 m CTX DEM. It remains unregistered until independent controls
+// pass in the backend; source selection is not evidence of alignment.
+export const LAYER_ID = "NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018";
 export const NASA_CRS = "urn:ogc:def:crs:EPSG::104905";
 export const CAPABILITIES_URL =
   `https://trek.nasa.gov/tiles/Mars/EQ/${LAYER_ID}/1.0.0/WMTSCapabilities.xml`;
@@ -60,8 +63,9 @@ export function createMarsWmts(xml: string) {
     ...pair(text(bbox, OWS_NS, "LowerCorner")),
     ...pair(text(bbox, OWS_NS, "UpperCorner")),
   ];
-  if (extent.some((value, index) => Math.abs(value - WORLD[index]) > 0.01)) {
-    throw new Error("The selected NASA layer no longer advertises global angular coverage.");
+  if (extent[0] < WORLD[0] || extent[1] < WORLD[1] || extent[2] > WORLD[2] || extent[3] > WORLD[3]
+    || extent[0] >= extent[2] || extent[1] >= extent[3]) {
+    throw new Error("NASA metadata advertises an invalid native map coverage extent.");
   }
 
   // NASA uses an EPSG-shaped URN for Esri's Mars 2000 identifier. Its published
@@ -109,7 +113,8 @@ export function createMarsWmts(xml: string) {
   // Preserve the advertised identifiers, style, format and ResourceURL. Replace
   // only the scale-derived grid: NASA's ScaleDenominator values use a different
   // metres/degree convention. Matrix dimensions and global degree bounds give
-  // exact angular resolutions without borrowing an Earth radius.
+  // exact angular resolutions without borrowing an Earth radius. The layer may
+  // cover only Jezero while its tile matrix remains global.
   const tileGrid = new WMTSTileGrid({
     extent,
     origins: matrices.map((matrix) => matrix.origin),

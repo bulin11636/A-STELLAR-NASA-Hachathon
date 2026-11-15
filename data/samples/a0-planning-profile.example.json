@@ -5,6 +5,7 @@
   "window": [1210, 2440, 128, 128],
   "vertical_units": "m",
   "vertical_units_evidence": "Host interpretation of the local CTX DTM: provider vertical units are metres according to data/samples/download-manifest.json; the raster band has no unit tag and these local bytes have no acquisition receipt.",
+  "wmts_layer": "NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018",
   "slope_threshold_deg": 15,
   "terrain_weight": 4,
   "dynamic_windowing": true,

@@ -146,7 +146,7 @@ export default function MarsMap() {
         }),
       });
       mapRef.current = map;
-      map.getView().fit([77.0, 17.95, 78.1, 18.95], { padding: [32, 32, 32, 32] });
+      map.getView().fit(extent, { padding: [32, 32, 32, 32] });
       map.on("singleclick", (event) => {
         const evidence = map?.forEachFeatureAtPixel(event.pixel, (feature) => {
           const kind = feature.get("kind");
@@ -250,7 +250,7 @@ export default function MarsMap() {
         </div>
         {sidebarTab === "plan" && <section id="plan-panel" role="tabpanel" aria-labelledby="plan-tab">
         <RoutePlannerPanel planner={planner} mapReady={ready} planningRegion={planningRegion} planningError={planningError} onViewJezero={() => {
-          mapRef.current?.getView().fit([77.0, 17.95, 78.1, 18.95], { padding: [32, 32, 32, 32], duration: 300 });
+          mapRef.current?.getView().fit([76.7912789, 17.5791654, 77.7314417, 18.6926322], { padding: [32, 32, 32, 32], duration: 300 });
         }} />
         </section>}
         {sidebarTab === "route" && <section id="route-panel" role="tabpanel" aria-labelledby="route-tab" className="route-workspace">
@@ -282,7 +282,10 @@ export default function MarsMap() {
           <dt>Coordinate system</dt><dd>Mars 2000 · NASA service label <code>urn:ogc:def:crs:EPSG::104905</code> (ESRI:104905 definition)</dd>
           <dt>Native units and axes</dt><dd>Degrees · X longitude, east positive (−180° to +180°); Y native latitude (−90° to +90°).</dd>
           <dt>Latitude convention</dt><dd>WMTS planetographic latitude is converted to/from the API's Mars 2000 planetocentric latitude. WMTS/DEM pixel registration remains unverified.</dd>
-          <dt>Layer</dt><dd>MGS MOLA global color hillshade<code>{LAYER_ID}</code></dd>
+          <dt>Layer</dt><dd>NASA Jezero HiRISE / CTX / HRSC mosaic <code>{LAYER_ID}</code></dd>
+          <dt>Registration</dt><dd>{planner.metadata?.validation.map_alignment === "verified"
+            ? "Verified only for this route's independently controlled footprint."
+            : "Pending independent NASA WMTS, wire-coordinate, and DEM feature controls. Computed geometry remains hidden."}</dd>
         </dl>
         <div className="tile-summary" aria-live="polite">
           <p>Tiles this session: {progress.loaded} received · {progress.missing} missing · {progress.failed} failed</p>

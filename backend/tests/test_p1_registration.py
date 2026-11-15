@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 from app.planning.grid import load_grid
-from app.planning.registration import validate_controls
+from app.planning.registration import registration_for_route, validate_controls
 from app.planning.synthetic_fixtures import inputs, controls
 from app.planning.service import PlanningService
 from test_planning import request_for
@@ -25,6 +25,14 @@ def test_independent_control_scope_and_synthetic_production_guard(tmp_path):
     assert len(result.residuals)==4 and all(r.passed for r in result.residuals)
     outside=grid.wire(*grid.center((0,0)))
     assert validate_controls(grid,path,[outside,request.goal],allow_synthetic=True).map_alignment=='unverified'
+
+
+def test_registration_stays_pending_without_observed_controls(tmp_path):
+    grid,path,request=prepared(tmp_path)
+    result=registration_for_route(grid,[request.start,request.goal],dataset_root=tmp_path)
+    assert result.map_alignment=='unverified'
+    assert result.wmts_layer == grid.profile.wmts_layer
+    assert result.reasons == ['Independent NASA WMTS/wire/DEM feature measurements have not been configured.']
 
 
 @pytest.mark.parametrize('change',['source','latitude','radius','duplicate','collinear','dem_offset','wmts_offset','asset','matrix','capability_resolution'])

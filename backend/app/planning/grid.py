@@ -45,6 +45,8 @@ class PlanningProfile(ContractModel):
     mission: str | None = None
     acquisition_time: str | None = None
     registration_controls: str | None = None
+    # Keep the global fixture default isolated from production. Real Jezero
+    # profiles must opt into their NASA layer explicitly.
     wmts_layer: str = 'Mars_MGS_MOLA_ClrShade_merge_global_463m'
     slope_threshold_deg: float = Field(default=15, gt=0, lt=90)
     terrain_weight: float = Field(default=4, ge=0, le=100)
