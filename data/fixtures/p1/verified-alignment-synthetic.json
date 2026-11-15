@@ -792,7 +792,7 @@
             "temporal_applicability": "Acquisition time is unknown; no present-day terrain freshness is inferred.",
             "validation_provenance": "Source hash and geometry verified; elevation units remain host-asserted, not publisher-certified."
           },
-          "confidence_contribution": 31.499999999999996,
+          "confidence_contribution": 31.5,
           "risk_contribution": 0.12400921637225143
         },
         {
@@ -981,7 +981,7 @@
       "method": "independent-feature-controls-v1",
       "map_alignment": "verified",
       "source_sha256": "53174e372260527a12c01a8dcf5851baa32bd9f6539972cf7c51d2b3452ace70",
-      "controls_sha256": "e60ffe605d6b606b445e27cf65119573c8b603fc13294f0774ef15b2b985a3d4",
+      "controls_sha256": "e7d0b3d7b66df768eb9b1f0f833776f2a13bb216b9685fc6724063f2822993e1",
       "capabilities_sha256": "979755247f7a2572810e1546feeddc89c5e35a171e7fc5beff3028b335354faa",
       "measurement_sha256": "6d5606bf004a423d81f85471340eeada98ed5862c12d3325da61f5faa7d6a5e4",
       "wmts_layer": "Mars_MGS_MOLA_ClrShade_merge_global_463m",

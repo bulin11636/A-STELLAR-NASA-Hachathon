@@ -74,6 +74,11 @@ def export(destination):
                 if isinstance(item,dict):
                     return {k:('2026-11-15T00:00:00Z' if k=='created_at' else 0.0 if k=='elapsed_ms' else stable(v)) for k,v in item.items()}
                 if isinstance(item,list): return [stable(v) for v in item]
+                if isinstance(item,float):
+                    # Eliminate machine-level representation noise in derived
+                    # percentage values without degrading geospatial precision.
+                    rounded=round(item,8)
+                    return rounded if abs(item-rounded)<1e-12 else item
                 if isinstance(item,str) and old: return item.replace(old,fixed)
                 return item
             item=stable(value)

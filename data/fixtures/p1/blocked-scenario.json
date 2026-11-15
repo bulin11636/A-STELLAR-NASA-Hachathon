@@ -802,7 +802,7 @@
             "temporal_applicability": "Acquisition time is unknown; no present-day terrain freshness is inferred.",
             "validation_provenance": "Source hash and geometry verified; elevation units remain host-asserted, not publisher-certified."
           },
-          "confidence_contribution": 31.499999999999996,
+          "confidence_contribution": 31.5,
           "risk_contribution": 0.12400921637225143
         },
         {
