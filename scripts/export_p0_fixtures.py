@@ -2,6 +2,7 @@
 """Export P0 API fixtures from a synthetic DEM and a strictly mocked provider."""
 import argparse
 from concurrent.futures import ThreadPoolExecutor
+import gc
 import json
 import os
 from pathlib import Path
@@ -114,6 +115,9 @@ def export(destination):
         destination.mkdir(parents=True,exist_ok=True)
         for name, value in output.items():
             (destination/name).write_text(json.dumps(stable(value),indent=2,allow_nan=False)+'\n')
+        # Windows can retain short-lived sqlite cursor/connection objects until
+        # collection, preventing TemporaryDirectory cleanup of the usage ledger.
+        gc.collect()
     return sorted(output)
 
 
