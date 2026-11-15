@@ -4,8 +4,8 @@
 
 | Owner | Area | Branching intent |
 | --- | --- | --- |
-| **Sheng** | Frontend: React, TypeScript, OpenLayers UI, API client, state, tests | Work only under `frontend/` unless a shared contract document needs an agreed update. |
-| **Sam** | Backend: FastAPI, request recovery, persistence, provider handling, API tests | Work under `backend/`, `scripts/`, and backend-facing documentation. |
+| **Sheng** | Product interaction, typed browser client, UI state, recovery behavior, and acceptance tests | Own the Sheng task list below and update shared contracts only by agreement. |
+| **Sam** | Durable request behavior, A0 policy, validation, persistence, and service acceptance tests | Own the Sam task list below and update shared contracts only by agreement. |
 
 Both owners may work in parallel. Do not wait for the other implementation to
 finish: use the shared contract and fixtures below. Neither owner should rewrite
@@ -53,9 +53,9 @@ Rules:
 - Expected failures must use the existing JSON error envelope. Do not expose
   traceback text, HTML error pages, file paths, credentials, or provider secrets.
 
-## Sheng — Frontend implementation work
+## Sheng — implementation work
 
-### Scope and restrictions
+### Sheng boundaries
 
 - Own `frontend/` source and frontend tests.
 - Keep all product UI text, controls, errors, and newly added code comments in English.
@@ -65,7 +65,7 @@ Rules:
 - Do not render computed route geometry on the NASA basemap until independent
   NASA WMTS/wire/DEM registration is verified.
 
-### SHENG-FE-1 — Typed request-status client and fixtures
+### SHENG-1 — Typed request-status client and fixtures
 
 - [ ] Define a `RequestAttemptStatus` TypeScript type and strict decoder.
 - [ ] Add `getPlanRequestStatus(requestId)`.
@@ -74,7 +74,7 @@ Rules:
   non-retryable `failed`, and `unknown`.
 - [ ] Add decoder tests for valid and malformed payloads.
 
-### SHENG-FE-2 — Computed plan lifecycle
+### SHENG-2 — Computed plan lifecycle
 
 - [ ] Generate one `Idempotency-Key` per intended computed planning action.
 - [ ] Retain that key until the outcome is known; do not create a replacement key
@@ -84,8 +84,13 @@ Rules:
 - [ ] Show a manual retry control only for `retry_allowed: true`.
 - [ ] Include the backend-required retry attempt header/version when retrying.
 - [ ] Surface clear English error messages without replacing backend codes.
+- [ ] In Advanced mode, support up to 16 ordered required waypoints added by
+  named coordinates or a dedicated `Pick Waypoint` map action; allow reorder
+  and removal before submission.
+- [ ] Render `W1`, `W2`, … independently from Start and Goal without enabling
+  computed geometry on the unverified NASA basemap.
 
-### SHENG-FE-3 — Chat lifecycle
+### SHENG-3 — Chat lifecycle
 
 - [ ] Preserve the existing chat `request_id` for an unresolved message.
 - [ ] Display chat attempt state and a manual retry action where allowed.
@@ -93,7 +98,7 @@ Rules:
   validated revision result and matching metadata.
 - [ ] State clearly when an answer is informational and did not change the route.
 
-### SHENG-FE-4 — Runtime status and UI quality
+### SHENG-4 — Runtime status and UI quality
 
 - [ ] Make routing status clear: `mock`, `computed / deterministic`, or
   `computed / agentic`.
@@ -104,7 +109,7 @@ Rules:
   punctuation or plain ASCII.
 - [ ] Keep all frontend text in English.
 
-### SHENG-FE-5 — Frontend acceptance tests
+### SHENG-5 — Acceptance tests
 
 - [ ] Same plan action reuses its idempotency key.
 - [ ] Stale responses cannot overwrite newer selections.
@@ -113,9 +118,9 @@ Rules:
 - [ ] Unknown outcome remains blocked from automatic resubmission.
 - [ ] A route changes only after a valid chat revision response.
 
-## Sam — Backend implementation work
+## Sam — implementation work
 
-### Scope and restrictions
+### Sam boundaries
 
 - Own FastAPI request recovery, persistence, provider boundaries, and backend tests.
 - Preserve existing success response schemas for route planning and chat.
@@ -124,7 +129,7 @@ Rules:
 - Keep model attempts bounded; do not introduce automatic paid retries.
 - Do not change the frontend's Mars coordinate convention.
 
-### SAM-BE-1 — Stable recovery endpoints
+### SAM-1 — Stable recovery endpoints
 
 - [ ] Confirm `GET /api/v1/routes/requests/{request_id}` implements the shared
   status contract for keyed computed plans.
@@ -134,7 +139,7 @@ Rules:
   nullable update time for every request state.
 - [ ] Document any intentionally unsupported status behavior before Sheng relies on it.
 
-### SAM-BE-2 — Idempotency, persistence, and explicit retry
+### SAM-2 — Idempotency, persistence, and explicit retry
 
 - [ ] Validate `Idempotency-Key` format and bind it to one request body.
 - [ ] Prevent simultaneous duplicate work for the same key.
@@ -145,8 +150,10 @@ Rules:
 - [ ] Reject early retries with an actionable JSON response and Retry-After behavior.
 - [ ] Ensure timeout/uncertain outcomes remain `unknown` rather than triggering a
   second automatic model call.
+- [ ] Preserve required waypoint order in every validated computed result and
+  reject consecutive duplicate stops using the existing request contract.
 
-### SAM-BE-3 — Error and provider handling
+### SAM-3 — Error and provider handling
 
 - [ ] Return the existing JSON error envelope for invalid input, missing DEM/profile,
   unavailable route, model configuration failure, provider rejection, budget limit,
@@ -156,14 +163,14 @@ Rules:
 - [ ] Keep provider/model errors classified without leaking secrets or paths.
 - [ ] Do not call the provider during readiness checks.
 
-### SAM-BE-4 — Readiness and A0 status
+### SAM-4 — Readiness and A0 status
 
 - [ ] Keep `GET /api/v1/ready` explicit about planning, storage, and credential checks.
 - [ ] Keep `GET /api/v1/a0/status` explicit about deterministic/agentic mode,
   configuration presence, model, usage/budget, and last provider failure when available.
 - [ ] Distinguish configured credentials from confirmed provider availability.
 
-### SAM-BE-5 — Backend test fixtures for Sheng
+### SAM-5 — Shared fixtures for Sheng
 
 - [ ] Provide stable JSON examples for:
   - `plan-running`
@@ -180,20 +187,20 @@ Rules:
 
 ### Day 1 — Contract and fixtures
 
-- Sheng starts `SHENG-FE-1` with local fixtures.
+- Sheng starts `SHENG-1` with local fixtures.
 - Sam validates the response contract and produces backend JSON examples.
 - Both compare field names, nullability, retry rules, and error shape. No need to
   wait for live endpoint deployment.
 
 ### Day 2 — Independent implementation
 
-- Sheng completes `SHENG-FE-2` against fixtures and tests idempotency/state UI.
-- Sam completes `SAM-BE-1` and `SAM-BE-2` with API and persistence tests.
+- Sheng completes `SHENG-2` against fixtures and tests idempotency/state UI.
+- Sam completes `SAM-1` and `SAM-2` with API and persistence tests.
 
 ### Day 3 — Chat and status
 
-- Sheng completes `SHENG-FE-3` and `SHENG-FE-4`.
-- Sam completes `SAM-BE-3` and `SAM-BE-4`.
+- Sheng completes `SHENG-3` and `SHENG-4`.
+- Sam completes `SAM-3` and `SAM-4`.
 - Each side runs its own test suite before integration.
 
 ### Day 4 — Integration and acceptance
