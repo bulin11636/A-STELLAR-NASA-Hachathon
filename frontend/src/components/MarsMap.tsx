@@ -7,9 +7,10 @@ import TileLayer from "ol/layer/Tile.js";
 import TileState from "ol/TileState.js";
 import { containsCoordinate, intersects } from "ol/extent.js";
 import { CAPABILITIES_URL, CATALOG_URL, JEZERO_LAYER_ID, LAYER_ID, loadMarsWmts } from "../map/marsWmts";
-import { mapViewToApiCoordinate } from "../geo/marsCoordinates.ts";
+import { apiCoordinateToMapView, mapViewToApiCoordinate } from "../geo/marsCoordinates.ts";
 import { createRouteOverlay, updateRouteOverlay } from "../map/routeOverlay.ts";
 import { createEvidenceOverlays, type SelectedEvidence } from "../map/evidenceOverlays.ts";
+import { missionViewport } from "../map/mapViewport.ts";
 import { useRoutePlanner } from "../services/useRoutePlanner.ts";
 import { getPlanningRegion } from "../services/planningRegion.ts";
 import type { PlanningRegion } from "../types/api.ts";
@@ -65,6 +66,36 @@ export default function MarsMap() {
   const [inspectedPoint, setInspectedPoint] = useState<import("../types/api.ts").MarsCoordinate | null>(null);
   const [missionObjective, setMissionObjective] = useState("Inspect Jezero science and historical rover evidence without treating the demonstration route as safety validated.");
   const [sidebarTab, setSidebarTab] = useState<SidebarTab>("plan");
+
+  const fitMapPoints = (points: import("../types/api.ts").MarsCoordinate[], minimumSpanDegrees: number, label: string) => {
+    const map = mapRef.current;
+    if (!map || !points.length) return;
+    const extent = missionViewport(points, minimumSpanDegrees);
+    if (!extent) return;
+    map.getView().fit(extent, {
+      padding: [56, 56, 56, 56], duration: 300, maxZoom: 13,
+    });
+    setCoordinates(label);
+  };
+
+  const fitRoute = () => {
+    if (planner.result) fitMapPoints(planner.result.route, 0.006, "Route extent fitted to the map.");
+  };
+
+  const fitMission = () => {
+    const stops = [planner.start, ...(planner.interfaceMode === "advanced" ? planner.waypoints : []), planner.goal]
+      .filter((point): point is import("../types/api.ts").MarsCoordinate => point !== null);
+    fitMapPoints(stops, 0.025, "Mission stops fitted to the map.");
+  };
+
+  const fitRegional = () => {
+    const bounds = planningRegion?.source_bounds ?? planningRegion?.bounds;
+    if (!bounds) return;
+    fitMapPoints([
+      { longitude: bounds.west, latitude: bounds.south },
+      { longitude: bounds.east, latitude: bounds.north },
+    ], 0.05, "Supported planning region fitted to the map.");
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -256,6 +287,11 @@ export default function MarsMap() {
     <section className="explorer" aria-label="Mars map explorer">
       <div className="map-frame">
         <div className="map" ref={target} tabIndex={0} aria-label="Interactive Mars map. Drag to pan, use plus and minus to zoom, click to inspect coordinates." />
+        <div className="map-workspace-controls" role="group" aria-label="Map view controls">
+          <button type="button" onClick={fitRoute} disabled={!planner.result}>Fit route</button>
+          <button type="button" onClick={fitMission} disabled={!planner.start && !planner.goal}>Mission scale</button>
+          <button type="button" onClick={fitRegional} disabled={!planningRegion}>Regional scale</button>
+        </div>
         <div className={`map-status ${error || tileIssue ? "warning" : ""}`} role={error ? "alert" : "status"}>
           {status}
         </div>
