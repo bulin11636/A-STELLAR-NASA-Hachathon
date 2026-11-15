@@ -31,6 +31,7 @@
 | [P0 分工計畫（繁中）](P0_分工計畫_繁中.md) | Sheng/Sam 平行工作、同步節點與 P0 完成條件的繁中討論版 |
 | [Quick and Advanced route planning contract](ADVANCED_ROUTE_PLANNING_CONTRACT.md) | Sheng/Sam P0 contract for simple planning, advanced parameters, and A0 chat context |
 | [Journey Briefing ownership plan](JOURNEY_BRIEFING_OWNERSHIP_PLAN.md) | Sheng/Sam plan for grounded route briefing and future segment-level hazard evidence |
+| [P1 mission assessment plan](P1_MISSION_ASSESSMENT_PLAN.md) | Canonical Sheng/Sam ownership, mission-profile, risk/confidence, map, and acceptance plan |
 
 Setup guides and overlapping agent reports are merged here. Scientific fixtures live in `data/fixtures/`; documentation contains no datasets. The repository-root README is the entry point.
 
