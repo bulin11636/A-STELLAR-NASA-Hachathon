@@ -1,5 +1,10 @@
 # TODO
 
+## P1 joint acceptance
+
+- [ ] Integrate Sheng's profile/resolution controls and paired risk/confidence presentation against the P1 fixtures.
+- [ ] Complete joint browser acceptance for gate states and the source/layer-bound verified NASA overlay after real controls pass.
+
 ## Deferred: deployment operations
 
 - [ ] Document and exercise backup/restore and upgrades for persistent application state.
@@ -19,7 +24,7 @@
 
 ## Deferred: NASA map registration
 
-- [ ] Establish independent NASA map/wire/DEM controls with justified tolerances.
+- [ ] Obtain independent NASA WMTS/wire/DEM feature measurements and source assets that satisfy the implemented residual, coverage and resolution tolerances.
 - [ ] Resolve the source-radius discrepancy and NASA latitude semantics.
 - [ ] Verify computed NASA route alignment and tile behavior in a real browser after registration is established.
 

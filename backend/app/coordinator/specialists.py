@@ -42,7 +42,11 @@ class SpecialistRouter:
         if not re.fullmatch(r'[A-Za-z0-9_-]{16,64}',action_id):
             raise ApiProblem(422,'VALIDATION_ERROR','The request identifier is malformed.')
         catalog=self.catalog()
-        required=set(request.mission.required_analyses if request.mission else [])
+        from app.planning.policies import mission_profile,selected_profile
+        policy=mission_profile(selected_profile(request))
+        required={a for a,w in policy.risk_weights.items() if w>0 and a!='A1'}
+        user_required=set(request.mission.required_analyses if request.mission else [])
+        required.update(user_required)
         if request.mission and request.mission.radiation_budget_usv is not None: required.add('A3')
         selection,usage=None,None
         if self.agent.settings.enabled and any(item['configured'] for item in catalog):
@@ -77,12 +81,12 @@ class SpecialistRouter:
         for capability in catalog:
             a=capability['agent_id']; configured=capability['configured']; choice=choices.get(a)
             selected=a in required or bool(choice and choice.selected and configured)
-            if a in required: reason='User-required analysis; the host cannot skip it.'
+            if a in required: reason='Required by user constraints or versioned mission policy; the host cannot skip it.'
             elif not configured: reason='No compatible worker is configured for this dataset scope.'
             elif choice: reason=choice.reason if not choice.selected or configured else 'Unavailable tool was not executed.'
             else: reason='Optional analysis was not selected in deterministic mode.'
             traces.append(SpecialistTrace(agent_id=a,public_name=ROLES[a][0],configured=configured,selected=selected,required=a in required,
-                selection_source='user_requirement' if a in required else 'a0' if choice else 'deterministic',selection_reason=reason,
+                selection_source=('user_requirement' if a in user_required else 'host_policy') if a in required else 'a0' if choice else 'deterministic',selection_reason=reason,
                 execution_state='not_requested' if not selected else 'unavailable',data_kind='unavailable',application='none',
                 limitations=[PURPOSES[a]]))
         return traces,usage

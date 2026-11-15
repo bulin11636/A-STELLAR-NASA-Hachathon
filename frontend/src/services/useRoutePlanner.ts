@@ -25,8 +25,8 @@ function rememberRoute(id: string | null) {
   if (id) url.searchParams.set("route", id); else url.searchParams.delete("route");
   window.history.replaceState(null, "", url);
 }
-function routeKey(request: { region_id: string; coordinate_system: string; start: MarsCoordinate; goal: MarsCoordinate; mode: RouteMode; waypoints?: MarsCoordinate[]; mission?: WalkingMission | null; mission_profile?: string }) {
-  return JSON.stringify([request.region_id, request.coordinate_system, [request.start.longitude, request.start.latitude], [request.goal.longitude, request.goal.latitude], request.mode, (request.waypoints ?? []).map(point => [point.longitude, point.latitude]), request.mission ? [request.mission.mode,request.mission.speed_m_s,request.mission.stop_minutes_per_waypoint,request.mission.exposure_duration_min,request.mission.radiation_budget_usv,request.mission.required_analyses] : null, request.mission_profile ?? "balanced"]);
+function routeKey(request: { region_id: string; coordinate_system: string; start: MarsCoordinate; goal: MarsCoordinate; mode: RouteMode; waypoints?: MarsCoordinate[]; mission?: WalkingMission | null; mission_profile?: string | null; resolution_profile?: string | null }) {
+  return JSON.stringify([request.region_id, request.coordinate_system, [request.start.longitude, request.start.latitude], [request.goal.longitude, request.goal.latitude], request.mode, (request.waypoints ?? []).map(point => [point.longitude, point.latitude]), request.mission ? [request.mission.mode,request.mission.speed_m_s,request.mission.stop_minutes_per_waypoint,request.mission.exposure_duration_min,request.mission.radiation_budget_usv,request.mission.required_analyses] : null, request.mission_profile ?? null, request.resolution_profile ?? null]);
 }
 function savedWork(): Work | null {
   const value = readPending(SESSION_KEY) as Work | null;
@@ -59,6 +59,8 @@ export function useRoutePlanner() {
   const [analysisFocus, setAnalysisFocus] = useState<AnalysisFocus[]>(["terrain"]);
   const [allowSupportedRevision, setAllowSupportedRevision] = useState(true);
   const [additionalRequirements, setAdditionalRequirements] = useState("");
+  const [missionProfile, setMissionProfile] = useState<PlanRouteRequest["mission_profile"]>(null);
+  const [resolutionProfile, setResolutionProfile] = useState<PlanRouteRequest["resolution_profile"]>(null);
   const [walkingSpeed, setWalkingSpeed] = useState("");
   const [waypointDwell, setWaypointDwell] = useState("0");
   const [exposureDuration, setExposureDuration] = useState("");
@@ -102,6 +104,7 @@ export function useRoutePlanner() {
     if (updateDraft) {
       setStart(meta?.request.start ?? value.route[0]); setGoal(meta?.request.goal ?? value.route[value.route.length - 1]);
       setMode(value.mode); setWaypoints(meta?.request.waypoints ?? []); setPickMode("inspect");
+      setMissionProfile(meta?.request.mission_profile ?? null); setResolutionProfile(meta?.request.resolution_profile ?? null);
       const mission=meta?.request.mission;
       if (mission) setInterfaceModeState("advanced");
       setWalkingSpeed(mission?.speed_m_s == null ? "" : String(mission.speed_m_s));
@@ -129,15 +132,17 @@ export function useRoutePlanner() {
       editDraft(); setWaypoints(next);
     } catch (reason) { selectionError(reason instanceof Error ? reason.message : "Invalid waypoint."); }
   }
-  function changeMode(value: RouteMode) { editDraft(); setMode(value); }
+  function changeMode(value: RouteMode) { editDraft(); setMode(value); setMissionProfile(null); }
   function setInterfaceMode(value: PlanningInterfaceMode) { editDraft(); setInterfaceModeState(value); setPickMode("inspect"); }
   function loadExample(request: PlanRouteRequest) {
     validateRouteRequest(request); editDraft();
     setStart(request.start); setGoal(request.goal); setMode(request.mode); setPickMode("inspect"); setWaypoints(request.waypoints ?? []);
+    setMissionProfile(request.mission_profile ?? null); setResolutionProfile(request.resolution_profile ?? null);
   }
   function clear() {
     cancelFlight(); savePending(null); displayed.current = null;
     rememberRoute(null); setResult(null); setMetadata(null); setMetadataError(null); setError(null); setAttemptStatus(null);
+    setMissionProfile(null); setResolutionProfile(null);
     setWalkingSpeed(""); setWaypointDwell("0"); setExposureDuration(""); setRadiationBudget(""); setRequiredAnalyses([]);
     setAdvancedReply(null); setStatus("idle"); setStart(null); setGoal(null); setWaypoints([]); setPickMode("inspect");
   }
@@ -161,7 +166,7 @@ export function useRoutePlanner() {
   }
   function currentRequest(): PlanRouteRequest {
     if (!start || !goal) throw new Error("Select both Start and Goal.");
-    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode, mission_profile: "balanced",
+    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode, ...(missionProfile ? { mission_profile: missionProfile } : {}), ...(resolutionProfile ? { resolution_profile: resolutionProfile } : {}),
       ...(interfaceMode === "advanced" && waypoints.length ? { waypoints } : {}), ...(missionSettings() ? { mission: missionSettings() } : {}) };
   }
   function sameDraft(work: Work | null) {
@@ -298,6 +303,8 @@ export function useRoutePlanner() {
     allowSupportedRevision, setAllowSupportedRevision: (value: boolean) => { editDraft(); setAllowSupportedRevision(value); },
     additionalRequirements, setAdditionalRequirements: (value: string) => { editDraft(); setAdditionalRequirements(value); }, pendingKind: pending?.kind ?? null, canSubmit, retry, recover, refreshAttempt,
     advancedReply, chatRefresh, draftVersion, inputError,
+    missionProfile, setMissionProfile: (value: PlanRouteRequest["mission_profile"]) => { editDraft(); setMissionProfile(value); },
+    resolutionProfile, setResolutionProfile: (value: PlanRouteRequest["resolution_profile"]) => { editDraft(); setResolutionProfile(value); },
     walkingSpeed, setWalkingSpeed: (value: string) => { editDraft(); setWalkingSpeed(value); },
     waypointDwell, setWaypointDwell: (value: string) => { editDraft(); setWaypointDwell(value); },
     exposureDuration, setExposureDuration: (value: string) => { editDraft(); setExposureDuration(value); },

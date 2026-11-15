@@ -3,6 +3,7 @@
 | Guide | Contents |
 | --- | --- |
 | [Specialist selection and walking assessment](SPECIALIST_ROUTING_AND_WALKING.md) | Bounded tool selection, auditable traces, explicit walking time, scenario assessment and offline verification |
+| [P1 backend handoff](P1_BACKEND_HANDOFF.md) | Versioned policies, bounded resolution, paired risk/confidence, stable UI fixtures and registration controls |
 | [Current TODO](TODO.md) | Remaining demo handoff checks and deferred exploration; pending tasks only |
 | [P0 UI acceptance and walkthrough](P0_UI_ACCEPTANCE.md) | Completed integration fixes, Docker startup, real-data manual steps and acceptance results |
 | [Merged P0 integration gaps](P0_INTEGRATION_GAPS.md) | Historical merged-main findings, now resolved by the P0 UI delivery |

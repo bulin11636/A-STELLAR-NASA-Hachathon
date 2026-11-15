@@ -20,7 +20,8 @@ export interface PlanRouteRequest {
   mode: RouteMode;
   waypoints?: MarsCoordinate[];
   mission?: WalkingMission | null;
-  mission_profile?: "safest" | "fastest" | "science_priority" | "balanced";
+  mission_profile?: "safest" | "fastest" | "science_priority" | "balanced" | null;
+  resolution_profile?: "coarse" | "standard" | "fine" | null;
 }
 
 export interface PlanRouteResponse {

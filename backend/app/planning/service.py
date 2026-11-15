@@ -1,5 +1,6 @@
 """A0 deterministic coordinator; no graph or model imports or network calls."""
 from datetime import datetime, timezone
+from collections import OrderedDict
 from pathlib import Path
 import os
 from time import monotonic
@@ -29,16 +30,18 @@ WARNINGS = [
 
 
 class PlanningService:
-    def __init__(self, mode='mock', profile=None, output_root=None, dataset_root=None):
+    def __init__(self, mode='mock', profile=None, output_root=None, dataset_root=None, *, allow_synthetic_registration=False):
         if mode not in ('mock','computed'):
             raise ValueError('A_STELLAR_ROUTING_MODE must be mock or computed')
         self.mode = mode
         self.profile_path = profile
         self.dataset_root = dataset_root
+        self.allow_synthetic_registration=allow_synthetic_registration
         self.store = RouteStore(output_root or REPO/'data/processed/routes')
         self.grid = None
         self.failure = None
         self._regional_grid = None
+        self._policy_grids = OrderedDict()
         self._regional_example = None
         self._regional_example_checked = False
         if mode == 'computed':
@@ -124,12 +127,22 @@ class PlanningService:
     def prepare_grid(self, request):
         if self.grid is None:
             raise ApiProblem(503,'PLANNING_UNAVAILABLE','Computed routing requires a validated planning profile and DEM.')
+        from app.planning.policies import configure_grid
+        if request.mission_profile is not None:
+            expected='shortest' if request.mission_profile=='fastest' else 'safest'
+            if request.mode!=expected:
+                raise ApiProblem(422,'PROFILE_OBJECTIVE_MISMATCH','Use the terrain objective advertised for the selected mission profile.')
+        policy_base=configure_grid(self.grid,request)
+        cache_key=policy_base.profile.model_dump_json()
+        cached=self._policy_grids.get(cache_key)
         try:
             self.grid.ensure_unchanged()
-            g=grid_for_request(self.profile_path,self.grid,request,self.dataset_root,self._regional_grid)
+            g=grid_for_request(self.profile_path,policy_base,request,self.dataset_root,cached)
             g.ensure_unchanged()
             if g.inventory.get('resolution_factor',1) > 1:
-                self._regional_grid = g
+                self._policy_grids[cache_key]=g
+                self._policy_grids.move_to_end(cache_key)
+                while len(self._policy_grids)>2: self._policy_grids.popitem(last=False)
         except OSError:
             raise ApiProblem(503,'PLANNING_UNAVAILABLE','A configured source or profile is no longer readable.') from None
         allowed=g.allowed
@@ -162,7 +175,7 @@ class PlanningService:
             full_window = (1,1,full_w-2,full_h-2)
             if error.code != 'NO_PATH' or not g.profile.dynamic_windowing or tuple(g.inventory['source_window']) == full_window:
                 raise
-            wider = self._regional_grid or regional_grid(self.profile_path,self.grid,self.dataset_root)
+            wider = regional_grid(self.profile_path,g,self.dataset_root)
             wider.ensure_unchanged()
             # Conservative aggregation may exclude a traversable native endpoint.
             # Keep the original NO_PATH result rather than mislabeling its coordinates.
@@ -175,7 +188,8 @@ class PlanningService:
             solution = solve_route(wider,request,limits.max_expanded_nodes-error.expanded_nodes,remaining)
             solution.search.expanded += error.expanded_nodes
             solution.search.elapsed_ms += error.elapsed_ms
-            self._regional_grid = g = wider
+            g = wider
+            if request.mission_profile is None and request.resolution_profile is None: self._regional_grid=wider
             widened = True
         points,route,search = solution.points,solution.route,solution.search
         distance,touched = solution.distance,solution.touched
@@ -192,6 +206,28 @@ class PlanningService:
         if assessment.required_unassessed: warnings.append('Required analyses remain unassessed: '+', '.join(assessment.required_unassessed)+'. This is a provisional terrain route.')
         if assessment.required_failed: warnings.append('Required scenario checks failed: '+', '.join(assessment.required_failed)+'. The route does not meet those scenario requirements.')
         route_id = 'route-'+uuid4().hex
+        from app.planning.policies import selected_profile, POLICY_VERSION
+        from app.planning.risk_assessment import enrich_risk_assessment
+        traces=context.get('specialist_trace',[])
+        assessment=enrich_risk_assessment(assessment,selected_profile(request),traces,
+            grid=g,touched=touched,route_id=route_id,request=request,evidence_descriptions=context.get('evidence_descriptions'),evidence_applicability=context.get('evidence_applicability'))
+        if assessment.hard_gate_status!='pass': warnings.extend(assessment.gate_reasons)
+        applied=dict(version=POLICY_VERSION,mission_profile_id=assessment.mission_profile.profile_id,
+            mission_profile_version=assessment.mission_profile.version,legacy_objective=request.mission_profile is None,
+            resolution_profile=request.resolution_profile or ('standard' if request.mission_profile else 'legacy'),
+            minimum_native_factor=g.profile.min_resolution_factor,actual_native_factor=factor,
+            actual_cell_size_m=g.metadata.planning_resolution_m,source_cell_size_m=g.metadata.source_resolution,
+            terrain_weight=0.0 if request.mode=='shortest' else g.profile.terrain_weight,limits=limits.model_dump(mode='json'))
+        from app.contracts.routes import AppliedPlanningPolicy
+        applied=AppliedPlanningPolicy.model_validate(applied).model_dump(mode='json')
+        legs=[dict(index=i+1,distance_m=d,travel_time_min=d/request.mission.speed_m_s/60 if request.mission and request.mission.speed_m_s is not None and assessment.time else None,
+            stop_time_min=request.mission.stop_minutes_per_waypoint if request.mission and i<len(request.waypoints) else 0)
+            for i,d in enumerate(solution.leg_distances)]
+        from app.planning.registration import registration_for_route
+        registration=registration_for_route(g,route,dataset_root=self.dataset_root,allow_synthetic=self.allow_synthetic_registration)
+        registration=registration.model_copy(update={'evidence_id':route_id+':provenance#registration'})
+        from app.planning.registration import control_snapshot
+        controls_text=control_snapshot(g,registration,dataset_root=self.dataset_root)
         result = PlanRouteResponse(route_id=route_id,mode=request.mode,source='computed',route=route,
             metrics=RouteMetrics(distance_m=distance,estimated_time_min=assessment.time.total_min if assessment.time else None), warnings=warnings)
         def build(folder):
@@ -201,7 +237,8 @@ class PlanningService:
                 native_validation=native_validation))
             write_json(folder/'provenance.json',dict(source_path=str(g.source_path),inventory=g.inventory,
                 profile=g.profile.model_dump(),source_hash=g.source_hash,specialist_evidence=context.get('evidence',[]),
-                specialist_results=context.get('private_evidence',{})))
+                specialist_results=context.get('private_evidence',{}),registration=registration.model_dump(mode='json'),
+                assessment=assessment.model_dump(mode='json'),planning_policy=applied,legs=legs,registration_controls_text=controls_text))
             artifacts = {role:dict(artifact_id=route_id+':'+role,sha256=digest(folder/name)) for role,name in
                 [('grid','grid.npz'),('validation','validation.json'),('provenance','provenance.json')]}
             gridmeta = g.metadata.model_copy(update={'mask_artifact_ids':{k:route_id+':grid#'+k for k in ['coverage','unknown','blocked']}})
@@ -230,8 +267,6 @@ class PlanningService:
                 facts=facts,limitations=list(warnings),model_commentary=context.get('commentary'),evidence_ids=context.get('evidence_ids',[]))
             traces=[t.model_copy(update={'artifact_id':route_id+(':grid' if t.agent_id=='A1' else ':provenance#'+t.agent_id)})
                 if t.agent_id=='A1' or t.agent_id in context.get('private_evidence',{}) else t for t in context.get('specialist_trace',[])]
-            from app.planning.risk_assessment import enrich_risk_assessment
-            enriched_assessment=enrich_risk_assessment(assessment,request.mission_profile,traces)
             metadata = RouteMetadata(route_id=route_id,created_at=datetime.now(timezone.utc),request=request,
                 coordinator=dict(public_name=ROLES['A0'][0],responsibility=ROLES['A0'][1],implementation_version='python-a0-v1'),
                 scope=dict(roi_id=g.profile.roi_id,dataset_version=g.source_hash,bounds=g.bounds),
@@ -248,9 +283,9 @@ class PlanningService:
                 validation=dict(validator_version='closed-cell-native-v2' if factor > 1 else 'closed-cell-box-v1',checks=['source version unchanged','all segments inside ROI',
                     'all touched cells covered, known and allowed','no blocked diagonal corners','exact endpoints','emitted wire geometry revalidated']
                     + (['conservative native-cell aggregation','independent native source segment re-read'] if factor > 1 else []),
-                    control_fixture_ids=['native-sphere-eqc-analytic-v1'],tolerances={'wire_metric_roundtrip_m':1e-5},map_alignment='unverified'),
+                    control_fixture_ids=['native-sphere-eqc-analytic-v1'],tolerances={'wire_metric_roundtrip_m':1e-5},map_alignment=registration.map_alignment),
                 workers=workers,artifacts=artifacts,warnings=warnings,rationale=rationale,
-                specialist_trace=traces,assessment=enriched_assessment,
+                specialist_trace=traces,assessment=assessment,planning_policy=applied,legs=legs,registration=registration,
                 usage=context.get('usage'),parent_route_id=parent_route_id)
             return StoredRouteResponse(result=result,metadata=metadata)
         return self.store.publish(route_id,build).result

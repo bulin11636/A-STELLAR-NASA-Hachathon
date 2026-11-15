@@ -107,3 +107,13 @@ integration, review, and acceptance rather than duplicating backend work.
 | Low risk, low confidence | UI states assessment is insufficient; never says safe. |
 | Unverified map alignment | No computed route overlay on NASA imagery. |
 | Verified map alignment | Main NASA map may show computed geometry. |
+
+
+## Backend handoff checkpoint
+
+See [P1 backend handoff](P1_BACKEND_HANDOFF.md) and `data/fixtures/p1/` for the
+implemented policy catalog, request fields, actual resolution metadata, factor
+and confidence formulas, gate behavior, durable records and verified/unverified
+synthetic fixtures. Profile/resolution UI and assessment presentation remain
+Sheng's scope. Real independent NASA feature measurements remain a joint
+registration prerequisite; a synthetic verified fixture does not satisfy it.

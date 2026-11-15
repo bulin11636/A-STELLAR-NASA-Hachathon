@@ -4,6 +4,8 @@ import sqlite3
 from starlette.concurrency import run_in_threadpool
 from starlette.responses import JSONResponse
 from app.contracts.routes import StoredRouteResponse
+from app.contracts.policies import PolicyCatalog
+from app.contracts.registration import MapRegistration
 from app.runtime import local_checks
 from app.contracts.chat import ChatRequest, ChatResponse, ChatHistory
 from app.contracts.attempts import REQUEST_ID_PATTERN, RequestAttemptStatus
@@ -83,6 +85,22 @@ async def plan_request_status(request_id: RequestId,request: Request,response: R
 })
 async def stored_route(route_id: str, request: Request):
     return await run_in_threadpool(request.app.state.planning.store.get, route_id)
+
+
+@router.get('/planning/registration', response_model=MapRegistration, tags=['planning'])
+async def planning_registration(request: Request):
+    from app.planning.registration import registration_for_route
+    planning=request.app.state.planning
+    if planning.grid is None:
+        from app.contracts.registration import MapRegistration
+        return MapRegistration(reasons=['Computed terrain data are unavailable.'])
+    return registration_for_route(planning.grid,[],dataset_root=planning.dataset_root)
+
+
+@router.get('/planning/policies', response_model=PolicyCatalog, tags=['planning'])
+async def planning_policies():
+    from app.planning.policies import catalog
+    return catalog()
 
 
 @router.get('/a0/capabilities', tags=['agents'])

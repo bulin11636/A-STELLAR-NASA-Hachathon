@@ -125,7 +125,8 @@ class MeteredProvider:
 
     def select_specialists(self, capabilities, request, message, *, advanced_context=None):
         snapshot={'capabilities':capabilities,'task':{'region_id':request.region_id,'objective':request.mode,
-            'waypoint_count':len(request.waypoints),'required_analyses':request.mission.required_analyses if request.mission else []},
+            'waypoint_count':len(request.waypoints),'mission_profile':request.mission_profile,'resolution_profile':request.resolution_profile,
+            'required_analyses':request.mission.required_analyses if request.mission else []},
             'focus':list(advanced_context.analysis_focus) if advanced_context else []}
         if request.mission is not None: snapshot['task']['walking']=request.mission.model_dump(mode='json',exclude_none=True)
         instructions=('Select relevant optional Mars specialist tools for this request. Return exactly one choice for each of A2,A3,A4,A6, '

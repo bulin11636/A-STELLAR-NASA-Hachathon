@@ -83,7 +83,8 @@
       "mode": "shortest",
       "waypoints": [],
       "mission": null,
-      "mission_profile": "balanced"
+      "mission_profile": null,
+      "resolution_profile": null
     },
     "coordinator": {
       "agent_id": "A0",
@@ -305,6 +306,9 @@
     "usage": null,
     "parent_route_id": null,
     "specialist_trace": [],
-    "assessment": null
+    "assessment": null,
+    "planning_policy": null,
+    "legs": [],
+    "registration": null
   }
 }

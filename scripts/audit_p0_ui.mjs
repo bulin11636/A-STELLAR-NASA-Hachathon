@@ -88,7 +88,10 @@ try{
  await page.getByRole('region',{name:'Advanced A0 response',exact:true}).waitFor();
  assert.equal(response.body.metrics.estimated_time_min,response.body.metrics.distance_m/60+6);
  const walking=await (await fetch(base+'/api/v1/routes/'+response.body.route_id)).json();
- assert.deepEqual(walking.metadata.assessment.required_unassessed,['A2']);
+ assert.deepEqual(walking.metadata.assessment.required_unassessed,['A2','A3']);
+ assert.equal(walking.metadata.assessment.hard_gate_status,'unassessed');
+ assert.equal(walking.metadata.assessment.risk_score,null);
+ assert.notEqual(walking.metadata.assessment.assessment_confidence,null);
  assert(walking.metadata.specialist_trace.find(t=>t.agent_id==='A4').selected);
  assert(walking.metadata.specialist_trace.find(t=>t.agent_id==='A1').required);
  assert(await page.getByRole('region',{name:'Walking time and exposure assessment',exact:true}).isVisible());

@@ -1,0 +1,992 @@
+{
+  "result": {
+    "status": "success",
+    "route_id": "route-347bdcb619d8ba0473a98dd9cba6dad4",
+    "region_id": "jezero",
+    "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+    "mode": "safest",
+    "source": "computed",
+    "route": [
+      {
+        "longitude": 77.44618858307257,
+        "latitude": 18.45256147566068
+      },
+      {
+        "longitude": 77.44618858307257,
+        "latitude": 18.45256147566068
+      },
+      {
+        "longitude": 77.44654431158752,
+        "latitude": 18.45222406356352
+      },
+      {
+        "longitude": 77.44690004010248,
+        "latitude": 18.451886651466356
+      },
+      {
+        "longitude": 77.44725576861744,
+        "latitude": 18.451549239369193
+      },
+      {
+        "longitude": 77.44761149713239,
+        "latitude": 18.451211827272033
+      },
+      {
+        "longitude": 77.44796722564735,
+        "latitude": 18.45087441517487
+      },
+      {
+        "longitude": 77.4483229541623,
+        "latitude": 18.450537003077706
+      },
+      {
+        "longitude": 77.44867868267724,
+        "latitude": 18.450199590980546
+      },
+      {
+        "longitude": 77.4490344111922,
+        "latitude": 18.449862178883382
+      },
+      {
+        "longitude": 77.44939013970715,
+        "latitude": 18.449524766786222
+      },
+      {
+        "longitude": 77.44974586822211,
+        "latitude": 18.44918735468906
+      },
+      {
+        "longitude": 77.45010159673706,
+        "latitude": 18.448849942591895
+      },
+      {
+        "longitude": 77.45045732525202,
+        "latitude": 18.448512530494735
+      },
+      {
+        "longitude": 77.45081305376695,
+        "latitude": 18.44817511839757
+      },
+      {
+        "longitude": 77.45116878228191,
+        "latitude": 18.447837706300408
+      },
+      {
+        "longitude": 77.45152451079687,
+        "latitude": 18.447500294203245
+      },
+      {
+        "longitude": 77.4518802393118,
+        "latitude": 18.447162882106085
+      },
+      {
+        "longitude": 77.45223596782677,
+        "latitude": 18.44682547000892
+      },
+      {
+        "longitude": 77.45259169634171,
+        "latitude": 18.44648805791176
+      },
+      {
+        "longitude": 77.45294742485667,
+        "latitude": 18.446150645814598
+      },
+      {
+        "longitude": 77.45330315337162,
+        "latitude": 18.445813233717434
+      },
+      {
+        "longitude": 77.45330315337162,
+        "latitude": 18.445813233717434
+      },
+      {
+        "longitude": 77.45330315337162,
+        "latitude": 18.445813233717434
+      },
+      {
+        "longitude": 77.45365888188657,
+        "latitude": 18.445475821620274
+      },
+      {
+        "longitude": 77.45401461040153,
+        "latitude": 18.44513840952311
+      },
+      {
+        "longitude": 77.45437033891648,
+        "latitude": 18.444800997425947
+      },
+      {
+        "longitude": 77.45472606743144,
+        "latitude": 18.444463585328787
+      },
+      {
+        "longitude": 77.4550817959464,
+        "latitude": 18.444126173231624
+      },
+      {
+        "longitude": 77.45543752446135,
+        "latitude": 18.443788761134464
+      },
+      {
+        "longitude": 77.45579325297629,
+        "latitude": 18.443451349037296
+      },
+      {
+        "longitude": 77.45614898149124,
+        "latitude": 18.443113936940136
+      },
+      {
+        "longitude": 77.4565047100062,
+        "latitude": 18.442776524842976
+      },
+      {
+        "longitude": 77.45686043852116,
+        "latitude": 18.442439112745813
+      },
+      {
+        "longitude": 77.45721616703611,
+        "latitude": 18.44210170064865
+      },
+      {
+        "longitude": 77.45757189555107,
+        "latitude": 18.441764288551486
+      },
+      {
+        "longitude": 77.45792762406602,
+        "latitude": 18.441426876454326
+      },
+      {
+        "longitude": 77.45828335258096,
+        "latitude": 18.441089464357166
+      },
+      {
+        "longitude": 77.45863908109591,
+        "latitude": 18.44075205226
+      },
+      {
+        "longitude": 77.45899480961086,
+        "latitude": 18.44041464016284
+      },
+      {
+        "longitude": 77.45935053812582,
+        "latitude": 18.440077228065675
+      },
+      {
+        "longitude": 77.45970626664077,
+        "latitude": 18.439739815968515
+      },
+      {
+        "longitude": 77.46006199515573,
+        "latitude": 18.43940240387135
+      },
+      {
+        "longitude": 77.46041772367066,
+        "latitude": 18.43906499177419
+      },
+      {
+        "longitude": 77.46041772367066,
+        "latitude": 18.43906499177419
+      },
+      {
+        "longitude": 77.46041772367066,
+        "latitude": 18.43906499177419
+      },
+      {
+        "longitude": 77.46077345218562,
+        "latitude": 18.43906499177419
+      },
+      {
+        "longitude": 77.46112918070058,
+        "latitude": 18.43872757967703
+      },
+      {
+        "longitude": 77.46148490921553,
+        "latitude": 18.438390167579865
+      },
+      {
+        "longitude": 77.46184063773049,
+        "latitude": 18.4380527554827
+      },
+      {
+        "longitude": 77.46219636624544,
+        "latitude": 18.437715343385538
+      },
+      {
+        "longitude": 77.4625520947604,
+        "latitude": 18.437715343385538
+      },
+      {
+        "longitude": 77.46290782327534,
+        "latitude": 18.437377931288378
+      },
+      {
+        "longitude": 77.46326355179029,
+        "latitude": 18.437040519191218
+      },
+      {
+        "longitude": 77.46361928030525,
+        "latitude": 18.43670310709405
+      },
+      {
+        "longitude": 77.4639750088202,
+        "latitude": 18.43636569499689
+      },
+      {
+        "longitude": 77.46433073733516,
+        "latitude": 18.43636569499689
+      },
+      {
+        "longitude": 77.46468646585012,
+        "latitude": 18.436028282899727
+      },
+      {
+        "longitude": 77.46504219436507,
+        "latitude": 18.435690870802567
+      },
+      {
+        "longitude": 77.46539792288002,
+        "latitude": 18.435353458705404
+      },
+      {
+        "longitude": 77.46575365139496,
+        "latitude": 18.435353458705404
+      },
+      {
+        "longitude": 77.46610937990991,
+        "latitude": 18.435353458705404
+      },
+      {
+        "longitude": 77.46646510842486,
+        "latitude": 18.435353458705404
+      },
+      {
+        "longitude": 77.46682083693982,
+        "latitude": 18.43501604660824
+      },
+      {
+        "longitude": 77.46717656545478,
+        "latitude": 18.43467863451108
+      },
+      {
+        "longitude": 77.46753229396973,
+        "latitude": 18.434341222413916
+      },
+      {
+        "longitude": 77.46788802248467,
+        "latitude": 18.434341222413916
+      },
+      {
+        "longitude": 77.46824375099962,
+        "latitude": 18.434003810316753
+      },
+      {
+        "longitude": 77.46859947951458,
+        "latitude": 18.433666398219593
+      },
+      {
+        "longitude": 77.46895520802954,
+        "latitude": 18.43332898612243
+      },
+      {
+        "longitude": 77.46931093654449,
+        "latitude": 18.43299157402527
+      },
+      {
+        "longitude": 77.46966666505945,
+        "latitude": 18.43299157402527
+      },
+      {
+        "longitude": 77.47002239357438,
+        "latitude": 18.43299157402527
+      },
+      {
+        "longitude": 77.47037812208934,
+        "latitude": 18.432654161928102
+      },
+      {
+        "longitude": 77.4707338506043,
+        "latitude": 18.432654161928102
+      },
+      {
+        "longitude": 77.47108957911925,
+        "latitude": 18.432316749830942
+      },
+      {
+        "longitude": 77.47108957911925,
+        "latitude": 18.432316749830942
+      }
+    ],
+    "metrics": {
+      "distance_m": 1897.0562748523994,
+      "estimated_time_min": 35.61760458087332,
+      "risk_score": null
+    },
+    "warnings": [
+      "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+      "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
+      "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+    ]
+  },
+  "metadata": {
+    "schema_version": "1",
+    "route_id": "route-347bdcb619d8ba0473a98dd9cba6dad4",
+    "created_at": "2026-11-15T00:00:00Z",
+    "request": {
+      "region_id": "jezero",
+      "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+      "start": {
+        "longitude": 77.44618858307257,
+        "latitude": 18.45256147566068
+      },
+      "goal": {
+        "longitude": 77.47108957911925,
+        "latitude": 18.432316749830942
+      },
+      "mode": "safest",
+      "waypoints": [
+        {
+          "longitude": 77.45330315337162,
+          "latitude": 18.445813233717434
+        },
+        {
+          "longitude": 77.46041772367066,
+          "latitude": 18.43906499177419
+        }
+      ],
+      "mission": {
+        "mode": "walking",
+        "speed_m_s": 1.0,
+        "stop_minutes_per_waypoint": 2.0,
+        "exposure_duration_min": null,
+        "radiation_budget_usv": 1000.0,
+        "required_analyses": []
+      },
+      "mission_profile": "balanced",
+      "resolution_profile": null
+    },
+    "coordinator": {
+      "agent_id": "A0",
+      "public_name": "Mission Orchestration and Route Planning Coordinator",
+      "responsibility": "Validate mission inputs and available data, dispatch registered analysis tools, request deterministic fusion/planning/validation, preserve provenance, persist results and explain unmet requirements.",
+      "implementation_version": "python-a0-v1"
+    },
+    "scope": {
+      "region_id": "jezero",
+      "roi_id": "synthetic-p1-roi",
+      "dataset_version": "53174e372260527a12c01a8dcf5851baa32bd9f6539972cf7c51d2b3452ace70",
+      "bounds": {
+        "west": 77.44245343366558,
+        "east": 77.48442939842997,
+        "south": 18.42303791715898,
+        "north": 18.456104302680885
+      }
+    },
+    "sources": [
+      {
+        "dataset_id": "synthetic-p1-plane",
+        "source_url": null,
+        "input_filename": "dem.tif",
+        "sha256": "53174e372260527a12c01a8dcf5851baa32bd9f6539972cf7c51d2b3452ace70",
+        "instrument": null,
+        "mission": null,
+        "acquisition_time": null,
+        "provenance_record_id": "route-347bdcb619d8ba0473a98dd9cba6dad4:provenance"
+      }
+    ],
+    "grid": {
+      "grid_id": "grid-dae0b02bb0ed1f97bdbc521f",
+      "source_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
+      "planning_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
+      "wire_convention": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+      "affine": [
+        20.0,
+        0.0,
+        4354020.0,
+        0.0,
+        -20.0,
+        1093980.0
+      ],
+      "affine_order": "a,b,c,d,e,f; x=a*column+b*row+c; y=d*column+e*row+f",
+      "width": 118,
+      "height": 98,
+      "source_resolution": [
+        20.0,
+        20.0
+      ],
+      "planning_resolution_m": [
+        20.0,
+        20.0
+      ],
+      "vertical_units": "m",
+      "vertical_scale": 1.0,
+      "vertical_offset": 0.0,
+      "nodata": "-9999.0",
+      "mask_artifact_ids": {
+        "coverage": "route-347bdcb619d8ba0473a98dd9cba6dad4:grid#coverage",
+        "unknown": "route-347bdcb619d8ba0473a98dd9cba6dad4:grid#unknown",
+        "blocked": "route-347bdcb619d8ba0473a98dd9cba6dad4:grid#blocked"
+      }
+    },
+    "policy": {
+      "policy_id": "terrain-research-v1",
+      "slope_threshold_deg": 15.0,
+      "unknown_handling": "impassable",
+      "connectivity": 8,
+      "corner_cutting": "prohibited",
+      "endpoint_rule": "Exact endpoints; closed-cell segment intersections including corner touches; no smoothing.",
+      "cost_formula": "edge_length_m * mean(1 + weight*(slope_deg/threshold_deg)^2); endpoint connectors use endpoint cell penalty",
+      "parameters": {
+        "weight": 4.0
+      },
+      "limits": {
+        "max_grid_cells": 262144,
+        "max_expanded_nodes": 200000,
+        "max_elapsed_seconds": 10.0
+      }
+    },
+    "planner": {
+      "algorithm": "astar",
+      "implementation_version": "astar-v1",
+      "heuristic": "Euclidean metric distance; minimum penalty is one",
+      "objective_cost": 1908.1269467493867,
+      "objective_units": "terrain-weighted metres",
+      "expanded_nodes": 334,
+      "elapsed_ms": 0.0,
+      "distance_convention": "Native projected planar polyline including endpoint connectors"
+    },
+    "validation": {
+      "status": "passed",
+      "validator_version": "closed-cell-box-v1",
+      "checks": [
+        "source version unchanged",
+        "all segments inside ROI",
+        "all touched cells covered, known and allowed",
+        "no blocked diagonal corners",
+        "exact endpoints",
+        "emitted wire geometry revalidated"
+      ],
+      "control_fixture_ids": [
+        "native-sphere-eqc-analytic-v1"
+      ],
+      "tolerances": {
+        "wire_metric_roundtrip_m": 1e-05
+      },
+      "map_alignment": "unverified"
+    },
+    "workers": [
+      {
+        "agent_id": "A1",
+        "public_name": "Surface Traversability and Terrain Hazard Agent",
+        "responsibility": "Derive slope and supported terrain descriptors from a DEM; supply metric costs, coverage, unknown and blocked masks. Optical obstacle analysis requires aligned imagery.",
+        "requested": true,
+        "status": "ready",
+        "evidence_kind": "observed",
+        "dataset_ids": [
+          "synthetic-p1-plane"
+        ],
+        "artifact_ids": [
+          "route-347bdcb619d8ba0473a98dd9cba6dad4:grid"
+        ],
+        "warnings": [
+          "Optical obstacles are unassessed."
+        ],
+        "unassessed_constraints": [
+          "optical obstacles"
+        ]
+      },
+      {
+        "agent_id": "A2",
+        "public_name": "Thermal Environment and Exposure Context Agent",
+        "responsibility": "Describe day/night thermal observations, units, times and coverage. Calibrated constraints require separate validation.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Thermal context; calibrated limits unavailable."
+        ],
+        "unassessed_constraints": [
+          "Thermal Environment and Exposure Context Agent"
+        ]
+      },
+      {
+        "agent_id": "A3",
+        "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
+        "responsibility": "Evaluate explicitly configured dose scenarios against a mission duration and user-supplied budget, retaining assumptions and uncertainty.",
+        "requested": true,
+        "status": "partial",
+        "evidence_kind": "scenario",
+        "dataset_ids": [
+          "synthetic-radiation"
+        ],
+        "artifact_ids": [
+          "route-347bdcb619d8ba0473a98dd9cba6dad4:provenance#A3"
+        ],
+        "warnings": [
+          "Configured constant-rate dose scenario; no spatial avoidance model."
+        ],
+        "unassessed_constraints": [
+          "Radiation Exposure and Mission Dose Assessment Agent"
+        ]
+      },
+      {
+        "agent_id": "A4",
+        "public_name": "Geological Context and Science Opportunity Agent",
+        "responsibility": "Associate source-attributed sampling POIs with regional geology, retain ambiguity and explain scientific relevance. Priority scoring requires a documented rubric.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Science-site context and explicit waypoint suggestions."
+        ],
+        "unassessed_constraints": [
+          "Geological Context and Science Opportunity Agent"
+        ]
+      },
+      {
+        "agent_id": "A6",
+        "public_name": "Rover Traverse and Observation Evidence Agent",
+        "responsibility": "Normalize historical rover positions and segments, compute supported proximity measures and attach verified observation references. Historical traversal does not establish astronaut safety.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Historical rover context; not proof of safe terrain."
+        ],
+        "unassessed_constraints": [
+          "Rover Traverse and Observation Evidence Agent"
+        ]
+      }
+    ],
+    "artifacts": {
+      "grid": {
+        "artifact_id": "route-347bdcb619d8ba0473a98dd9cba6dad4:grid",
+        "sha256": "8f5e0a435d07498f458c0a7981453c2203ce08ad24363ada668dc73ae0ed4ed5"
+      },
+      "validation": {
+        "artifact_id": "route-347bdcb619d8ba0473a98dd9cba6dad4:validation",
+        "sha256": "63d74399dbf1cc941f3de10f6cfd17bd975520dd0a7eec04a818615af7b4110f"
+      },
+      "provenance": {
+        "artifact_id": "route-347bdcb619d8ba0473a98dd9cba6dad4:provenance",
+        "sha256": "984e8a7be8c749899dff4a9992f1c26e43d82ee70d29479c2390af6297a35022"
+      }
+    },
+    "warnings": [
+      "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+      "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
+      "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+    ],
+    "rationale": {
+      "summary": "A* computed a terrain-only route using terrain-weighted distance cost and the requested stop order.",
+      "facts": [
+        "Computed 3 ordered route leg(s), including 2 required waypoint(s).",
+        "Projected planar distance: 1897.06 m; objective: safest.",
+        "Grid: 118 by 98 cells at 20 by 20 m.",
+        "Unknown cells are impassable; slope threshold is 15 degrees (research policy)."
+      ],
+      "limitations": [
+        "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+        "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
+        "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+        "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+        "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+      ],
+      "model_commentary": null,
+      "evidence_ids": []
+    },
+    "usage": null,
+    "parent_route_id": null,
+    "specialist_trace": [
+      {
+        "agent_id": "A1",
+        "public_name": "Surface Traversability and Terrain Hazard Agent",
+        "configured": true,
+        "selected": true,
+        "required": true,
+        "selection_source": "host_policy",
+        "selection_reason": "Terrain coverage, slope policy and native route checks are mandatory.",
+        "execution_state": "succeeded",
+        "data_kind": "observed",
+        "result_status": "ready",
+        "application": "terrain_cost",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Optical obstacles and non-terrain environmental constraints remain unassessed."
+        ],
+        "dataset_ids": [
+          "synthetic-p1-plane"
+        ],
+        "artifact_id": "route-347bdcb619d8ba0473a98dd9cba6dad4:grid"
+      },
+      {
+        "agent_id": "A2",
+        "public_name": "Thermal Environment and Exposure Context Agent",
+        "configured": false,
+        "selected": false,
+        "required": false,
+        "selection_source": "deterministic",
+        "selection_reason": "No compatible worker is configured for this dataset scope.",
+        "execution_state": "not_requested",
+        "data_kind": "unavailable",
+        "result_status": null,
+        "application": "none",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Thermal context; calibrated limits unavailable."
+        ],
+        "dataset_ids": [],
+        "artifact_id": null
+      },
+      {
+        "agent_id": "A3",
+        "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
+        "configured": true,
+        "selected": true,
+        "required": true,
+        "selection_source": "host_policy",
+        "selection_reason": "Required by user constraints or versioned mission policy; the host cannot skip it.",
+        "execution_state": "cached",
+        "data_kind": "scenario",
+        "result_status": "partial",
+        "application": "dose_scenario",
+        "constraint_status": "pass",
+        "limitations": [
+          "Configured constant-rate dose scenario; no spatial avoidance model."
+        ],
+        "dataset_ids": [
+          "synthetic-radiation"
+        ],
+        "artifact_id": "route-347bdcb619d8ba0473a98dd9cba6dad4:provenance#A3"
+      },
+      {
+        "agent_id": "A4",
+        "public_name": "Geological Context and Science Opportunity Agent",
+        "configured": false,
+        "selected": false,
+        "required": false,
+        "selection_source": "deterministic",
+        "selection_reason": "No compatible worker is configured for this dataset scope.",
+        "execution_state": "not_requested",
+        "data_kind": "unavailable",
+        "result_status": null,
+        "application": "none",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Science-site context and explicit waypoint suggestions."
+        ],
+        "dataset_ids": [],
+        "artifact_id": null
+      },
+      {
+        "agent_id": "A6",
+        "public_name": "Rover Traverse and Observation Evidence Agent",
+        "configured": false,
+        "selected": false,
+        "required": false,
+        "selection_source": "deterministic",
+        "selection_reason": "No compatible worker is configured for this dataset scope.",
+        "execution_state": "not_requested",
+        "data_kind": "unavailable",
+        "result_status": null,
+        "application": "none",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Historical rover context; not proof of safe terrain."
+        ],
+        "dataset_ids": [],
+        "artifact_id": null
+      }
+    ],
+    "assessment": {
+      "schema_version": "2",
+      "formula_version": "relative-terrain-scenario-v2",
+      "score_scale": "0..100",
+      "gate_reasons": [],
+      "time": {
+        "mode": "walking",
+        "model": "constant_projected_speed_v1",
+        "speed_m_s": 1.0,
+        "travel_min": 31.617604580873323,
+        "stop_min": 4.0,
+        "total_min": 35.61760458087332,
+        "assumptions": [
+          "User-supplied constant projected walking speed.",
+          "Dwell applies once per required intermediate visit, including repeated visits.",
+          "No start/goal dwell, slope-dependent speed, rest, suit/load or physiological model is included."
+        ]
+      },
+      "radiation_duration_min": 35.61760458087332,
+      "radiation_duration_basis": "route_estimate",
+      "dose_estimate_usv": 7.123520916174664,
+      "dose_uncertainty_usv": 1.1872534860291106,
+      "radiation_constraint_status": "pass",
+      "required_unassessed": [],
+      "required_failed": [],
+      "mission_profile": {
+        "schema_version": "1",
+        "profile_id": "balanced",
+        "version": "balanced-v2",
+        "risk_weights": {
+          "A1": 0.85,
+          "A2": 0.0,
+          "A3": 0.15,
+          "A4": 0.0,
+          "A5": 0.0,
+          "A6": 0.0
+        },
+        "confidence_weights": {
+          "A1": 0.45,
+          "A2": 0.1,
+          "A3": 0.2,
+          "A4": 0.15,
+          "A5": 0.0,
+          "A6": 0.1
+        }
+      },
+      "hard_gate_status": "pass",
+      "risk_score": 0.24867083240530807,
+      "assessment_confidence": 49.5,
+      "risk_factors": [
+        {
+          "agent_id": "A1",
+          "kind": "risk",
+          "status": "assessed",
+          "risk_score": 0.001458931957320605,
+          "evidence_quality": {
+            "availability": 1.0,
+            "route_coverage": 1.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.5
+          },
+          "evidence_ids": [
+            "route-347bdcb619d8ba0473a98dd9cba6dad4:grid",
+            "route-347bdcb619d8ba0473a98dd9cba6dad4:validation"
+          ],
+          "message": "Relative peak slope utilization against a configurable engineering threshold; excludes optical obstacles and physiological safety.",
+          "model_version": "conservative-peak-slope-utilization-v1",
+          "evidence": {
+            "dataset_ids": [
+              "synthetic-p1-plane"
+            ],
+            "source_urls": [],
+            "dataset_version": "53174e372260527a12c01a8dcf5851baa32bd9f6539972cf7c51d2b3452ace70",
+            "acquisition_time": null,
+            "observation_period": null,
+            "route_coverage_fraction": 1.0,
+            "uncertainty": "Host-asserted elevation units and conservative aggregation; no optical or physiological model."
+          },
+          "component_reasons": {
+            "availability": "Versioned DEM data were read and source integrity checked.",
+            "route_coverage": "All closed-cell route intersections passed terrain validation; aggregated cells are conservative.",
+            "temporal_applicability": "Acquisition time is unknown; no present-day terrain freshness is inferred.",
+            "validation_provenance": "Source hash and geometry verified; elevation units remain host-asserted, not publisher-certified."
+          },
+          "confidence_contribution": 31.499999999999996,
+          "risk_contribution": 0.12400921637225143
+        },
+        {
+          "agent_id": "A2",
+          "kind": "context",
+          "status": "unavailable",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "Applicable specialist evidence is unavailable or unassessed.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {
+            "route_coverage": "No validated route-risk coverage model is configured.",
+            "temporal_applicability": "Context timestamps do not establish mission-time hazard applicability."
+          },
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
+        },
+        {
+          "agent_id": "A3",
+          "kind": "risk",
+          "status": "assessed",
+          "risk_score": 0.008310774402203775,
+          "evidence_quality": {
+            "availability": 1.0,
+            "route_coverage": 1.0,
+            "temporal_applicability": 1.0,
+            "validation_provenance": 0.5
+          },
+          "evidence_ids": [
+            "route-347bdcb619d8ba0473a98dd9cba6dad4:provenance#A3"
+          ],
+          "message": "Relative upper-band scenario dose divided by the user budget; a scenario comparison, not astronaut safety.",
+          "model_version": "upper-scenario-budget-utilization-v1",
+          "evidence": {
+            "dataset_ids": [
+              "synthetic-radiation"
+            ],
+            "source_urls": [
+              "https://example.com/synthetic"
+            ],
+            "dataset_version": "synthetic-v1",
+            "acquisition_time": null,
+            "observation_period": "Synthetic epoch",
+            "route_coverage_fraction": 1.0,
+            "uncertainty": "Synthetic sensitivity band."
+          },
+          "component_reasons": {
+            "availability": "Configured scenario output is source-identified.",
+            "route_coverage": "Constant-rate mission scenario covers the explicitly supplied route duration; no spatial hazard map.",
+            "temporal_applicability": "Duration lies within the explicit hypothetical scenario scope; this is not current radiation telemetry.",
+            "validation_provenance": "Unit arithmetic and scenario provenance checked; transfer to Jezero is hypothetical."
+          },
+          "confidence_contribution": 18.0,
+          "risk_contribution": 0.12466161603305663
+        },
+        {
+          "agent_id": "A4",
+          "kind": "context",
+          "status": "unavailable",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "Applicable specialist evidence is unavailable or unassessed.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {
+            "route_coverage": "No validated route-risk coverage model is configured.",
+            "temporal_applicability": "Context timestamps do not establish mission-time hazard applicability."
+          },
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
+        },
+        {
+          "agent_id": "A5",
+          "kind": "context",
+          "status": "not_applicable",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "Surface obstacle responsibility belongs to the terrain specialist; no independent validated optical factor. Its profile weights are explicitly zero.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {},
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
+        },
+        {
+          "agent_id": "A6",
+          "kind": "context",
+          "status": "unavailable",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "Applicable specialist evidence is unavailable or unassessed.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {
+            "route_coverage": "No validated route-risk coverage model is configured.",
+            "temporal_applicability": "Context timestamps do not establish mission-time hazard applicability."
+          },
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
+        }
+      ],
+      "limitations": [
+        "Human exposure and combined environmental risk are not calibrated; relative engineering scores apply only to the explicitly assessed factors.",
+        "Assessment confidence is below 70/100; inspect missing factors, route coverage, acquisition time and provenance before comparison. Missing or unassessed: A2, A4, A6.",
+        "Relative engineering terrain/scenario scores do not certify astronaut safety.",
+        "Science and rover context do not reduce terrain cost or supply safety scores."
+      ]
+    },
+    "planning_policy": {
+      "version": "jezero-walking-policy-v2",
+      "mission_profile_id": "balanced",
+      "mission_profile_version": "balanced-v2",
+      "legacy_objective": false,
+      "resolution_profile": "standard",
+      "resolution_version": "resolution-v1",
+      "minimum_native_factor": 1,
+      "actual_native_factor": 1,
+      "actual_cell_size_m": [
+        20.0,
+        20.0
+      ],
+      "source_cell_size_m": [
+        20.0,
+        20.0
+      ],
+      "terrain_weight": 4.0,
+      "limits": {
+        "max_grid_cells": 262144,
+        "max_expanded_nodes": 200000,
+        "max_elapsed_seconds": 10.0
+      },
+      "eta_model": "constant_projected_speed_v1"
+    },
+    "legs": [
+      {
+        "index": 1,
+        "distance_m": 565.6854249511293,
+        "travel_time_min": 9.428090415852155,
+        "stop_time_min": 2.0
+      },
+      {
+        "index": 2,
+        "distance_m": 565.6854249511007,
+        "travel_time_min": 9.428090415851678,
+        "stop_time_min": 2.0
+      },
+      {
+        "index": 3,
+        "distance_m": 765.6854249501694,
+        "travel_time_min": 12.76142374916949,
+        "stop_time_min": 0.0
+      }
+    ],
+    "registration": {
+      "schema_version": "1",
+      "method": "independent-feature-controls-v1",
+      "map_alignment": "unverified",
+      "source_sha256": "53174e372260527a12c01a8dcf5851baa32bd9f6539972cf7c51d2b3452ace70",
+      "controls_sha256": null,
+      "capabilities_sha256": null,
+      "measurement_sha256": null,
+      "wmts_layer": null,
+      "wmts_crs": null,
+      "synthetic": false,
+      "scope": [],
+      "residuals": [],
+      "reasons": [
+        "Independent NASA WMTS/wire/DEM feature measurements have not been configured."
+      ],
+      "evidence_id": "route-347bdcb619d8ba0473a98dd9cba6dad4:provenance#registration"
+    }
+  }
+}

@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 from pydantic import Field, model_validator
 from app.contracts.api import ContractModel, PlanRouteRequest, PlanRouteResponse, NonNegative
 from app.contracts.assessment import SpecialistTrace, RouteAssessment
+from app.contracts.registration import MapRegistration
 
 
 class Bounds(ContractModel):
@@ -88,6 +89,29 @@ class Planner(ContractModel):
     distance_convention: str
 
 
+class RouteLeg(ContractModel):
+    index: int = Field(ge=1)
+    distance_m: NonNegative
+    travel_time_min: NonNegative | None = None
+    stop_time_min: NonNegative = 0
+
+
+class AppliedPlanningPolicy(ContractModel):
+    version: str
+    mission_profile_id: str
+    mission_profile_version: str
+    legacy_objective: bool
+    resolution_profile: Literal['coarse','standard','fine','legacy']
+    resolution_version: str = 'resolution-v1'
+    minimum_native_factor: int = Field(ge=1)
+    actual_native_factor: int = Field(ge=1)
+    actual_cell_size_m: tuple[PositiveSpacing,PositiveSpacing]
+    source_cell_size_m: tuple[PositiveSpacing,PositiveSpacing]
+    terrain_weight: NonNegative
+    limits: Limits
+    eta_model: Literal['constant_projected_speed_v1'] = 'constant_projected_speed_v1'
+
+
 class Validation(ContractModel):
     status: Literal['passed'] = 'passed'
     validator_version: str
@@ -156,6 +180,9 @@ class RouteMetadata(ContractModel):
 
     specialist_trace: list[SpecialistTrace] = Field(default_factory=list)
     assessment: RouteAssessment | None = None
+    planning_policy: AppliedPlanningPolicy | None = None
+    legs: list[RouteLeg] = Field(default_factory=list)
+    registration: MapRegistration | None = None
 
     @model_validator(mode='after')
     def utc_timestamp(self):
@@ -191,6 +218,32 @@ class StoredRouteResponse(ContractModel):
                 if not all(math.isclose(a,b,rel_tol=1e-9,abs_tol=1e-9) for a,b in
                     [(estimate.travel_min,travel),(estimate.stop_min,stop),(estimate.total_min,travel+stop)]):
                     raise ValueError('Walking estimate does not match the route distance and dwell assumptions')
+        if m.registration is not None:
+            if m.registration.map_alignment!=m.validation.map_alignment or m.registration.source_sha256!=m.sources[0].sha256:
+                raise ValueError('Registration and source validation disagree')
+            if m.registration.map_alignment=='verified':
+                from app.planning.registration import covered
+                polygon=[tuple(p) for p in m.registration.scope]
+                if not all(covered(polygon,(p.longitude,p.latitude),1e-14) for p in r.route):
+                    raise ValueError('Persisted route leaves the registration control footprint')
+            if m.registration.evidence_id!=r.route_id+':provenance#registration':
+                raise ValueError('Registration evidence reference mismatch')
+        if m.planning_policy is not None:
+            import math
+            from app.planning.policies import POLICY_VERSION, selected_profile
+            applied=m.planning_policy
+            if (applied.version!=POLICY_VERSION or applied.mission_profile_id!=selected_profile(m.request)
+                or applied.limits!=m.policy.limits or applied.actual_cell_size_m!=m.grid.planning_resolution_m
+                or applied.source_cell_size_m!=m.grid.source_resolution
+                or applied.terrain_weight!=m.policy.parameters['weight']
+                or m.assessment is None or applied.mission_profile_version!=m.assessment.mission_profile.version):
+                raise ValueError('Stored planning policy disagrees with request, assessment or grid')
+            if len(m.legs)!=len(m.request.waypoints)+1 or [leg.index for leg in m.legs]!=list(range(1,len(m.legs)+1)):
+                raise ValueError('Incomplete ordered leg metadata')
+            if not math.isclose(sum(leg.distance_m for leg in m.legs),r.metrics.distance_m,rel_tol=1e-9,abs_tol=1e-6):
+                raise ValueError('Leg distances disagree with total distance')
+            if m.assessment.time and not math.isclose(sum((leg.travel_time_min or 0)+leg.stop_time_min for leg in m.legs),m.assessment.time.total_min,rel_tol=1e-9,abs_tol=1e-8):
+                raise ValueError('Leg time disagrees with walking assumptions')
         index = 0
         for stop in m.request.waypoints:
             while index < len(r.route) and r.route[index] != stop:

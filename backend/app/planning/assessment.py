@@ -5,7 +5,7 @@ from app.contracts.assessment import RouteAssessment, TimeEstimate
 
 def walking_assessment(request,distance_m):
     mission=request.mission
-    result=RouteAssessment(limitations=['Combined thermal/radiation risk is not calibrated; risk_score remains unknown.'])
+    result=RouteAssessment(limitations=['Human exposure and combined environmental risk are not calibrated; relative engineering scores apply only to the explicitly assessed factors.'])
     if mission is None: return result
     required=set(mission.required_analyses)
     if mission.radiation_budget_usv is not None: required.add('A3')

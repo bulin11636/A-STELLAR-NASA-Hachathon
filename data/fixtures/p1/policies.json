@@ -1,0 +1,174 @@
+{
+  "schema_version": "2",
+  "policy_version": "jezero-walking-policy-v2",
+  "formula_version": "relative-terrain-scenario-v2",
+  "score_scale": "0..100",
+  "mission_mode": "walking",
+  "profiles": [
+    {
+      "schema_version": "1",
+      "profile_id": "safest",
+      "version": "safest-v2",
+      "risk_weights": {
+        "A1": 0.75,
+        "A2": 0.0,
+        "A3": 0.25,
+        "A4": 0.0,
+        "A5": 0.0,
+        "A6": 0.0
+      },
+      "confidence_weights": {
+        "A1": 0.55,
+        "A2": 0.1,
+        "A3": 0.25,
+        "A4": 0.0,
+        "A5": 0.0,
+        "A6": 0.1
+      },
+      "mode": "safest",
+      "terrain_weight_multiplier": 1.5,
+      "default_resolution": "standard",
+      "eta_model": "constant_projected_speed_v1",
+      "requires_user_speed": true,
+      "required_risk_factors": [
+        "A1",
+        "A3"
+      ],
+      "limitations": [
+        "Engineering terrain/scenario comparison, not astronaut safety.",
+        "Science priority preserves explicit visits; unranked science context cannot create a science cost."
+      ]
+    },
+    {
+      "schema_version": "1",
+      "profile_id": "fastest",
+      "version": "fastest-v2",
+      "risk_weights": {
+        "A1": 0.9,
+        "A2": 0.0,
+        "A3": 0.1,
+        "A4": 0.0,
+        "A5": 0.0,
+        "A6": 0.0
+      },
+      "confidence_weights": {
+        "A1": 0.6,
+        "A2": 0.1,
+        "A3": 0.1,
+        "A4": 0.05,
+        "A5": 0.0,
+        "A6": 0.15
+      },
+      "mode": "shortest",
+      "terrain_weight_multiplier": 0,
+      "default_resolution": "standard",
+      "eta_model": "constant_projected_speed_v1",
+      "requires_user_speed": true,
+      "required_risk_factors": [
+        "A1",
+        "A3"
+      ],
+      "limitations": [
+        "Engineering terrain/scenario comparison, not astronaut safety.",
+        "Science priority preserves explicit visits; unranked science context cannot create a science cost."
+      ]
+    },
+    {
+      "schema_version": "1",
+      "profile_id": "science_priority",
+      "version": "science_priority-v2",
+      "risk_weights": {
+        "A1": 0.8,
+        "A2": 0.0,
+        "A3": 0.2,
+        "A4": 0.0,
+        "A5": 0.0,
+        "A6": 0.0
+      },
+      "confidence_weights": {
+        "A1": 0.35,
+        "A2": 0.1,
+        "A3": 0.1,
+        "A4": 0.3,
+        "A5": 0.0,
+        "A6": 0.15
+      },
+      "mode": "safest",
+      "terrain_weight_multiplier": 0.5,
+      "default_resolution": "standard",
+      "eta_model": "constant_projected_speed_v1",
+      "requires_user_speed": true,
+      "required_risk_factors": [
+        "A1",
+        "A3"
+      ],
+      "limitations": [
+        "Engineering terrain/scenario comparison, not astronaut safety.",
+        "Science priority preserves explicit visits; unranked science context cannot create a science cost."
+      ]
+    },
+    {
+      "schema_version": "1",
+      "profile_id": "balanced",
+      "version": "balanced-v2",
+      "risk_weights": {
+        "A1": 0.85,
+        "A2": 0.0,
+        "A3": 0.15,
+        "A4": 0.0,
+        "A5": 0.0,
+        "A6": 0.0
+      },
+      "confidence_weights": {
+        "A1": 0.45,
+        "A2": 0.1,
+        "A3": 0.2,
+        "A4": 0.15,
+        "A5": 0.0,
+        "A6": 0.1
+      },
+      "mode": "safest",
+      "terrain_weight_multiplier": 1,
+      "default_resolution": "standard",
+      "eta_model": "constant_projected_speed_v1",
+      "requires_user_speed": true,
+      "required_risk_factors": [
+        "A1",
+        "A3"
+      ],
+      "limitations": [
+        "Engineering terrain/scenario comparison, not astronaut safety.",
+        "Science priority preserves explicit visits; unranked science context cannot create a science cost."
+      ]
+    }
+  ],
+  "resolutions": [
+    {
+      "profile_id": "coarse",
+      "version": "resolution-v1",
+      "minimum_native_factor": 2,
+      "max_grid_cells": 131072,
+      "max_expanded_nodes": 100000,
+      "max_elapsed_seconds": 5.0,
+      "bounds": "Additionally capped by the host; actual cells may be coarser for regional routes."
+    },
+    {
+      "profile_id": "standard",
+      "version": "resolution-v1",
+      "minimum_native_factor": 1,
+      "max_grid_cells": 262144,
+      "max_expanded_nodes": 200000,
+      "max_elapsed_seconds": 10.0,
+      "bounds": "Additionally capped by the host; actual cells may be coarser for regional routes."
+    },
+    {
+      "profile_id": "fine",
+      "version": "resolution-v1",
+      "minimum_native_factor": 1,
+      "max_grid_cells": 524288,
+      "max_expanded_nodes": 400000,
+      "max_elapsed_seconds": 20.0,
+      "bounds": "Additionally capped by the host; actual cells may be coarser for regional routes."
+    }
+  ]
+}

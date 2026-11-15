@@ -191,31 +191,20 @@ contributes zero confidence; it cannot be silently excluded.
 
 ## Implementation status — 2026-11-15
 
-The integrated `main` includes P0 recovery and the specialist-selection/walking
-foundation described in [Specialist selection and walking assessment](SPECIALIST_ROUTING_AND_WALKING.md).
-This status records implementation progress; the P1 requirements and acceptance
-criteria above remain unchanged.
+Sam's policy/assessment implementation and fixture handoff are documented in
+[P1 backend handoff](P1_BACKEND_HANDOFF.md). Four versioned profiles and bounded
+resolution policies now affect actual planning. Durable metadata includes paired
+0..100 assessment risk/confidence, six explicit factor entries, quality components,
+per-leg distances, ETA assumptions and source-bound registration reports.
 
-| Requirement | Current implementation | Remaining P1 work |
-| --- | --- | --- |
-| Explicit walking ETA | User-supplied speed, intermediate dwell, stored assumptions and revision recalculation | Adopt the versioned P1 traverse-time/profile contract |
-| Specialist applicability and provenance | Bounded selection, mandatory terrain checks, required analysis enforcement and durable execution traces | Add route coverage, temporal applicability and component-level quality scoring |
-| Radiation applicability | Explicitly scoped constant-rate scenario with duration, uncertainty and scenario budget outcome | Bind applicability to supported P1 mission profiles; no real-time dosimetry claim |
-| Context-only science and rover evidence | Context and grounded waypoint proposals; no fabricated safety factors | Retain this boundary until separately validated factor models exist |
-| Planning metadata | Actual grid resolution, coverage, total projected distance and bounded search policy | Versioned resolution options and per-leg distance output |
-| Hard gates | Blocked/out-of-coverage terrain is rejected; required unknown/failed analyses are reported | Add unified `hard_gate_status`; current required-unknown output is a provisional terrain route with warnings |
-| Assessment persistence | Walking/scenario assessments and specialist traces survive retrieval/restart; retries preserve identity | Add persistence fixtures and invariants for the P1 profile/factor/confidence model |
-| NASA registration | `map_alignment: unverified`; computed NASA overlay remains disabled | Independent NASA registration controls and verified-state acceptance |
+Missing weighted factors and failed required scenarios override ranking. The
+factor models are explicitly relative engineering terrain utilization and
+applicable hypothetical radiation budget utilization; contextual specialists do
+not supply fabricated safety scores. The legacy result-level risk field remains
+null. Interim v1 records retain a separately identified score-scale migration.
 
-The four versioned mission profiles, fixed profile weights, normalized factor
-risk, evidence-quality components and `assessment_confidence` are not implemented.
-The existing nullable `metrics.risk_score` contract is 0..1; the P1 contract must
-explicitly accommodate the required 0..100 scale. The former A5 responsibility
-currently belongs to A1, but a separate A5 `not_applicable`/`unavailable` assessment
-entry and confidence treatment are still required by this plan.
-
-Frontend P1 tabs, Journey Briefing, profile/resolution controls and paired
-risk/confidence presentation remain pending. Existing stop focus, preview zoom,
-walking controls and specialist traces are supporting features, not complete P1
-frontend acceptance. See the linked delivery guide for the existing offline test
-results; those tests do not certify the remaining P1 assessment model.
+Independent registration machinery and synthetic verified/unverified fixtures
+are implemented. Real Jezero NASA alignment remains unverified pending independent
+feature measurements and adequate layer precision. Sheng's P1 selectors,
+briefing/tabs and paired assessment/map presentation remain pending. This status
+does not replace joint acceptance or claim the real registration gate has passed.

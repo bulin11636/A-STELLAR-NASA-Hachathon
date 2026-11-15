@@ -7,7 +7,13 @@
   "error": {
     "code": "OUTSIDE_PLANNING_COVERAGE",
     "message": "A route stop is outside the supported DEM source footprint.",
-    "details": null
+    "details": [
+      {
+        "hard_gate_status": "blocked",
+        "risk_score": "null",
+        "reason": "OUTSIDE_PLANNING_COVERAGE"
+      }
+    ]
   },
   "updated_at": "2026-11-15T00:00:00Z"
 }

@@ -5,11 +5,15 @@ Use this prompt in a new chat with this repository open.
 ```text
 Work in ~/nasa/repo/A-STELLAR-NASA-Hachathon on main.
 Inspect repository instructions and git status first. Preserve existing changes.
-Read docs/SPECIALIST_ROUTING_AND_WALKING.md, docs/P0_UI_ACCEPTANCE.md, docs/P0_BACKEND_DELIVERY.md, docs/backend-handoff.md, docs/TODO.md,
+Read docs/P1_TOKEN_WEIGHTED_OWNERSHIP_PLAN.md, docs/P1_BACKEND_HANDOFF.md, docs/SPECIALIST_ROUTING_AND_WALKING.md, docs/P0_UI_ACCEPTANCE.md, docs/P0_BACKEND_DELIVERY.md, docs/backend-handoff.md, docs/TODO.md,
 docs/ADVANCED_ROUTE_PLANNING_CONTRACT.md and docs/docker.md. Repository documentation must be English.
 Keep TODO limited to pending work; do not record personal usage or billing.
 
-The current scope is reliable delivery of the existing prototype. Retain
+The current scope follows the P1 ownership plan. Sam owns backend policy, factor
+assessment, durable metadata, fixtures and numerical registration controls. Sheng
+owns product selectors, briefing, tabs and map presentation. Real NASA alignment
+remains unverified without independent feature measurements. Use the P1 handoff
+before treating older implementation-status reports as current. Retain
 regional terrain A*, up to 16 ordered waypoints, chat additions/reordering,
 persisted rationale, immutable routes, source validation and provider diagnostics.
 UI styling and map fitting belong to the frontend owner; keep frontend source

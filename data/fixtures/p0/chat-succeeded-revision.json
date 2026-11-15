@@ -355,7 +355,10 @@
       "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
       "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
       "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
-      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified.",
+      "Required analyses remain unassessed: A3. This is a provisional terrain route.",
+      "Comparable risk requires applicable factors: A3.",
+      "User-required analyses remain unassessed: A3."
     ]
   },
   "metadata": {
@@ -376,7 +379,8 @@
       "mode": "safest",
       "waypoints": [],
       "mission": null,
-      "mission_profile": "balanced"
+      "mission_profile": null,
+      "resolution_profile": null
     },
     "coordinator": {
       "agent_id": "A0",
@@ -408,7 +412,7 @@
       }
     ],
     "grid": {
-      "grid_id": "grid-969811e44046b84a66d3227e",
+      "grid_id": "grid-b954a8c38deecfa4884bd2fe",
       "source_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
       "planning_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
       "wire_convention": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
@@ -465,7 +469,7 @@
       "objective_cost": 2262.741699796954,
       "objective_units": "terrain-weighted metres",
       "expanded_nodes": 81,
-      "elapsed_ms": 0.0,
+      "elapsed_ms": 0.42367400601506233,
       "distance_convention": "Native projected planar polyline including endpoint connectors"
     },
     "validation": {
@@ -528,13 +532,14 @@
         "agent_id": "A3",
         "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
         "responsibility": "Evaluate explicitly configured dose scenarios against a mission duration and user-supplied budget, retaining assumptions and uncertainty.",
-        "requested": false,
-        "status": "unassessed",
+        "requested": true,
+        "status": "unavailable",
         "evidence_kind": "unavailable",
         "dataset_ids": [],
         "artifact_ids": [],
         "warnings": [
-          "Configured constant-rate dose scenario; no spatial avoidance model."
+          "Configured constant-rate dose scenario; no spatial avoidance model.",
+          "No explicit exposure duration or computable walking time is available."
         ],
         "unassessed_constraints": [
           "Radiation Exposure and Mission Dose Assessment Agent"
@@ -576,15 +581,15 @@
     "artifacts": {
       "grid": {
         "artifact_id": "route-11111111111111111111111111111111:grid",
-        "sha256": "669e2a77a5dd0cf4e2e2152924496d9d23188dac675ac254b970f18d95e5dc54"
+        "sha256": "60445b19bcea4ef25b721c58b2da985c671366f85ae25a8bdb4c9260b680f3ca"
       },
       "validation": {
         "artifact_id": "route-11111111111111111111111111111111:validation",
-        "sha256": "23cce19ae558b04f9c26e9e6db3bfb80b0c6f2e534ff6593a9c4f896470db96e"
+        "sha256": "c8a4f3777423e813d0d1868e9959231d063a627787879cbb102c47cb3692e5e8"
       },
       "provenance": {
         "artifact_id": "route-11111111111111111111111111111111:provenance",
-        "sha256": "8638f47a5773f3ef598d22d9f50497a539a962299ef73e12989f35ae641924fe"
+        "sha256": "fd072561c31bda8255f527e8dcfe95dca0410bef2738bc47a431166bbd8ddd56"
       }
     },
     "warnings": [
@@ -592,7 +597,10 @@
       "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
       "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
       "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
-      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified.",
+      "Required analyses remain unassessed: A3. This is a provisional terrain route.",
+      "Comparable risk requires applicable factors: A3.",
+      "User-required analyses remain unassessed: A3."
     ],
     "rationale": {
       "summary": "A* computed a terrain-only route using terrain-weighted distance cost and the requested stop order.",
@@ -607,7 +615,10 @@
         "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
         "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
         "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
-        "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+        "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified.",
+        "Required analyses remain unassessed: A3. This is a provisional terrain route.",
+        "Comparable risk requires applicable factors: A3.",
+        "User-required analyses remain unassessed: A3."
       ],
       "model_commentary": "Propose the requested objective; the host computes the terrain route.",
       "evidence_ids": [
@@ -671,17 +682,18 @@
         "agent_id": "A3",
         "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
         "configured": false,
-        "selected": false,
-        "required": false,
-        "selection_source": "deterministic",
-        "selection_reason": "No compatible worker is configured for this dataset scope.",
-        "execution_state": "not_requested",
+        "selected": true,
+        "required": true,
+        "selection_source": "host_policy",
+        "selection_reason": "Required by user constraints or versioned mission policy; the host cannot skip it.",
+        "execution_state": "unavailable",
         "data_kind": "unavailable",
         "result_status": null,
         "application": "none",
         "constraint_status": "unknown",
         "limitations": [
-          "Configured constant-rate dose scenario; no spatial avoidance model."
+          "Configured constant-rate dose scenario; no spatial avoidance model.",
+          "No explicit exposure duration or computable walking time is available."
         ],
         "dataset_ids": [],
         "artifact_id": null
@@ -726,60 +738,89 @@
       }
     ],
     "assessment": {
+      "schema_version": "2",
+      "formula_version": "relative-terrain-scenario-v2",
+      "score_scale": "0..100",
+      "gate_reasons": [
+        "Comparable risk requires applicable factors: A3.",
+        "User-required analyses remain unassessed: A3."
+      ],
       "time": null,
       "radiation_duration_min": null,
       "radiation_duration_basis": "unavailable",
       "dose_estimate_usv": null,
       "dose_uncertainty_usv": null,
       "radiation_constraint_status": "unknown",
-      "required_unassessed": [],
+      "required_unassessed": [
+        "A3"
+      ],
       "required_failed": [],
       "mission_profile": {
         "schema_version": "1",
-        "profile_id": "balanced",
-        "version": "balanced-v1",
+        "profile_id": "safest",
+        "version": "safest-v2",
         "risk_weights": {
-          "A1": 0.85,
+          "A1": 0.75,
           "A2": 0.0,
-          "A3": 0.15,
+          "A3": 0.25,
           "A4": 0.0,
           "A5": 0.0,
           "A6": 0.0
         },
         "confidence_weights": {
-          "A1": 0.45,
+          "A1": 0.55,
           "A2": 0.1,
-          "A3": 0.2,
-          "A4": 0.15,
+          "A3": 0.25,
+          "A4": 0.0,
           "A5": 0.0,
           "A6": 0.1
         }
       },
-      "hard_gate_status": "pass",
+      "hard_gate_status": "unassessed",
       "risk_score": null,
-      "assessment_confidence": 0.45,
+      "assessment_confidence": 38.5,
       "risk_factors": [
         {
           "agent_id": "A1",
-          "kind": "context",
-          "status": "contextual",
-          "risk_score": null,
+          "kind": "risk",
+          "status": "assessed",
+          "risk_score": 0.0,
           "evidence_quality": {
             "availability": 1.0,
             "route_coverage": 1.0,
-            "temporal_applicability": 1.0,
-            "validation_provenance": 1.0
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.5
           },
           "evidence_ids": [
-            "route-grid",
-            "route-validation"
+            "route-11111111111111111111111111111111:grid",
+            "route-11111111111111111111111111111111:validation"
           ],
-          "message": "Terrain traversability gate passed; no calibrated normalized A1 risk model is configured."
+          "message": "Relative peak slope utilization against a configurable engineering threshold; excludes optical obstacles and physiological safety.",
+          "model_version": "conservative-peak-slope-utilization-v1",
+          "evidence": {
+            "dataset_ids": [
+              "docker-synthetic-plane"
+            ],
+            "source_urls": [],
+            "dataset_version": "4a7a5faca77c50d75867612709c13ea33f393e84d80d8dd62293ac1132e04f44",
+            "acquisition_time": null,
+            "observation_period": null,
+            "route_coverage_fraction": 1.0,
+            "uncertainty": "Host-asserted elevation units and conservative aggregation; no optical or physiological model."
+          },
+          "component_reasons": {
+            "availability": "Versioned DEM data were read and source integrity checked.",
+            "route_coverage": "All closed-cell route intersections passed terrain validation; aggregated cells are conservative.",
+            "temporal_applicability": "Acquisition time is unknown; no present-day terrain freshness is inferred.",
+            "validation_provenance": "Source hash and geometry verified; elevation units remain host-asserted, not publisher-certified."
+          },
+          "confidence_contribution": 38.5,
+          "risk_contribution": 0.0
         },
         {
           "agent_id": "A2",
           "kind": "context",
-          "status": "unassessed",
+          "status": "unavailable",
           "risk_score": null,
           "evidence_quality": {
             "availability": 0.0,
@@ -788,12 +829,20 @@
             "validation_provenance": 0.0
           },
           "evidence_ids": [],
-          "message": "No route-applicable A2 risk factor is available."
+          "message": "Applicable specialist evidence is unavailable or unassessed.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {
+            "route_coverage": "No validated route-risk coverage model is configured.",
+            "temporal_applicability": "Context timestamps do not establish mission-time hazard applicability."
+          },
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
         },
         {
           "agent_id": "A3",
-          "kind": "context",
-          "status": "unassessed",
+          "kind": "risk",
+          "status": "unavailable",
           "risk_score": null,
           "evidence_quality": {
             "availability": 0.0,
@@ -802,12 +851,17 @@
             "validation_provenance": 0.0
           },
           "evidence_ids": [],
-          "message": "No route-applicable A3 risk factor is available."
+          "message": "An applicable, source-identified radiation scenario is missing; no dose risk is inferred.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {},
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
         },
         {
           "agent_id": "A4",
           "kind": "context",
-          "status": "unassessed",
+          "status": "unavailable",
           "risk_score": null,
           "evidence_quality": {
             "availability": 0.0,
@@ -816,21 +870,15 @@
             "validation_provenance": 0.0
           },
           "evidence_ids": [],
-          "message": "No route-applicable A4 risk factor is available."
-        },
-        {
-          "agent_id": "A6",
-          "kind": "context",
-          "status": "unassessed",
-          "risk_score": null,
-          "evidence_quality": {
-            "availability": 0.0,
-            "route_coverage": 0.0,
-            "temporal_applicability": 0.0,
-            "validation_provenance": 0.0
+          "message": "Applicable specialist evidence is unavailable or unassessed.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {
+            "route_coverage": "No validated route-risk coverage model is configured.",
+            "temporal_applicability": "Context timestamps do not establish mission-time hazard applicability."
           },
-          "evidence_ids": [],
-          "message": "No route-applicable A6 risk factor is available."
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
         },
         {
           "agent_id": "A5",
@@ -844,13 +892,93 @@
             "validation_provenance": 0.0
           },
           "evidence_ids": [],
-          "message": "A5 is not available as an independent factor for this mission profile."
+          "message": "Surface obstacle responsibility belongs to the terrain specialist; no independent validated optical factor. Its profile weights are explicitly zero.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {},
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
+        },
+        {
+          "agent_id": "A6",
+          "kind": "context",
+          "status": "unavailable",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "Applicable specialist evidence is unavailable or unassessed.",
+          "model_version": null,
+          "evidence": null,
+          "component_reasons": {
+            "route_coverage": "No validated route-risk coverage model is configured.",
+            "temporal_applicability": "Context timestamps do not establish mission-time hazard applicability."
+          },
+          "confidence_contribution": 0.0,
+          "risk_contribution": null
         }
       ],
       "limitations": [
-        "Combined thermal/radiation risk is not calibrated; risk_score remains unknown.",
-        "Risk score is not assessed because no calibrated normalized route-risk factors are configured."
+        "Human exposure and combined environmental risk are not calibrated; relative engineering scores apply only to the explicitly assessed factors.",
+        "Assessment confidence is below 70/100; inspect missing factors, route coverage, acquisition time and provenance before comparison. Missing or unassessed: A2, A3, A4, A6.",
+        "Relative engineering terrain/scenario scores do not certify astronaut safety.",
+        "Science and rover context do not reduce terrain cost or supply safety scores."
       ]
+    },
+    "planning_policy": {
+      "version": "jezero-walking-policy-v2",
+      "mission_profile_id": "safest",
+      "mission_profile_version": "safest-v2",
+      "legacy_objective": true,
+      "resolution_profile": "legacy",
+      "resolution_version": "resolution-v1",
+      "minimum_native_factor": 1,
+      "actual_native_factor": 1,
+      "actual_cell_size_m": [
+        20.0,
+        20.0
+      ],
+      "source_cell_size_m": [
+        20.0,
+        20.0
+      ],
+      "terrain_weight": 4.0,
+      "limits": {
+        "max_grid_cells": 262144,
+        "max_expanded_nodes": 200000,
+        "max_elapsed_seconds": 5.0
+      },
+      "eta_model": "constant_projected_speed_v1"
+    },
+    "legs": [
+      {
+        "index": 1,
+        "distance_m": 2262.741699796954,
+        "travel_time_min": null,
+        "stop_time_min": 0.0
+      }
+    ],
+    "registration": {
+      "schema_version": "1",
+      "method": "independent-feature-controls-v1",
+      "map_alignment": "unverified",
+      "source_sha256": "4a7a5faca77c50d75867612709c13ea33f393e84d80d8dd62293ac1132e04f44",
+      "controls_sha256": null,
+      "capabilities_sha256": null,
+      "measurement_sha256": null,
+      "wmts_layer": null,
+      "wmts_crs": null,
+      "synthetic": false,
+      "scope": [],
+      "residuals": [],
+      "reasons": [
+        "Independent NASA WMTS/wire/DEM feature measurements have not been configured."
+      ],
+      "evidence_id": "route-11111111111111111111111111111111:provenance#registration"
     }
   },
   "usage": {
@@ -909,17 +1037,18 @@
       "agent_id": "A3",
       "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
       "configured": false,
-      "selected": false,
-      "required": false,
-      "selection_source": "deterministic",
-      "selection_reason": "No compatible worker is configured for this dataset scope.",
-      "execution_state": "not_requested",
+      "selected": true,
+      "required": true,
+      "selection_source": "host_policy",
+      "selection_reason": "Required by user constraints or versioned mission policy; the host cannot skip it.",
+      "execution_state": "unavailable",
       "data_kind": "unavailable",
       "result_status": null,
       "application": "none",
       "constraint_status": "unknown",
       "limitations": [
-        "Configured constant-rate dose scenario; no spatial avoidance model."
+        "Configured constant-rate dose scenario; no spatial avoidance model.",
+        "No explicit exposure duration or computable walking time is available."
       ],
       "dataset_ids": [],
       "artifact_id": null

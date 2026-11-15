@@ -17,6 +17,9 @@ class ApiProblem(Exception):
         self.status = status
         self.code = code
         self.message = message
+        terrain_blocked={'OUTSIDE_PLANNING_COVERAGE','ENDPOINT_NOT_TRAVERSABLE','NO_PATH'}
+        if details is None and code in terrain_blocked:
+            details=[{'hard_gate_status':'blocked','risk_score':'null','reason':code}]
         self.details = details
         self.retry_safe = retry_safe
         self.outcome_unknown = outcome_unknown

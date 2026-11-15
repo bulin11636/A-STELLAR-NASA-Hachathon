@@ -44,10 +44,13 @@ class PlanningProfile(ContractModel):
     instrument: str | None = None
     mission: str | None = None
     acquisition_time: str | None = None
+    registration_controls: str | None = None
+    wmts_layer: str = 'Mars_MGS_MOLA_ClrShade_merge_global_463m'
     slope_threshold_deg: float = Field(default=15, gt=0, lt=90)
     terrain_weight: float = Field(default=4, ge=0, le=100)
     dynamic_windowing: bool = True
     adaptive_resolution: bool = True
+    min_resolution_factor: int = Field(default=1, ge=1, le=32)
     max_resolution_factor: int = Field(default=16, ge=1, le=32)
     window_margin_cells: int = Field(default=24, ge=2, le=256)
     limits: Limits = Limits(max_grid_cells=262144, max_expanded_nodes=200000, max_elapsed_seconds=5)
@@ -156,7 +159,7 @@ def aggregate_terrain(src, window, factor, threshold):
     return outputs
 
 
-def load_grid(profile_path, *, window=None, reference=None, dataset_root=None, resolution_factor=1):
+def load_grid(profile_path, *, window=None, reference=None, dataset_root=None, resolution_factor=1, policy=None):
     # Only computed mode imports these dependencies; ordinary API/mock imports stay light.
     import numpy as np
     import rasterio
@@ -164,7 +167,7 @@ def load_grid(profile_path, *, window=None, reference=None, dataset_root=None, r
     from pyproj import CRS, Transformer
     path = Path(profile_path).expanduser().resolve()
     profile_stat = fingerprint(path)
-    p = PlanningProfile.model_validate_json(path.read_text())
+    p = policy or PlanningProfile.model_validate_json(path.read_text())
     if window is not None:
         p = p.model_copy(update={'window': window, 'roi_id': p.roi_id+'-crop-'+hashlib.sha256(str(window).encode()).hexdigest()[:12]})
     root = Path(dataset_root or os.environ.get('A_STELLAR_DATASET_DIR', str(path.parent))).expanduser().resolve()
@@ -244,24 +247,27 @@ def source_bounds(grid):
 
 def regional_grid(profile_path, base, dataset_root=None):
     height, width = base.inventory['source_shape']
-    factor = 1
+    factor = base.profile.min_resolution_factor
     while math.ceil((width-2)/factor)*math.ceil((height-2)/factor) > base.profile.limits.max_grid_cells:
         factor += 1
     if factor > base.profile.max_resolution_factor or (factor > 1 and not base.profile.adaptive_resolution):
         raise ApiProblem(503,'PLANNING_LIMIT_EXCEEDED','The source exceeds the configured adaptive-resolution limits.')
     return load_grid(profile_path,window=(1,1,width-2,height-2),reference=base,
-                     dataset_root=dataset_root,resolution_factor=factor)
+                     dataset_root=dataset_root,resolution_factor=factor,policy=base.profile)
 
 
 def grid_for_request(profile_path, base, request, dataset_root=None, regional_reference=None):
     from affine import Affine
     if not base.profile.dynamic_windowing:
-        return base
+        factor=base.profile.min_resolution_factor
+        if factor==1: return base
+        return load_grid(profile_path,reference=base,dataset_root=dataset_root,resolution_factor=factor,policy=base.profile)
     points = [request.start, *request.waypoints, request.goal]
     try:
         for point in points:
             base.cell(point)
-        return base
+        if base.inventory.get('resolution_factor',1)>=base.profile.min_resolution_factor and base.metadata.width*base.metadata.height<=base.profile.limits.max_grid_cells:
+            return base
     except ApiProblem:
         pass
     tr = Affine(*base.inventory['source_transform'])
@@ -274,10 +280,10 @@ def grid_for_request(profile_path, base, request, dataset_root=None, regional_re
     top = max(1, math.floor(min(r for c,r in cells))-margin)
     right = min(width-1, math.floor(max(c for c,r in cells))+margin+1)
     bottom = min(height-1, math.floor(max(r for c,r in cells))+margin+1)
-    factor = 1
+    factor = base.profile.min_resolution_factor
     while math.ceil((right-left)/factor)*math.ceil((bottom-top)/factor) > base.profile.limits.max_grid_cells:
         factor += 1
-    if factor > 1 and base.profile.adaptive_resolution:
+    if factor > base.profile.min_resolution_factor and base.profile.adaptive_resolution:
         # Regional searches include the whole supported source, so a tight
         # endpoint corridor cannot cut off a crater-scale detour.
         if regional_reference is not None:
@@ -287,4 +293,4 @@ def grid_for_request(profile_path, base, request, dataset_root=None, regional_re
     if factor > base.profile.max_resolution_factor or (factor > 1 and not base.profile.adaptive_resolution):
         raise ApiProblem(503, 'PLANNING_LIMIT_EXCEEDED', 'The route exceeds the configured grid and adaptive-resolution limits.')
     return load_grid(profile_path, window=(left,top,right-left,bottom-top), reference=base,
-                     dataset_root=dataset_root, resolution_factor=factor)
+                     dataset_root=dataset_root, resolution_factor=factor,policy=base.profile)

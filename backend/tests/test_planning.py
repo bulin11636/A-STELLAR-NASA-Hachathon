@@ -157,7 +157,8 @@ def test_real_pipeline_api_restart_corruption_and_missing(tmp_path):
             assert result['metrics']['risk_score'] is None
             stored=client.get('/api/v1/routes/'+rid).json()
             assert stored['result']==result
-            assert all(w['status']=='unassessed' for w in stored['metadata']['workers'][1:])
+            assert all(w['status'] in ('unassessed','unavailable') for w in stored['metadata']['workers'][1:])
+            assert stored['metadata']['assessment']['hard_gate_status']=='unassessed'
             assert str(tmp_path) not in json.dumps(stored)
             with TestClient(create_app(planning=PlanningService('computed',None,tmp_path/'routes'))) as restarted:
                 assert restarted.get('/api/v1/routes/'+rid).json()==stored

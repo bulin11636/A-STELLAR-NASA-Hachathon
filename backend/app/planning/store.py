@@ -117,6 +117,19 @@ class RouteStore:
         if b != 0 or d != 0 or a <= 0 or e >= 0 or not all(math.isclose(x,y,rel_tol=1e-10,abs_tol=1e-8) for x,y in zip((a,-e),meta.planning_resolution_m)):
             raise ValueError('Grid affine/resolution disagree')
         provenance = json.loads((folder/'provenance.json').read_text())
+        if record.metadata.planning_policy is not None:
+            public=dict(assessment=record.metadata.assessment.model_dump(mode='json'),
+                planning_policy=record.metadata.planning_policy.model_dump(mode='json'),
+                legs=[leg.model_dump(mode='json') for leg in record.metadata.legs],
+                registration=record.metadata.registration.model_dump(mode='json'))
+            if any(provenance.get(key)!=value for key,value in public.items()):
+                raise ValueError('Public assessment and private audit disagree')
+            registration=record.metadata.registration
+            if registration.map_alignment=='verified':
+                import hashlib
+                text=provenance.get('registration_controls_text')
+                if not isinstance(text,str) or hashlib.sha256(text.encode()).hexdigest()!=registration.controls_sha256:
+                    raise ValueError('Independent control snapshot failed integrity checks')
         inventory = provenance['inventory']
         if meta.source_crs!=inventory['source_crs'] or meta.planning_crs!=inventory['source_crs']:
             raise ValueError('Source CRS and grid metadata disagree')

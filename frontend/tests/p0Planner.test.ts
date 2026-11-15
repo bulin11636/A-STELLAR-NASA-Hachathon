@@ -195,3 +195,14 @@ test("Quick requests omit Advanced walking assumptions", async () => {
   await act(async () => current().submit(true));
   assert.equal(calls.find(c=>c.url.endsWith('/plan')).body.mission,undefined);
 });
+
+test("P1 profile and resolution are serialized and retained after metadata retrieval", async () => {
+  const calls=mockSuccess();const current=await harness();
+  await act(()=>{ current().changeMode('safest');current().setMissionProfile('balanced');current().setResolutionProfile('fine'); });
+  await act(async()=>current().submit(true));
+  const body=calls.find(c=>c.url.endsWith('/plan')).body;
+  assert.equal(body.mission_profile,'balanced');assert.equal(body.resolution_profile,'fine');
+  assert.equal(current().missionProfile,'balanced');assert.equal(current().resolutionProfile,'fine');
+  await act(()=>current().loadExample(fixture.metadata.request));
+  assert.equal(current().missionProfile,null);assert.equal(current().resolutionProfile,null);
+});

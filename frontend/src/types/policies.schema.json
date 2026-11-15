@@ -1,0 +1,254 @@
+{
+  "$defs": {
+    "MissionPolicyOption": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1",
+          "default": "1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "profile_id": {
+          "enum": [
+            "safest",
+            "fastest",
+            "science_priority",
+            "balanced"
+          ],
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$",
+          "title": "Version",
+          "type": "string"
+        },
+        "risk_weights": {
+          "additionalProperties": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "propertyNames": {
+            "enum": [
+              "A1",
+              "A2",
+              "A3",
+              "A4",
+              "A5",
+              "A6"
+            ]
+          },
+          "title": "Risk Weights",
+          "type": "object"
+        },
+        "confidence_weights": {
+          "additionalProperties": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "propertyNames": {
+            "enum": [
+              "A1",
+              "A2",
+              "A3",
+              "A4",
+              "A5",
+              "A6"
+            ]
+          },
+          "title": "Confidence Weights",
+          "type": "object"
+        },
+        "mode": {
+          "enum": [
+            "shortest",
+            "safest"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "terrain_weight_multiplier": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Terrain Weight Multiplier",
+          "type": "number"
+        },
+        "default_resolution": {
+          "enum": [
+            "coarse",
+            "standard",
+            "fine"
+          ],
+          "title": "Default Resolution",
+          "type": "string"
+        },
+        "eta_model": {
+          "const": "constant_projected_speed_v1",
+          "title": "Eta Model",
+          "type": "string"
+        },
+        "requires_user_speed": {
+          "const": true,
+          "title": "Requires User Speed",
+          "type": "boolean"
+        },
+        "required_risk_factors": {
+          "items": {
+            "enum": [
+              "A1",
+              "A2",
+              "A3",
+              "A4",
+              "A5",
+              "A6"
+            ],
+            "type": "string"
+          },
+          "title": "Required Risk Factors",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "profile_id",
+        "version",
+        "risk_weights",
+        "confidence_weights",
+        "mode",
+        "terrain_weight_multiplier",
+        "default_resolution",
+        "eta_model",
+        "requires_user_speed",
+        "required_risk_factors",
+        "limitations"
+      ],
+      "title": "MissionPolicyOption",
+      "type": "object"
+    },
+    "ResolutionOption": {
+      "additionalProperties": false,
+      "properties": {
+        "profile_id": {
+          "enum": [
+            "coarse",
+            "standard",
+            "fine"
+          ],
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "version": {
+          "const": "resolution-v1",
+          "title": "Version",
+          "type": "string"
+        },
+        "minimum_native_factor": {
+          "maximum": 32,
+          "minimum": 1,
+          "title": "Minimum Native Factor",
+          "type": "integer"
+        },
+        "max_grid_cells": {
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "title": "Max Grid Cells",
+          "type": "integer"
+        },
+        "max_expanded_nodes": {
+          "exclusiveMinimum": 0,
+          "maximum": 1000000,
+          "title": "Max Expanded Nodes",
+          "type": "integer"
+        },
+        "max_elapsed_seconds": {
+          "exclusiveMinimum": 0,
+          "maximum": 30,
+          "title": "Max Elapsed Seconds",
+          "type": "number"
+        },
+        "bounds": {
+          "title": "Bounds",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "version",
+        "minimum_native_factor",
+        "max_grid_cells",
+        "max_expanded_nodes",
+        "max_elapsed_seconds",
+        "bounds"
+      ],
+      "title": "ResolutionOption",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "2",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "policy_version": {
+      "const": "jezero-walking-policy-v2",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "formula_version": {
+      "const": "relative-terrain-scenario-v2",
+      "title": "Formula Version",
+      "type": "string"
+    },
+    "score_scale": {
+      "const": "0..100",
+      "title": "Score Scale",
+      "type": "string"
+    },
+    "mission_mode": {
+      "const": "walking",
+      "title": "Mission Mode",
+      "type": "string"
+    },
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/MissionPolicyOption"
+      },
+      "maxItems": 4,
+      "minItems": 4,
+      "title": "Profiles",
+      "type": "array"
+    },
+    "resolutions": {
+      "items": {
+        "$ref": "#/$defs/ResolutionOption"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "title": "Resolutions",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "policy_version",
+    "formula_version",
+    "score_scale",
+    "mission_mode",
+    "profiles",
+    "resolutions"
+  ],
+  "title": "PolicyCatalog",
+  "type": "object"
+}

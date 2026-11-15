@@ -24,7 +24,9 @@ def test_shared_status_fields_nullability_and_retry_rules(name):
         assert status.error is None
     else:
         assert set(data['error'])=={'code','message','details'}
-        assert data['error']['details'] is None
+        if name=='plan-failed-non-retryable':
+            assert data['error']['details'][0]['hard_gate_status']=='blocked'
+        else: assert data['error']['details'] is None
     assert not status.retry_allowed or (status.state=='failed' and status.retry_after_seconds==0)
     if status.state=='unknown': assert status.retry_allowed is False
 

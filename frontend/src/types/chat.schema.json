@@ -1,5 +1,114 @@
 {
   "$defs": {
+    "AppliedPlanningPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "title": "Version",
+          "type": "string"
+        },
+        "mission_profile_id": {
+          "title": "Mission Profile Id",
+          "type": "string"
+        },
+        "mission_profile_version": {
+          "title": "Mission Profile Version",
+          "type": "string"
+        },
+        "legacy_objective": {
+          "title": "Legacy Objective",
+          "type": "boolean"
+        },
+        "resolution_profile": {
+          "enum": [
+            "coarse",
+            "standard",
+            "fine",
+            "legacy"
+          ],
+          "title": "Resolution Profile",
+          "type": "string"
+        },
+        "resolution_version": {
+          "default": "resolution-v1",
+          "title": "Resolution Version",
+          "type": "string"
+        },
+        "minimum_native_factor": {
+          "minimum": 1,
+          "title": "Minimum Native Factor",
+          "type": "integer"
+        },
+        "actual_native_factor": {
+          "minimum": 1,
+          "title": "Actual Native Factor",
+          "type": "integer"
+        },
+        "actual_cell_size_m": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Actual Cell Size M",
+          "type": "array"
+        },
+        "source_cell_size_m": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          ],
+          "title": "Source Cell Size M",
+          "type": "array"
+        },
+        "terrain_weight": {
+          "minimum": 0,
+          "title": "Terrain Weight",
+          "type": "number"
+        },
+        "limits": {
+          "$ref": "#/$defs/Limits"
+        },
+        "eta_model": {
+          "const": "constant_projected_speed_v1",
+          "default": "constant_projected_speed_v1",
+          "title": "Eta Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "version",
+        "mission_profile_id",
+        "mission_profile_version",
+        "legacy_objective",
+        "resolution_profile",
+        "resolution_version",
+        "minimum_native_factor",
+        "actual_native_factor",
+        "actual_cell_size_m",
+        "source_cell_size_m",
+        "terrain_weight",
+        "limits",
+        "eta_model"
+      ],
+      "title": "AppliedPlanningPolicy",
+      "type": "object"
+    },
     "Artifact": {
       "additionalProperties": false,
       "properties": {
@@ -49,6 +158,49 @@
       "title": "Bounds",
       "type": "object"
     },
+    "ControlResidual": {
+      "additionalProperties": false,
+      "properties": {
+        "control_id": {
+          "title": "Control Id",
+          "type": "string"
+        },
+        "dem_error_m": {
+          "minimum": 0,
+          "title": "Dem Error M",
+          "type": "number"
+        },
+        "wmts_error_m": {
+          "minimum": 0,
+          "title": "Wmts Error M",
+          "type": "number"
+        },
+        "dem_tolerance_m": {
+          "exclusiveMinimum": 0,
+          "title": "Dem Tolerance M",
+          "type": "number"
+        },
+        "wmts_tolerance_m": {
+          "exclusiveMinimum": 0,
+          "title": "Wmts Tolerance M",
+          "type": "number"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "control_id",
+        "dem_error_m",
+        "wmts_error_m",
+        "dem_tolerance_m",
+        "wmts_tolerance_m",
+        "passed"
+      ],
+      "title": "ControlResidual",
+      "type": "object"
+    },
     "Coordinator": {
       "additionalProperties": false,
       "properties": {
@@ -78,6 +230,90 @@
         "implementation_version"
       ],
       "title": "Coordinator",
+      "type": "object"
+    },
+    "EvidenceDescription": {
+      "additionalProperties": false,
+      "properties": {
+        "dataset_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dataset Ids",
+          "type": "array"
+        },
+        "source_urls": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Urls",
+          "type": "array"
+        },
+        "dataset_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dataset Version"
+        },
+        "acquisition_time": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Acquisition Time"
+        },
+        "observation_period": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observation Period"
+        },
+        "route_coverage_fraction": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Route Coverage Fraction"
+        },
+        "uncertainty": {
+          "title": "Uncertainty",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dataset_ids",
+        "source_urls",
+        "dataset_version",
+        "acquisition_time",
+        "observation_period",
+        "route_coverage_fraction",
+        "uncertainty"
+      ],
+      "title": "EvidenceDescription",
       "type": "object"
     },
     "EvidenceQuality": {
@@ -293,6 +529,170 @@
       "title": "Limits",
       "type": "object"
     },
+    "MapRegistration": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1",
+          "default": "1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "method": {
+          "const": "independent-feature-controls-v1",
+          "default": "independent-feature-controls-v1",
+          "title": "Method",
+          "type": "string"
+        },
+        "map_alignment": {
+          "default": "unverified",
+          "enum": [
+            "verified",
+            "unverified"
+          ],
+          "title": "Map Alignment",
+          "type": "string"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "controls_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Controls Sha256"
+        },
+        "capabilities_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Capabilities Sha256"
+        },
+        "measurement_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Measurement Sha256"
+        },
+        "wmts_layer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wmts Layer"
+        },
+        "wmts_crs": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wmts Crs"
+        },
+        "synthetic": {
+          "default": false,
+          "title": "Synthetic",
+          "type": "boolean"
+        },
+        "scope": {
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Scope",
+          "type": "array"
+        },
+        "residuals": {
+          "items": {
+            "$ref": "#/$defs/ControlResidual"
+          },
+          "title": "Residuals",
+          "type": "array"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Id"
+        }
+      },
+      "required": [
+        "schema_version",
+        "method",
+        "map_alignment",
+        "source_sha256",
+        "controls_sha256",
+        "capabilities_sha256",
+        "measurement_sha256",
+        "wmts_layer",
+        "wmts_crs",
+        "synthetic",
+        "scope",
+        "residuals",
+        "reasons",
+        "evidence_id"
+      ],
+      "title": "MapRegistration",
+      "type": "object"
+    },
     "MarsCoordinate": {
       "additionalProperties": false,
       "description": "Named API fields; east-positive [0,360), planetocentric [-90,90].",
@@ -437,15 +837,39 @@
           "default": null
         },
         "mission_profile": {
-          "default": "balanced",
-          "enum": [
-            "safest",
-            "fastest",
-            "science_priority",
-            "balanced"
+          "anyOf": [
+            {
+              "enum": [
+                "safest",
+                "fastest",
+                "science_priority",
+                "balanced"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
           ],
-          "title": "Mission Profile",
-          "type": "string"
+          "default": null,
+          "title": "Mission Profile"
+        },
+        "resolution_profile": {
+          "anyOf": [
+            {
+              "enum": [
+                "coarse",
+                "standard",
+                "fine"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolution Profile"
         }
       },
       "required": [
@@ -456,7 +880,8 @@
         "mode",
         "waypoints",
         "mission",
-        "mission_profile"
+        "mission_profile",
+        "resolution_profile"
       ],
       "title": "PlanRouteRequest",
       "type": "object"
@@ -770,6 +1195,57 @@
           "minLength": 1,
           "title": "Message",
           "type": "string"
+        },
+        "model_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Version"
+        },
+        "evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvidenceDescription"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "component_reasons": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Component Reasons",
+          "type": "object"
+        },
+        "confidence_contribution": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Confidence Contribution",
+          "type": "number"
+        },
+        "risk_contribution": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Risk Contribution"
         }
       },
       "required": [
@@ -779,7 +1255,12 @@
         "risk_score",
         "evidence_quality",
         "evidence_ids",
-        "message"
+        "message",
+        "model_version",
+        "evidence",
+        "component_reasons",
+        "confidence_contribution",
+        "risk_contribution"
       ],
       "title": "RiskFactor",
       "type": "object"
@@ -787,6 +1268,30 @@
     "RouteAssessment": {
       "additionalProperties": false,
       "properties": {
+        "schema_version": {
+          "const": "2",
+          "default": "2",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "formula_version": {
+          "default": "relative-terrain-scenario-v2",
+          "title": "Formula Version",
+          "type": "string"
+        },
+        "score_scale": {
+          "const": "0..100",
+          "default": "0..100",
+          "title": "Score Scale",
+          "type": "string"
+        },
+        "gate_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Gate Reasons",
+          "type": "array"
+        },
         "time": {
           "anyOf": [
             {
@@ -907,7 +1412,7 @@
         "risk_score": {
           "anyOf": [
             {
-              "maximum": 1,
+              "maximum": 100,
               "minimum": 0,
               "type": "number"
             },
@@ -921,7 +1426,7 @@
         "assessment_confidence": {
           "anyOf": [
             {
-              "maximum": 1,
+              "maximum": 100,
               "minimum": 0,
               "type": "number"
             },
@@ -948,6 +1453,10 @@
         }
       },
       "required": [
+        "schema_version",
+        "formula_version",
+        "score_scale",
+        "gate_reasons",
         "time",
         "radiation_duration_min",
         "radiation_duration_basis",
@@ -964,6 +1473,48 @@
         "limitations"
       ],
       "title": "RouteAssessment",
+      "type": "object"
+    },
+    "RouteLeg": {
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "minimum": 1,
+          "title": "Index",
+          "type": "integer"
+        },
+        "distance_m": {
+          "minimum": 0,
+          "title": "Distance M",
+          "type": "number"
+        },
+        "travel_time_min": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Travel Time Min"
+        },
+        "stop_time_min": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Stop Time Min",
+          "type": "number"
+        }
+      },
+      "required": [
+        "index",
+        "distance_m",
+        "travel_time_min",
+        "stop_time_min"
+      ],
+      "title": "RouteLeg",
       "type": "object"
     },
     "RouteMetadata": {
@@ -1087,6 +1638,35 @@
             }
           ],
           "default": null
+        },
+        "planning_policy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AppliedPlanningPolicy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "legs": {
+          "items": {
+            "$ref": "#/$defs/RouteLeg"
+          },
+          "title": "Legs",
+          "type": "array"
+        },
+        "registration": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MapRegistration"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -1108,7 +1688,10 @@
         "usage",
         "parent_route_id",
         "specialist_trace",
-        "assessment"
+        "assessment",
+        "planning_policy",
+        "legs",
+        "registration"
       ],
       "title": "RouteMetadata",
       "type": "object"

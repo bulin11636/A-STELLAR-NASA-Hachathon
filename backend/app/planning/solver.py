@@ -16,13 +16,14 @@ class RouteSolution:
     search: SimpleNamespace
     distance: float
     touched: list
+    leg_distances: list
 
 
 def solve_route(grid, request, max_nodes, max_seconds):
     penalty = grid.arrays()[request.mode+'_cost']
     dx,dy = grid.metadata.planning_resolution_m
     stops = [request.start,*request.waypoints,request.goal]
-    points,route,cells = [],[],[]
+    points,route,cells,distances = [],[],[],[]
     started = monotonic()
     objective,expanded,elapsed = 0.0,0,0.0
     allowed = grid.allowed
@@ -39,6 +40,7 @@ def solve_route(grid, request, max_nodes, max_seconds):
             raise
         local = [grid.xy(first),*(grid.center(cell) for cell in leg.cells),grid.xy(last)] if start != goal else [grid.xy(first),grid.xy(last)]
         leg_distance,_ = validate_polyline(grid,local,grid.source_hash)
+        distances.append(leg_distance)
         connectors = sum(np.linalg.norm(np.subtract(a,b))*penalty[cell] for a,b,cell in
             [(local[0],local[1],start),(local[-2],local[-1],goal)]) if start != goal else leg_distance*penalty[start]
         objective += leg.cost+connectors if start != goal else connectors
@@ -52,4 +54,4 @@ def solve_route(grid, request, max_nodes, max_seconds):
     emitted_distance,_ = validate_polyline(grid,[grid.xy(p) for p in route],grid.source_hash)
     if abs(distance-emitted_distance) > 1e-5:
         raise ValueError('Wire transform changed route length')
-    return RouteSolution(points,route,SimpleNamespace(cells=cells,cost=objective,expanded=expanded,elapsed_ms=elapsed),distance,touched)
+    return RouteSolution(points,route,SimpleNamespace(cells=cells,cost=objective,expanded=expanded,elapsed_ms=elapsed),distance,touched,distances)

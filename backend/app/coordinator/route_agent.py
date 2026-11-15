@@ -104,6 +104,40 @@ class RouteAgent:
             snapshot['request'].pop('waypoints',None)
         return snapshot,workers,pois,raw,traces,outputs,selection_usage
 
+    def evidence_descriptions(self, outputs):
+        descriptions={}
+        for result in outputs:
+            if result.status not in ('ready','partial') or not result.provenance_ref or not result.dataset_ids: continue
+            worker=self.evidence.registry.get(result.agent_id) if self.evidence else None
+            scenario=getattr(worker,'scenario',None)
+            source=getattr(scenario,'source',None) or getattr(getattr(worker,'config',None),'source',None)
+            urls=[str(source.source_url)] if source else []
+            for field in ('pois','stops'):
+                for item in getattr(result,field,[]):
+                    url=str(item.source.source_url)
+                    if url not in urls: urls.append(url)
+            acquired=getattr(result,'data_timestamp',None) or getattr(result,'observed_at',None)
+            descriptions[result.agent_id]=dict(dataset_ids=result.dataset_ids,source_urls=urls[:12],
+                dataset_version=self.evidence.scope.dataset_version,acquisition_time=acquired.isoformat() if acquired else None,
+                observation_period=scenario.source_observation_period if scenario else None,
+                route_coverage_fraction=1.0 if result.agent_id=='A3' and result.dose_estimate_usv is not None else None,
+                uncertainty=scenario.uncertainty_description if scenario else 'Context does not establish route-risk coverage or current hazard applicability.')
+        return descriptions
+
+    def evidence_applicability(self):
+        states={}
+        if self.evidence:
+            for agent_id in ('A2','A3'):
+                worker=self.evidence.registry.get(agent_id)
+                scenario=getattr(worker,'scenario',None)
+                config=getattr(worker,'config',None)
+                scope=self.evidence.scope
+                if scenario and (scenario.region_id,scenario.roi_id,scenario.dataset_version)!=(scope.region_id,scope.roi_id,scope.dataset_version):
+                    states[agent_id]='incompatible'
+                elif config is not None and hasattr(config,'matches') and not config.matches(scope):
+                    states[agent_id]='incompatible'
+        return states
+
     def finalize(self, request, distance, traces, outputs):
         from app.planning.assessment import walking_assessment
         assessment=walking_assessment(request,distance)
@@ -126,7 +160,8 @@ class RouteAgent:
                 unknown.append(trace.agent_id)
         assessment=assessment.model_copy(update={'required_unassessed':unknown,'required_failed':failed})
         evidence,workers,_,raw=self._summarize(list(by_id.values()),traces)
-        return dict(assessment=assessment,specialist_trace=traces,workers=workers,evidence=evidence,private_evidence=raw)
+        return dict(assessment=assessment,specialist_trace=traces,workers=workers,evidence=evidence,private_evidence=raw,
+            evidence_descriptions=self.evidence_descriptions(list(by_id.values())),evidence_applicability=self.evidence_applicability())
 
     def plan(self, request, *, request_id=None):
         grid=self.planning.prepare_grid(request)
@@ -176,6 +211,8 @@ class RouteAgent:
             coordinates=[(p['longitude'],p['latitude']) if isinstance(p,dict) else (p.longitude,p.latitude) for p in allowed]+supplied
             if any(not any(abs(p.longitude-x)<1e-7 and abs(p.latitude-y)<1e-7 for x,y in coordinates) for p in decision.waypoints):
                 raise ApiProblem(422,'UNRESOLVED_WAYPOINT','A0 proposed an unrecognized place. Specify longitude,latitude or a known place ID.')
+        if request.mission_profile is not None and decision.mode is not None and decision.mode!=request.mode:
+            raise ApiProblem(422,'PROFILE_OBJECTIVE_MISMATCH','Change the versioned mission profile through a new plan; chat cannot override its objective.')
         revised=PlanRouteRequest.model_validate({**request.model_dump(),'mode':decision.mode or request.mode,
             'waypoints':decision.waypoints if decision.waypoints is not None else request.waypoints})
         if revised==request:

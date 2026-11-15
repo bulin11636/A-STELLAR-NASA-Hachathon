@@ -10,6 +10,8 @@ export function validateRouteRequest(request: PlanRouteRequest): void {
   if (request.region_id !== "jezero") throw new Error("F1.5 supports region jezero only.");
   if (request.coordinate_system !== COORDINATE_SYSTEM) throw new Error("Unsupported coordinate convention.");
   if (request.mode !== "shortest" && request.mode !== "safest") throw new Error("Choose shortest or safest mode.");
+  if (request.mission_profile != null && !["safest","fastest","science_priority","balanced"].includes(request.mission_profile)) throw new Error("Choose a supported mission profile.");
+  if (request.resolution_profile != null && !["coarse","standard","fine"].includes(request.resolution_profile)) throw new Error("Choose a supported resolution profile.");
   validateApiCoordinate(request.start);
   validateApiCoordinate(request.goal);
   const waypoints = request.waypoints ?? [];
