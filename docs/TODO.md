@@ -1,9 +1,12 @@
 # TODO
 
-## Demo acceptance: frontend handoff
+## P0 frontend integration and acceptance
 
 - [ ] Revalidate map fitting, nearby-stop usability and the supported route view after the frontend owner's presentation changes; retain the unverified NASA registration status until independent registration checks pass.
 - [ ] Revalidate active-mode labels, actionable failures and unassessed evidence after the frontend owner's presentation changes.
+
+- [ ] Complete Sheng's Quick/Advanced controls, required-waypoint interactions and plan-to-chat flow against the shared P0 fixtures and backend.
+- [ ] Integrate request status, stable IDs and explicit versioned retry controls without automatic model retries; run the joint P0 acceptance matrix.
 
 ## Deferred: deployment operations
 
@@ -11,7 +14,6 @@
 
 ## Deferred: route revisions and chat
 
-- [ ] Connect explicit request status/retry controls and optional planning Idempotency-Key in the frontend without automatic model retries.
 - [ ] Support explicit avoidance areas with typed geometry, bounded masks and independent validation.
 - [ ] Define optional visits, soft preferences and unspecified visit order without weakening required constraints.
 - [ ] Add cooperative cancellation for specialist/model/planning work and expose progress without applying stale results.

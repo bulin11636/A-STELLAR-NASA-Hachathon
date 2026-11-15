@@ -1,4 +1,5 @@
 import logging
+import math
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -22,15 +23,16 @@ class ApiProblem(Exception):
         self.retry_after_seconds = retry_after_seconds
 
 
-def error_response(status: int, code: str, message: str, details=None) -> JSONResponse:
+def error_response(status: int, code: str, message: str, details=None, retry_after_seconds=None) -> JSONResponse:
     envelope = ErrorEnvelope(error=ErrorBody(code=code, message=message, details=details))
-    return JSONResponse(status_code=status, content=envelope.model_dump(mode="json"))
+    headers = {'Retry-After': str(math.ceil(retry_after_seconds))} if retry_after_seconds is not None else None
+    return JSONResponse(status_code=status, content=envelope.model_dump(mode="json"), headers=headers)
 
 
 def register_error_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiProblem)
     async def domain_error(_request: Request, error: ApiProblem):
-        return error_response(error.status, error.code, error.message, error.details)
+        return error_response(error.status, error.code, error.message, error.details, error.retry_after_seconds)
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(_request: Request, error: RequestValidationError):
@@ -46,5 +48,5 @@ def register_error_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(Exception)
     async def internal_error(_request: Request, error: Exception):
-        logger.error("Unhandled API failure", exc_info=error)
+        logger.error("Unhandled API failure: %s", type(error).__name__)
         return error_response(500, "INTERNAL_ERROR", "An unexpected backend error occurred.")

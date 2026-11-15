@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Request, Response, Header, Path
 from typing import Annotated
+import sqlite3
 from starlette.concurrency import run_in_threadpool
 from starlette.responses import JSONResponse
 from app.contracts.routes import StoredRouteResponse
+from app.runtime import local_checks
 from app.contracts.chat import ChatRequest, ChatResponse, ChatHistory
 from app.contracts.attempts import REQUEST_ID_PATTERN, RequestAttemptStatus
 
@@ -27,16 +29,14 @@ async def readiness(request: Request):
     """Local configuration readiness only; never contact the model provider."""
     planning = request.app.state.planning
     settings = request.app.state.route_agent.settings
-    checks = {
-        "planning": bool(await run_in_threadpool(lambda: planning.ready)),
-        "model_credentials": not settings.enabled or bool(settings.api_key),
-    }
+    checks = await run_in_threadpool(local_checks, planning, settings)
     ready = all(checks.values())
     return JSONResponse(status_code=200 if ready else 503, content={
         "status": "ready" if ready else "not_ready",
         "routing_mode": planning.mode,
         "a0_mode": "agentic" if settings.enabled else "deterministic",
         "checks": checks,
+        "provider_access_verified": False,
     })
 
 
@@ -48,7 +48,7 @@ async def regions(request: Request):
 
 
 @router.post("/routes/plan", response_model=PlanRouteResponse, tags=["routes"], responses={
-    status: {"model": ErrorEnvelope} for status in (400, 404, 409, 422, 429, 500, 503)
+    status: {"model": ErrorEnvelope} for status in (400, 404, 409, 413, 422, 429, 500, 503)
 })
 async def plan_route(body: PlanRouteRequest, request: Request,
                      idempotency_key: str | None = Header(default=None,alias='Idempotency-Key',pattern=REQUEST_ID_PATTERN),
@@ -90,14 +90,28 @@ async def agent_status(request: Request):
     agent=request.app.state.route_agent
     result=dict(mode='agentic' if agent.settings.enabled else 'deterministic',model=agent.settings.model,
         reasoning_effort='medium',configured=bool(agent.settings.api_key),max_output_tokens=agent.settings.max_output_tokens)
-    if agent.settings.enabled:
-        result['budget']=await run_in_threadpool(agent.provider.totals)
-        result['last_provider_error']=await run_in_threadpool(agent.provider.last_failure)
+    result['checks']=await run_in_threadpool(local_checks,agent.planning,agent.settings)
+    result['provider_access_verified']=False
+    result['provider']={'availability':'not_checked' if agent.settings.enabled else 'disabled',
+        'last_request_outcome':'not_requested','last_http_status':None}
+    result['last_provider_error']=None
+    result['budget']=None
+    result['usage_available']=False
+    if agent.settings.enabled and result['checks']['storage']:
+        try:
+            result['budget']=await run_in_threadpool(agent.provider.totals)
+            result['last_provider_error']=await run_in_threadpool(agent.provider.last_failure)
+            result['provider']=await run_in_threadpool(agent.provider.observation)
+            result['usage_available']=True
+        except (OSError, sqlite3.Error, ValueError):
+            result['checks']['storage']=False
+            result['budget']=None
+            result['last_provider_error']=None
     return result
 
 
 @router.post('/routes/{route_id}/chat',response_model=ChatResponse,tags=['chat'],responses={
-    status: {'model':ErrorEnvelope} for status in (400,404,409,422,429,500,503)
+    status: {'model':ErrorEnvelope} for status in (400,404,409,413,422,429,500,503)
 })
 async def chat_route(route_id: str,body: ChatRequest,request: Request,
                      retry_attempt: int | None = Header(default=None,alias='X-A-Stellar-Retry-Attempt',ge=1)):

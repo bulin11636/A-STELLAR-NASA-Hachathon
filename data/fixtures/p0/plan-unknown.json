@@ -1,0 +1,13 @@
+{
+  "request_id": "fixture-plan-unknown",
+  "state": "unknown",
+  "attempt": 1,
+  "retry_allowed": false,
+  "retry_after_seconds": 0,
+  "error": {
+    "code": "A0_TIMEOUT",
+    "message": "A0 timed out. Its cost reservation is retained and no automatic paid retry was made.",
+    "details": null
+  },
+  "updated_at": "2026-11-15T00:00:00Z"
+}

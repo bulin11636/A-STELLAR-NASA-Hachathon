@@ -103,15 +103,24 @@ class RouteAgent:
                  'evidence':snapshot['evidence'],'private_evidence':raw}
         return self.planning.plan(request,agent_context=context,prepared_grid=grid)
 
-    def respond(self, stored, message, *, recent_dialogue=None):
+    def respond(self, stored, message, *, recent_dialogue=None, advanced_context=None):
         request=stored.metadata.request
+        if advanced_context is not None:
+            advanced_context.require_parent(request)
         if not self.settings.enabled:
             summary=stored.metadata.rationale.summary if stored.metadata.rationale else 'This route was computed by deterministic terrain A*.'
             return summary+' Live A0 chat is disabled; use the ordered waypoint editor to revise this route.',None,None
         snapshot,workers,pois,raw=self.snapshot(request,stored=stored,message=message)
         if recent_dialogue:
             snapshot['recent_dialogue']=recent_dialogue
+        if advanced_context is not None:
+            snapshot['advanced_context']=advanced_context.model_dump(mode='json')
+            # The typed context already carries these exact parent stops.
+            # Keep one authoritative list in the bounded model input.
+            snapshot['request'].pop('waypoints',None)
         decision,usage=self.provider.decide(snapshot,message)
+        if advanced_context is not None and not advanced_context.allow_supported_revision:
+            return decision.message+' Explanation only: this request does not permit route revisions; the route is unchanged.',None,usage
         if decision.action=='answer':
             return decision.message,None,usage
         if decision.waypoints is not None:

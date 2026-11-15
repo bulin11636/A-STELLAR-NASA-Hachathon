@@ -5,15 +5,18 @@ Use this prompt in a new chat with this repository open.
 ```text
 Work in ~/nasa/repo/A-STELLAR-NASA-Hachathon on sam/backend.
 Inspect repository instructions and git status first. Preserve existing changes.
-Read docs/backend-handoff.md, docs/TODO.md, docs/docker.md and
-docs/regional-verification.md. Repository documentation must be English.
+Read docs/P0_BACKEND_DELIVERY.md, docs/backend-handoff.md, docs/TODO.md,
+docs/ADVANCED_ROUTE_PLANNING_CONTRACT.md and docs/docker.md. Repository documentation must be English.
 Keep TODO limited to pending work; do not record personal usage or billing.
 
 The current scope is reliable delivery of the existing prototype. Retain
 regional terrain A*, up to 16 ordered waypoints, chat additions/reordering,
 persisted rationale, immutable routes, source validation and provider diagnostics.
 UI styling and map fitting belong to the frontend owner; keep frontend source
-and existing plan/chat JSON contracts stable.
+and successful plan/chat response contracts stable. Sam's P0 work is complete;
+chat additionally accepts the optional typed advanced_context. Preserve its
+parent-route matching, context-bound request identity and host-enforced
+explanation-only permission. Remaining P0 UI work belongs to Sheng.
 
 Backend recovery uses durable request states and explicit, versioned retries.
 Known failed requests replay their saved error unless explicitly retried;
