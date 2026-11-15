@@ -1,14 +1,16 @@
 # Backend delivery and frontend integration
 
 Work in `A-STELLAR-NASA-Hachathon` on `sam/backend`. Frontend presentation and
-map fitting remain with the frontend owner. Existing plan/chat JSON bodies and
-successful response schemas are unchanged. This scope improves request recovery
+map fitting remain with the frontend owner. Existing plan bodies and successful
+plan/chat response schemas are unchanged. Chat accepts optional Advanced context. This scope improves request recovery
 and deployment verification without adding itinerary optimization or new mission
 constraints.
 
 See the [reliability checkpoint](backend-verification.md) for observed results;
 the commands below describe how to reproduce acceptance, not a claim that all
 external prerequisites have already been satisfied.
+
+Advanced context and current P0 status details are in the [Sam P0 delivery](P0_BACKEND_DELIVERY.md); shared examples are in [P0 fixtures](../data/fixtures/p0/README.md).
 
 ## Start this checkout
 
@@ -40,7 +42,7 @@ development proxy still targets that port.
 
 ## Request recovery protocol
 
-Chat retains its existing body: `{message, request_id}`. Planning optionally
+Chat retains `{message, request_id}` and additionally accepts optional `advanced_context` under the agreed Advanced contract. Planning optionally
 accepts `Idempotency-Key` in computed mode. Keys use 16–64 ASCII letters, digits,
 underscores or hyphens. Generate a key once for an intended action and retain it
 while its outcome is unresolved. A different input needs a different key.

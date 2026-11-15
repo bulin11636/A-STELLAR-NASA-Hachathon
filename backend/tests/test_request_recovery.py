@@ -214,6 +214,7 @@ def test_legacy_completed_messages_keep_replay_and_conflict_semantics(tmp_path):
     completed=chat.send(previous.route_id,body)
     # Simulate an older successful record with a permanent claim and no new state.
     chat._attempts(previous.route_id).paths(body.request_id)[0].unlink()
+    chat._input_path(previous.route_id,body.request_id).unlink()
     (planning.store.root/'chat'/previous.route_id/(body.request_id+'.claim')).write_text('claimed')
     assert chat.status(previous.route_id,body.request_id).state=='succeeded'
     assert chat.send(previous.route_id,body)==completed
@@ -303,3 +304,49 @@ def test_a_corrupt_saved_response_never_executes_the_model_again(tmp_path,corrup
         path.write_text(json.dumps(data))
     with pytest.raises(ApiProblem) as error: chat.send(previous.route_id,body)
     assert error.value.code=='REQUEST_RECORD_INVALID' and len(calls)==1
+
+
+def test_competing_keyed_plans_report_running_and_generate_once(tmp_path):
+    entered,release=Event(),Event();calls=[]
+    def handler(req):
+        calls.append(1);entered.set();assert release.wait(5)
+        return httpx.Response(200,json=model_response(decision()))
+    planning,agent,_,_=setup(tmp_path,handler)
+    body=request_for(planning.grid).model_dump(mode='json')
+    key='competing-plan-00001';headers={'Idempotency-Key':key}
+    with TestClient(create_app(planning=planning,route_agent=agent)) as client:
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            pending=pool.submit(client.post,'/api/v1/routes/plan',json=body,headers=headers)
+            assert entered.wait(5)
+            try:
+                state=client.get('/api/v1/routes/requests/'+key)
+                assert state.json()['state']=='running' and state.headers['cache-control']=='no-store'
+                duplicate=client.post('/api/v1/routes/plan',json=body,headers=headers)
+                assert duplicate.status_code==409 and duplicate.json()['error']['code']=='PLAN_REQUEST_IN_PROGRESS'
+            finally:release.set()
+            result=pending.result(timeout=5)
+        assert result.status_code==200,result.text
+        assert client.post('/api/v1/routes/plan',json=body,headers=headers).json()==result.json()
+    assert len(calls)==1
+
+
+@pytest.mark.parametrize('failure,expected_state',[('reject','failed'),('timeout','unknown')])
+def test_keyed_plan_failure_state_survives_fresh_service(tmp_path,failure,expected_state):
+    calls=[]
+    def handler(req):
+        calls.append(1)
+        if failure=='timeout': raise httpx.ReadTimeout('private-timeout',request=req)
+        return httpx.Response(429,json={'error':{'code':'rate_limit_exceeded'}})
+    planning,agent,provider,_=setup(tmp_path,handler)
+    body=request_for(planning.grid).model_dump(mode='json')
+    key='persistent-plan-0001';headers={'Idempotency-Key':key}
+    with TestClient(create_app(planning=planning,route_agent=agent)) as client:
+        failed=client.post('/api/v1/routes/plan',json=body,headers=headers)
+        assert failed.status_code==503
+    fresh=PlanningService('computed',planning.profile_path,planning.store.root)
+    with TestClient(create_app(planning=fresh,route_agent=RouteAgent(agent.settings,fresh,provider))) as client:
+        state=client.get('/api/v1/routes/requests/'+key).json()
+        assert state['state']==expected_state
+        assert state['retry_allowed']==(expected_state=='failed')
+        assert client.post('/api/v1/routes/plan',json=body,headers=headers).json()==failed.json()
+        assert len(calls)==1

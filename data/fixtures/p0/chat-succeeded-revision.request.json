@@ -1,0 +1,15 @@
+{
+  "message": "Switch to safest mode while keeping the original stops.",
+  "request_id": "fixture-chat-succeeded-revision",
+  "advanced_context": {
+    "schema_version": "1",
+    "interface_mode": "advanced",
+    "route_objective": "shortest",
+    "required_waypoints": [],
+    "analysis_focus": [
+      "terrain",
+      "operations"
+    ],
+    "allow_supported_revision": true
+  }
+}

@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 import subprocess
 import sys
-import tempfile
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'backend'))
@@ -54,15 +53,8 @@ def check_configuration(env):
     values=environment(env)
     settings=AgentSettings.read(values)
     planning=PlanningService('computed',values['A_STELLAR_PLANNING_PROFILE'],values['A_STELLAR_ROUTE_STORE'],dataset_root=values['A_STELLAR_DATASET_DIR'])
-    storage=True
-    for directory in [planning.store.root,settings.usage_root]:
-        try:
-            directory.mkdir(parents=True,exist_ok=True)
-            with tempfile.TemporaryFile(dir=directory) as probe:
-                probe.write(b'readiness'); probe.flush(); os.fsync(probe.fileno())
-        except OSError:
-            storage=False
-    checks=dict(planning=planning.ready,storage=storage,model_credentials=not settings.enabled or bool(settings.api_key))
+    from app.runtime import local_checks
+    checks=local_checks(planning,settings)
     return dict(ready=all(checks.values()),checks=checks,mode='agentic' if settings.enabled else 'deterministic',
         provider_access_verified=False)
 

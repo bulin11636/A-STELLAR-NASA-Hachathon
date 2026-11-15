@@ -1,0 +1,611 @@
+{
+  "result": {
+    "status": "success",
+    "route_id": "route-00000000000000000000000000000000",
+    "region_id": "jezero",
+    "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+    "mode": "shortest",
+    "source": "computed",
+    "route": [
+      {
+        "longitude": 77.44974586822211,
+        "latitude": 18.44918735468906
+      },
+      {
+        "longitude": 77.44974586822211,
+        "latitude": 18.44918735468906
+      },
+      {
+        "longitude": 77.45010159673706,
+        "latitude": 18.448849942591895
+      },
+      {
+        "longitude": 77.45045732525202,
+        "latitude": 18.448512530494735
+      },
+      {
+        "longitude": 77.45081305376695,
+        "latitude": 18.44817511839757
+      },
+      {
+        "longitude": 77.45116878228191,
+        "latitude": 18.447837706300408
+      },
+      {
+        "longitude": 77.45152451079687,
+        "latitude": 18.447500294203245
+      },
+      {
+        "longitude": 77.4518802393118,
+        "latitude": 18.447162882106085
+      },
+      {
+        "longitude": 77.45223596782677,
+        "latitude": 18.44682547000892
+      },
+      {
+        "longitude": 77.45259169634171,
+        "latitude": 18.44648805791176
+      },
+      {
+        "longitude": 77.45294742485667,
+        "latitude": 18.446150645814598
+      },
+      {
+        "longitude": 77.45330315337162,
+        "latitude": 18.445813233717434
+      },
+      {
+        "longitude": 77.45365888188657,
+        "latitude": 18.445475821620274
+      },
+      {
+        "longitude": 77.45401461040153,
+        "latitude": 18.44513840952311
+      },
+      {
+        "longitude": 77.45437033891648,
+        "latitude": 18.444800997425947
+      },
+      {
+        "longitude": 77.45472606743144,
+        "latitude": 18.444463585328787
+      },
+      {
+        "longitude": 77.4550817959464,
+        "latitude": 18.444126173231624
+      },
+      {
+        "longitude": 77.45543752446135,
+        "latitude": 18.443788761134464
+      },
+      {
+        "longitude": 77.45579325297629,
+        "latitude": 18.443451349037296
+      },
+      {
+        "longitude": 77.45614898149124,
+        "latitude": 18.443113936940136
+      },
+      {
+        "longitude": 77.4565047100062,
+        "latitude": 18.442776524842976
+      },
+      {
+        "longitude": 77.45686043852116,
+        "latitude": 18.442439112745813
+      },
+      {
+        "longitude": 77.45721616703611,
+        "latitude": 18.44210170064865
+      },
+      {
+        "longitude": 77.45757189555107,
+        "latitude": 18.441764288551486
+      },
+      {
+        "longitude": 77.45792762406602,
+        "latitude": 18.441426876454326
+      },
+      {
+        "longitude": 77.45828335258096,
+        "latitude": 18.441089464357166
+      },
+      {
+        "longitude": 77.45863908109591,
+        "latitude": 18.44075205226
+      },
+      {
+        "longitude": 77.45899480961086,
+        "latitude": 18.44041464016284
+      },
+      {
+        "longitude": 77.45935053812582,
+        "latitude": 18.440077228065675
+      },
+      {
+        "longitude": 77.45970626664077,
+        "latitude": 18.439739815968515
+      },
+      {
+        "longitude": 77.46006199515573,
+        "latitude": 18.43940240387135
+      },
+      {
+        "longitude": 77.46041772367066,
+        "latitude": 18.43906499177419
+      },
+      {
+        "longitude": 77.46077345218562,
+        "latitude": 18.43872757967703
+      },
+      {
+        "longitude": 77.46112918070058,
+        "latitude": 18.438390167579865
+      },
+      {
+        "longitude": 77.46148490921553,
+        "latitude": 18.4380527554827
+      },
+      {
+        "longitude": 77.46184063773049,
+        "latitude": 18.437715343385538
+      },
+      {
+        "longitude": 77.46219636624544,
+        "latitude": 18.437377931288378
+      },
+      {
+        "longitude": 77.4625520947604,
+        "latitude": 18.437040519191218
+      },
+      {
+        "longitude": 77.46290782327534,
+        "latitude": 18.43670310709405
+      },
+      {
+        "longitude": 77.46326355179029,
+        "latitude": 18.43636569499689
+      },
+      {
+        "longitude": 77.46361928030525,
+        "latitude": 18.436028282899727
+      },
+      {
+        "longitude": 77.4639750088202,
+        "latitude": 18.435690870802567
+      },
+      {
+        "longitude": 77.46433073733516,
+        "latitude": 18.435353458705404
+      },
+      {
+        "longitude": 77.46468646585012,
+        "latitude": 18.43501604660824
+      },
+      {
+        "longitude": 77.46504219436507,
+        "latitude": 18.43467863451108
+      },
+      {
+        "longitude": 77.46539792288002,
+        "latitude": 18.434341222413916
+      },
+      {
+        "longitude": 77.46575365139496,
+        "latitude": 18.434003810316753
+      },
+      {
+        "longitude": 77.46610937990991,
+        "latitude": 18.433666398219593
+      },
+      {
+        "longitude": 77.46646510842486,
+        "latitude": 18.43332898612243
+      },
+      {
+        "longitude": 77.46682083693982,
+        "latitude": 18.43299157402527
+      },
+      {
+        "longitude": 77.46717656545478,
+        "latitude": 18.432654161928102
+      },
+      {
+        "longitude": 77.46753229396973,
+        "latitude": 18.432316749830942
+      },
+      {
+        "longitude": 77.46788802248467,
+        "latitude": 18.431979337733782
+      },
+      {
+        "longitude": 77.46824375099962,
+        "latitude": 18.43164192563662
+      },
+      {
+        "longitude": 77.46859947951458,
+        "latitude": 18.431304513539455
+      },
+      {
+        "longitude": 77.46895520802954,
+        "latitude": 18.430967101442292
+      },
+      {
+        "longitude": 77.46931093654449,
+        "latitude": 18.430629689345132
+      },
+      {
+        "longitude": 77.46966666505945,
+        "latitude": 18.430292277247972
+      },
+      {
+        "longitude": 77.47002239357438,
+        "latitude": 18.429954865150805
+      },
+      {
+        "longitude": 77.47037812208934,
+        "latitude": 18.429617453053645
+      },
+      {
+        "longitude": 77.4707338506043,
+        "latitude": 18.42928004095648
+      },
+      {
+        "longitude": 77.47108957911925,
+        "latitude": 18.42894262885932
+      },
+      {
+        "longitude": 77.47144530763421,
+        "latitude": 18.428605216762158
+      },
+      {
+        "longitude": 77.47180103614916,
+        "latitude": 18.428267804664994
+      },
+      {
+        "longitude": 77.4721567646641,
+        "latitude": 18.427930392567834
+      },
+      {
+        "longitude": 77.47251249317905,
+        "latitude": 18.42759298047067
+      },
+      {
+        "longitude": 77.472868221694,
+        "latitude": 18.427255568373507
+      },
+      {
+        "longitude": 77.47322395020896,
+        "latitude": 18.426918156276344
+      },
+      {
+        "longitude": 77.47357967872391,
+        "latitude": 18.426580744179184
+      },
+      {
+        "longitude": 77.47393540723887,
+        "latitude": 18.426243332082024
+      },
+      {
+        "longitude": 77.47429113575382,
+        "latitude": 18.42590591998486
+      },
+      {
+        "longitude": 77.47464686426878,
+        "latitude": 18.425568507887697
+      },
+      {
+        "longitude": 77.47500259278372,
+        "latitude": 18.425231095790533
+      },
+      {
+        "longitude": 77.47535832129867,
+        "latitude": 18.424893683693373
+      },
+      {
+        "longitude": 77.47571404981363,
+        "latitude": 18.42455627159621
+      },
+      {
+        "longitude": 77.47606977832858,
+        "latitude": 18.424218859499046
+      },
+      {
+        "longitude": 77.47642550684354,
+        "latitude": 18.423881447401886
+      },
+      {
+        "longitude": 77.4767812353585,
+        "latitude": 18.423544035304722
+      },
+      {
+        "longitude": 77.47713696387345,
+        "latitude": 18.423206623207562
+      },
+      {
+        "longitude": 77.4774926923884,
+        "latitude": 18.4228692111104
+      },
+      {
+        "longitude": 77.47784842090334,
+        "latitude": 18.422531799013235
+      },
+      {
+        "longitude": 77.4782041494183,
+        "latitude": 18.422194386916075
+      },
+      {
+        "longitude": 77.4782041494183,
+        "latitude": 18.422194386916075
+      }
+    ],
+    "metrics": {
+      "distance_m": 2262.741699796954,
+      "estimated_time_min": null,
+      "risk_score": null
+    },
+    "warnings": [
+      "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+      "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
+      "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+    ]
+  },
+  "metadata": {
+    "schema_version": "1",
+    "route_id": "route-00000000000000000000000000000000",
+    "created_at": "2026-11-15T00:00:00Z",
+    "request": {
+      "region_id": "jezero",
+      "coordinate_system": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+      "start": {
+        "longitude": 77.44974586822211,
+        "latitude": 18.44918735468906
+      },
+      "goal": {
+        "longitude": 77.4782041494183,
+        "latitude": 18.422194386916075
+      },
+      "mode": "shortest",
+      "waypoints": []
+    },
+    "coordinator": {
+      "agent_id": "A0",
+      "public_name": "Mission Orchestration and Route Planning Coordinator",
+      "responsibility": "Validate mission inputs and available data, dispatch registered analysis tools, request deterministic fusion/planning/validation, preserve provenance, persist results and explain unmet requirements.",
+      "implementation_version": "python-a0-v1"
+    },
+    "scope": {
+      "region_id": "jezero",
+      "roi_id": "docker-synthetic-v1",
+      "dataset_version": "4a7a5faca77c50d75867612709c13ea33f393e84d80d8dd62293ac1132e04f44",
+      "bounds": {
+        "west": 77.44245343366558,
+        "east": 77.48798668357948,
+        "south": 18.412915554244112,
+        "north": 18.456104302680885
+      }
+    },
+    "sources": [
+      {
+        "dataset_id": "docker-synthetic-plane",
+        "source_url": null,
+        "input_filename": "dem.tif",
+        "sha256": "4a7a5faca77c50d75867612709c13ea33f393e84d80d8dd62293ac1132e04f44",
+        "instrument": null,
+        "mission": null,
+        "acquisition_time": null,
+        "provenance_record_id": "route-00000000000000000000000000000000:provenance"
+      }
+    ],
+    "grid": {
+      "grid_id": "grid-969811e44046b84a66d3227e",
+      "source_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
+      "planning_crs": "PROJCRS[\"Mars_Synthetic\",BASEGEOGCRS[\"Mars_Synthetic\",DATUM[\"Mars_Synthetic\",ELLIPSOID[\"Mars_Synthetic\",3396190,0,LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]],PRIMEM[\"Reference meridian\",0,ANGLEUNIT[\"degree\",0.0174532925199433,ID[\"EPSG\",9122]]]],CONVERSION[\"unnamed\",METHOD[\"Equidistant Cylindrical (Spherical)\",ID[\"EPSG\",1029]],PARAMETER[\"Latitude of 1st standard parallel\",18.4663,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8823]],PARAMETER[\"Longitude of natural origin\",0,ANGLEUNIT[\"degree\",0.0174532925199433],ID[\"EPSG\",8802]],PARAMETER[\"False easting\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8806]],PARAMETER[\"False northing\",0,LENGTHUNIT[\"metre\",1],ID[\"EPSG\",8807]]],CS[Cartesian,2],AXIS[\"easting\",east,ORDER[1],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]],AXIS[\"northing\",north,ORDER[2],LENGTHUNIT[\"metre\",1,ID[\"EPSG\",9001]]]]",
+      "wire_convention": "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
+      "affine": [
+        20.0,
+        0.0,
+        4354020.0,
+        0.0,
+        -20.0,
+        1093980.0
+      ],
+      "affine_order": "a,b,c,d,e,f; x=a*column+b*row+c; y=d*column+e*row+f",
+      "width": 128,
+      "height": 128,
+      "source_resolution": [
+        20.0,
+        20.0
+      ],
+      "planning_resolution_m": [
+        20.0,
+        20.0
+      ],
+      "vertical_units": "m",
+      "vertical_scale": 1.0,
+      "vertical_offset": 0.0,
+      "nodata": "-9999.0",
+      "mask_artifact_ids": {
+        "coverage": "route-00000000000000000000000000000000:grid#coverage",
+        "unknown": "route-00000000000000000000000000000000:grid#unknown",
+        "blocked": "route-00000000000000000000000000000000:grid#blocked"
+      }
+    },
+    "policy": {
+      "policy_id": "terrain-research-v1",
+      "slope_threshold_deg": 15.0,
+      "unknown_handling": "impassable",
+      "connectivity": 8,
+      "corner_cutting": "prohibited",
+      "endpoint_rule": "Exact endpoints; closed-cell segment intersections including corner touches; no smoothing.",
+      "cost_formula": "edge_length_m * mean(1 + weight*(slope_deg/threshold_deg)^2); endpoint connectors use endpoint cell penalty",
+      "parameters": {
+        "weight": 0.0
+      },
+      "limits": {
+        "max_grid_cells": 262144,
+        "max_expanded_nodes": 200000,
+        "max_elapsed_seconds": 5.0
+      }
+    },
+    "planner": {
+      "algorithm": "astar",
+      "implementation_version": "astar-v1",
+      "heuristic": "Euclidean metric distance; minimum penalty is one",
+      "objective_cost": 2262.741699796954,
+      "objective_units": "m",
+      "expanded_nodes": 81,
+      "elapsed_ms": 0.6945790082681924,
+      "distance_convention": "Native projected planar polyline including endpoint connectors"
+    },
+    "validation": {
+      "status": "passed",
+      "validator_version": "closed-cell-box-v1",
+      "checks": [
+        "source version unchanged",
+        "all segments inside ROI",
+        "all touched cells covered, known and allowed",
+        "no blocked diagonal corners",
+        "exact endpoints",
+        "emitted wire geometry revalidated"
+      ],
+      "control_fixture_ids": [
+        "native-sphere-eqc-analytic-v1"
+      ],
+      "tolerances": {
+        "wire_metric_roundtrip_m": 1e-05
+      },
+      "map_alignment": "unverified"
+    },
+    "workers": [
+      {
+        "agent_id": "A1",
+        "public_name": "Surface Traversability and Terrain Hazard Agent",
+        "responsibility": "Derive slope and supported terrain descriptors from a DEM; supply metric costs, coverage, unknown and blocked masks. Optical obstacle analysis requires aligned imagery.",
+        "requested": true,
+        "status": "ready",
+        "evidence_kind": "observed",
+        "dataset_ids": [
+          "docker-synthetic-plane"
+        ],
+        "artifact_ids": [
+          "route-00000000000000000000000000000000:grid"
+        ],
+        "warnings": [
+          "Optical obstacles are unassessed."
+        ],
+        "unassessed_constraints": [
+          "optical obstacles"
+        ]
+      },
+      {
+        "agent_id": "A2",
+        "public_name": "Thermal Environment and Exposure Context Agent",
+        "responsibility": "Describe day/night thermal observations, units, times and coverage. Calibrated constraints require separate validation.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Thermal Environment and Exposure Context Agent"
+        ]
+      },
+      {
+        "agent_id": "A3",
+        "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
+        "responsibility": "Evaluate explicitly configured dose scenarios against a mission duration and user-supplied budget, retaining assumptions and uncertainty.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Radiation Exposure and Mission Dose Assessment Agent"
+        ]
+      },
+      {
+        "agent_id": "A4",
+        "public_name": "Geological Context and Science Opportunity Agent",
+        "responsibility": "Associate source-attributed sampling POIs with regional geology, retain ambiguity and explain scientific relevance. Priority scoring requires a documented rubric.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Geological Context and Science Opportunity Agent"
+        ]
+      },
+      {
+        "agent_id": "A6",
+        "public_name": "Rover Traverse and Observation Evidence Agent",
+        "responsibility": "Normalize historical rover positions and segments, compute supported proximity measures and attach verified observation references. Historical traversal does not establish astronaut safety.",
+        "requested": false,
+        "status": "unassessed",
+        "evidence_kind": "unavailable",
+        "dataset_ids": [],
+        "artifact_ids": [],
+        "warnings": [
+          "Not invoked; no validated constraint supplied."
+        ],
+        "unassessed_constraints": [
+          "Rover Traverse and Observation Evidence Agent"
+        ]
+      }
+    ],
+    "artifacts": {
+      "grid": {
+        "artifact_id": "route-00000000000000000000000000000000:grid",
+        "sha256": "60445b19bcea4ef25b721c58b2da985c671366f85ae25a8bdb4c9260b680f3ca"
+      },
+      "validation": {
+        "artifact_id": "route-00000000000000000000000000000000:validation",
+        "sha256": "77159479d9bb042771ebf05055e120047be3ebea7b57ba74e2c629d13c75d5ae"
+      },
+      "provenance": {
+        "artifact_id": "route-00000000000000000000000000000000:provenance",
+        "sha256": "899085629140ccd89dc876143d0a7fc2c9e4e42bc4f5f2fe8ec15e2ca386c43e"
+      }
+    },
+    "warnings": [
+      "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+      "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
+      "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+    ],
+    "rationale": {
+      "summary": "A* computed a terrain-only route using projected distance cost and the requested stop order.",
+      "facts": [
+        "Computed 1 ordered route leg(s), including 0 required waypoint(s).",
+        "Projected planar distance: 2262.74 m; objective: shortest.",
+        "Grid: 128 by 128 cells at 20 by 20 m.",
+        "Unknown cells are impassable; slope threshold is 15 degrees (research policy)."
+      ],
+      "limitations": [
+        "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
+        "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
+        "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
+        "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+        "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified."
+      ],
+      "model_commentary": null,
+      "evidence_ids": []
+    },
+    "usage": null,
+    "parent_route_id": null
+  }
+}

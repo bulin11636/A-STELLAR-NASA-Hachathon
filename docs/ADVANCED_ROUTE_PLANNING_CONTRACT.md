@@ -5,6 +5,8 @@
 - **Sheng:** owns the interaction flow, typed client, request lifecycle, tests, and English user-facing text.
 - **Sam:** owns request validation, A0 context handling, policy validation, persistence, API tests, and safe errors.
 
+Sam's backend implementation and fixtures are documented in the [P0 backend delivery](P0_BACKEND_DELIVERY.md).
+
 This document is the shared implementation contract for P0. Quick mode must
 continue to work if Advanced mode or A0 is unavailable.
 

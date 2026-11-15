@@ -50,7 +50,7 @@ def test_readiness_distinguishes_missing_source_and_key_without_a_paid_call(tmp_
     with TestClient(create_app(planning=working,route_agent=agent)) as client:
         response = client.get('/api/v1/ready')
         assert response.status_code == 503
-        assert response.json()['checks'] == {'planning':True,'model_credentials':False}
+        assert response.json()['checks'] == {'planning':True,'storage':True,'model_credentials':False}
 
 
 def test_explicit_static_configuration_requires_a_build(tmp_path):

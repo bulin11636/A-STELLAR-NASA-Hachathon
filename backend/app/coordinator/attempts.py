@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 import math
+import logging
 import os
 from pathlib import Path
 import re
@@ -22,6 +23,8 @@ from app.api.errors import ApiProblem
 from app.contracts.api import ContractModel, ErrorBody
 from app.contracts.attempts import REQUEST_ID_PATTERN, RequestAttemptStatus
 from app.planning.store import sync_dir
+
+logger = logging.getLogger(__name__)
 
 MAX_RESPONSE_BYTES = 128*1024*1024  # bounded, while allowing native-resolution route polylines
 
@@ -54,6 +57,7 @@ class Failure(ContractModel):
     code: str
     message: str
     retry_safe: bool = False
+    details: list[dict[str, str]] | None = None
     retry_not_before: datetime | None = None
 
 
@@ -89,12 +93,15 @@ class AttemptStore:
 
     @contextmanager
     def lock(self, path):
-        path.parent.mkdir(parents=True,exist_ok=True)
         if path.is_symlink():
             raise ApiProblem(500,'REQUEST_RECORD_INVALID','The request lock is invalid.')
         # One database per key: an active model call never holds a global lock
         # against unrelated requests. No application data is stored in it.
-        connection = sqlite3.connect(path,timeout=0,isolation_level=None)
+        try:
+            path.parent.mkdir(parents=True,exist_ok=True)
+            connection = sqlite3.connect(path,timeout=0,isolation_level=None)
+        except (OSError, sqlite3.Error):
+            raise ApiProblem(503,'REQUEST_STORAGE_UNAVAILABLE','Durable request storage is unavailable; no new work was started.') from None
         try:
             try:
                 connection.execute('BEGIN EXCLUSIVE')
@@ -138,7 +145,7 @@ class AttemptStore:
         state = state or record.state
         return RequestAttemptStatus(request_id=key,state=state,attempt=record.attempt,
             retry_allowed=bool(state=='failed' and failure and failure.retry_safe and delay==0),
-            retry_after_seconds=delay,error=ErrorBody(code=failure.code,message=failure.message) if failure else None,
+            retry_after_seconds=delay,error=ErrorBody(code=failure.code,message=failure.message,details=failure.details) if failure else None,
             updated_at=record.updated_at)
 
     def unknown(self, record):
@@ -148,10 +155,10 @@ class AttemptStore:
     def failed_error(self, key, record):
         status = self.view(key,record)
         failure = record.failure
-        return ApiProblem(failure.http_status,failure.code,failure.message,details=[dict(
+        return ApiProblem(failure.http_status,failure.code,failure.message,details=[*(failure.details or []),dict(
             type='request_attempt',state=status.state,request_id=key,attempt=str(status.attempt),
             retry_allowed=str(status.retry_allowed).lower(),retry_after_seconds=str(status.retry_after_seconds),
-            retry_header='X-A-Stellar-Retry-Attempt')])
+            retry_header='X-A-Stellar-Retry-Attempt')], retry_after_seconds=status.retry_after_seconds or None)
 
     def status(self, key, parse, *, response_path=None, legacy_claim=None):
         path,response,lock = self.paths(key)
@@ -207,7 +214,7 @@ class AttemptStore:
                 delay = self.view(key,record).retry_after_seconds
                 if delay:
                     raise ApiProblem(429,self.code('RETRY_DELAY'),'Wait for Retry-After before explicitly retrying.',
-                        details=[dict(type='request_attempt',retry_after_seconds=str(delay))])
+                        details=[dict(type='request_attempt',retry_after_seconds=str(delay))],retry_after_seconds=delay)
             elif retry_attempt is not None:
                 raise ApiProblem(409,self.code('RETRY_CONFLICT'),'An explicit retry requires an existing failed attempt.')
             record = Record(payload_hash=expected,state='running',attempt=record.attempt+1 if record else 1,updated_at=now())
@@ -217,13 +224,16 @@ class AttemptStore:
                 save_json(response,result.model_dump(mode='json'))
             except ApiProblem as error:
                 delay = error.retry_after_seconds
-                failure = Failure(http_status=error.status,code=error.code,message=error.message,retry_safe=error.retry_safe and not error.outcome_unknown,
+                failure = Failure(http_status=error.status,code=error.code,message=error.message,details=error.details,retry_safe=error.retry_safe and not error.outcome_unknown,
                     retry_not_before=now()+timedelta(seconds=delay) if delay is not None else None)
                 record = record.model_copy(update=dict(state='unknown' if error.outcome_unknown else 'failed',updated_at=now(),failure=failure))
                 save_json(path,record.model_dump(mode='json'))
                 raise self.failed_error(key,record) from None
-            except Exception:
-                record = self.unknown(record)
+            except Exception as error:
+                logger.error('Unhandled %s request failure: %s', self.kind, type(error).__name__)
+                record = record.model_copy(update=dict(state='unknown',updated_at=now(),failure=Failure(
+                    http_status=500,code='INTERNAL_ERROR',
+                    message='An unexpected backend error occurred. The request outcome is uncertain; do not automatically retry.')))
                 save_json(path,record.model_dump(mode='json'))
                 raise self.failed_error(key,record) from None
             # A published response remains authoritative if this final status

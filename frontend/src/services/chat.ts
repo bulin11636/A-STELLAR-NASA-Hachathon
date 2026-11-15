@@ -2,6 +2,7 @@ import schema from "../types/chat.schema.json";
 import type { ChatResponse } from "../types/routeMetadata.ts";
 import { apiRequest, ApiError } from "./apiClient.ts";
 import { checkSchema, decodeStoredRoute } from "./metadata.ts";
+import type { AdvancedContext } from "./advancedContext.ts";
 
 export type { ChatResponse };
 
@@ -20,10 +21,10 @@ function validId(id: string) {
   if (!/^route-[a-f0-9]{32}$/.test(id)) throw new ApiError("Invalid route identifier.", "VALIDATION_ERROR");
 }
 
-export function sendChat(routeId: string, message: string, requestId: string, signal?: AbortSignal) {
+export function sendChat(routeId: string, message: string, requestId: string, signal?: AbortSignal, advancedContext?: AdvancedContext) {
   validId(routeId);
   return apiRequest(`/api/v1/routes/${routeId}/chat`, (body) => decodeChat(body, routeId), {
-    method: "POST", body: { message, request_id: requestId }, signal, timeoutMs: 90_000,
+    method: "POST", body: { message, request_id: requestId, ...(advancedContext ? { advanced_context: advancedContext } : {}) }, signal, timeoutMs: 90_000,
   });
 }
 

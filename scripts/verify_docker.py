@@ -162,10 +162,13 @@ def main():
                 summary.update(distance_m=result['metrics']['distance_m'],
                     planning_resolution_m=stored['metadata']['grid']['planning_resolution_m'])
                 save('stored-route.json',stored)
-                body=dict(message='Explain the terrain-only limits.',request_id='docker-chat-'+suffix)
+                body=dict(message='Explain the terrain-only limits.',request_id='docker-chat-'+suffix,
+                    advanced_context=dict(schema_version='1',interface_mode='advanced',route_objective=request['mode'],
+                        required_waypoints=request.get('waypoints',[]),analysis_focus=['terrain'],allow_supported_revision=False))
                 chat_url='/api/v1/routes/'+route_id+'/chat'
                 chat=client.post(chat_url,json=body)
                 assert chat.status_code==200,chat.text
+                assert chat.json()['result'] is None and chat.json()['metadata'] is None
                 assert client.post(chat_url,json=body).json()==chat.json()
                 bad_key='docker-bad-'+suffix
                 invalid={**request,'start':{'longitude':0.0,'latitude':0.0}}

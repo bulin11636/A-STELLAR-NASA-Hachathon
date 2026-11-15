@@ -6,6 +6,7 @@ import RouteChat from "./RouteChat.tsx";
 import RoutePreview from "./RoutePreview.tsx";
 import A0Status from "./A0Status.tsx";
 import RouteComparison from "./RouteComparison.tsx";
+import { buildAdvancedContext } from "../services/advancedContext.ts";
 
 function label(point: MarsCoordinate | null) {
   return point ? `${point.longitude.toFixed(6)}° E · ${point.latitude.toFixed(6)}° (API coordinates)` : "Not selected";
@@ -21,6 +22,9 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
   return (
     <section className="route-planner" aria-labelledby="route-planner-title">
       <h2 id="route-planner-title">Plan a research route</h2>
+      <div className="pick-modes" role="tablist" aria-label="Planning mode">
+        {(["quick", "advanced"] as const).map((value) => <button type="button" role="tab" key={value} aria-selected={planner.interfaceMode === value} onClick={() => planner.setInterfaceMode(value)}>{value === "quick" ? "Quick" : "Advanced"}</button>)}
+      </div>
       <A0Status revision={planner.result?.route_id} />
       <p className="notice coordinate-caveat"><strong>{COORDINATE_NOTICE}</strong>. Computed geometry is hidden until NASA map registration is verified. Map picks use unverified native latitude.</p>
       <p>Region: Jezero · Terrain-only research policy; optional environmental constraints may be unassessed.</p>
@@ -47,33 +51,41 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
       <fieldset disabled={!mapReady}>
         <legend>Map click action</legend>
         <div className="pick-modes">
-          {(["inspect", "start", "goal"] as const).map((mode) => (
+          {(["inspect", "start", "goal", "waypoint"] as const).map((mode) => (
             <button type="button" key={mode} aria-pressed={planner.pickMode === mode} onClick={() => planner.setPickMode(mode)}>
-              {mode === "inspect" ? "Inspect" : `Pick ${mode === "start" ? "Start" : "Goal"}`}
+              {mode === "inspect" ? "Inspect" : `Pick ${mode === "start" ? "Start" : mode === "goal" ? "Goal" : "Waypoint"}`}
             </button>
           ))}
         </div>
       </fieldset>
-      <p className="pick-instruction" role="status">{planner.pickMode === "inspect" ? "Inspecting coordinates. Choose Pick Start or Pick Goal to place a marker." : `Click the map to select ${planner.pickMode === "start" ? "Start (S)" : "Goal (G)"}.`}</p>
+      <p className="pick-instruction" role="status">{planner.pickMode === "inspect" ? "Inspecting coordinates. Choose Pick Start, Pick Goal, or Pick Waypoint." : `Click the map to select ${planner.pickMode === "start" ? "Start (S)" : planner.pickMode === "goal" ? "Goal (G)" : "a required waypoint"}.`}</p>
       <dl className="selected-coordinates">
         <dt>Start (S)</dt><dd data-testid="start-coordinate">{label(planner.start)}</dd>
         <dt>Goal (G)</dt><dd data-testid="goal-coordinate">{label(planner.goal)}</dd>
       </dl>
       <CoordinateEditor planner={planner} />
-      <p>Required waypoints: {planner.waypoints.length} (visit order preserved).</p>
+      <section aria-label="Required waypoints"><p>Required waypoints: {planner.waypoints.length}/16 (visit order preserved).</p>
+        <ol>{planner.waypoints.map((point, index) => <li key={`${point.longitude}:${point.latitude}:${index}`}>W{index + 1}: {label(point)} <button type="button" disabled={index === 0} onClick={() => planner.moveWaypoint(index, -1)}>Move up</button> <button type="button" disabled={index === planner.waypoints.length - 1} onClick={() => planner.moveWaypoint(index, 1)}>Move down</button> <button type="button" onClick={() => planner.removeWaypoint(index)}>Remove</button></li>)}</ol>
+      </section>
       <label className="mode-label">Requested terrain objective
         <select value={planner.mode} onChange={(event) => planner.changeMode(event.target.value as "shortest" | "safest")}>
           <option value="safest">Safest</option><option value="shortest">Shortest</option>
         </select>
       </label>
+      {planner.interfaceMode === "advanced" && <section aria-label="Advanced planning options">
+        <fieldset><legend>Analysis focus</legend>{(["terrain", "science", "operations"] as const).map((focus) => <label key={focus}><input type="checkbox" checked={planner.analysisFocus.includes(focus)} onChange={() => planner.setAnalysisFocus(planner.analysisFocus.includes(focus) ? planner.analysisFocus.filter((item) => item !== focus) : [...planner.analysisFocus, focus])} /> {focus}</label>)}</fieldset>
+        <label><input type="checkbox" checked={planner.allowSupportedRevision} onChange={(event) => planner.setAllowSupportedRevision(event.target.checked)} /> Allow A0 to propose a supported route revision</label>
+        <label className="mode-label">Additional requirements<textarea maxLength={1600} rows={3} value={planner.additionalRequirements} onChange={(event) => planner.setAdditionalRequirements(event.target.value)} placeholder="Describe a bounded requirement for A0 to explain or evaluate." /></label>
+      </section>}
       <div className="route-actions">
-        <button type="button" disabled={!planner.start || !planner.goal || planner.status === "loading"} onClick={() => void planner.submit()}>
+        <button type="button" disabled={!planner.start || !planner.goal || planner.status === "loading"} onClick={() => void planner.submit(planningRegion?.routing_mode === "computed")}>
           {planner.status === "loading" ? "Planning…" : "Plan Route"}
         </button>
         <button type="button" onClick={planner.clear}>Clear selections</button>
       </div>
       {planner.status === "loading" && <p role="status">Waiting for the backend… Changing selections cancels this request.</p>}
       {planner.error && <p className="notice route-error" role="alert"><strong>{planner.error.code}</strong>: {planner.error.message}{planner.error.status !== null && ` (HTTP ${planner.error.status})`}</p>}
+      {planner.attemptStatus && <p role="status">Request {planner.attemptStatus.state}. Attempt {planner.attemptStatus.attempt}. {planner.attemptStatus.retry_allowed ? `Manual retry available after ${planner.attemptStatus.retry_after_seconds} seconds.` : "Manual retry is not available."}</p>}
       {planner.result && (
         <section className="route-result" aria-label="Route result" aria-live="polite">
           <strong className="mock-badge">{planner.result.source === "mock" ? "MOCK / NOT SAFETY-VALIDATED" : "COMPUTED / RESEARCH TERRAIN ONLY"}</strong>
@@ -102,7 +114,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
           {planner.metadata && <RoutePreview result={planner.result} metadata={planner.metadata} />}
           {planner.metadata?.usage && <p>A0: {planner.metadata.usage.model} / {planner.metadata.usage.reasoning_effort} ·
             {planner.metadata.usage.input_tokens} input / {planner.metadata.usage.output_tokens} output tokens (including reasoning) · estimated ${planner.metadata.usage.estimated_cost_usd.toFixed(4)}</p>}
-          {planner.result.source === "computed" && <RouteChat routeId={planner.result.route_id} onRevision={planner.acceptRevision} />}
+          {planner.result.source === "computed" && <RouteChat routeId={planner.result.route_id} onRevision={planner.acceptRevision} advancedContext={planner.interfaceMode === "advanced" && planner.analysisFocus.length ? buildAdvancedContext(planner.mode, planner.waypoints, planner.analysisFocus, planner.allowSupportedRevision) : undefined} />}
           <ul>{planner.result.warnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul>
         </section>
       )}

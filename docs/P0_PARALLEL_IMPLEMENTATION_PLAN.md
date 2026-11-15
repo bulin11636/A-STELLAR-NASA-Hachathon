@@ -120,6 +120,8 @@ Rules:
 
 ## Sam — implementation work
 
+Backend delivery and current integration notes: [Sam P0 delivery](P0_BACKEND_DELIVERY.md).
+
 ### Sam boundaries
 
 - Own FastAPI request recovery, persistence, provider boundaries, and backend tests.
@@ -131,48 +133,48 @@ Rules:
 
 ### SAM-1 — Stable recovery endpoints
 
-- [ ] Confirm `GET /api/v1/routes/requests/{request_id}` implements the shared
+- [x] Confirm `GET /api/v1/routes/requests/{request_id}` implements the shared
   status contract for keyed computed plans.
-- [ ] Confirm `GET /api/v1/routes/{route_id}/chat/attempts/{request_id}` implements
+- [x] Confirm `GET /api/v1/routes/{route_id}/chat/attempts/{request_id}` implements
   the same contract for chat messages.
-- [ ] Return stable state, attempt, retry eligibility, delay, nullable error, and
+- [x] Return stable state, attempt, retry eligibility, delay, nullable error, and
   nullable update time for every request state.
-- [ ] Document any intentionally unsupported status behavior before Sheng relies on it.
+- [x] Document any intentionally unsupported status behavior before Sheng relies on it.
 
 ### SAM-2 — Idempotency, persistence, and explicit retry
 
-- [ ] Validate `Idempotency-Key` format and bind it to one request body.
-- [ ] Prevent simultaneous duplicate work for the same key.
-- [ ] Replay the stored successful response for a completed successful key.
-- [ ] Persist failed and unknown outcomes across backend restarts.
-- [ ] Permit retry only for known eligible failures and only with the current
+- [x] Validate `Idempotency-Key` format and bind it to one request body.
+- [x] Prevent simultaneous duplicate work for the same key.
+- [x] Replay the stored successful response for a completed successful key.
+- [x] Persist failed and unknown outcomes across backend restarts.
+- [x] Permit retry only for known eligible failures and only with the current
   backend attempt version.
-- [ ] Reject early retries with an actionable JSON response and Retry-After behavior.
-- [ ] Ensure timeout/uncertain outcomes remain `unknown` rather than triggering a
+- [x] Reject early retries with an actionable JSON response and Retry-After behavior.
+- [x] Ensure timeout/uncertain outcomes remain `unknown` rather than triggering a
   second automatic model call.
-- [ ] Preserve required waypoint order in every validated computed result and
+- [x] Preserve required waypoint order in every validated computed result and
   reject consecutive duplicate stops using the existing request contract.
 
 ### SAM-3 — Error and provider handling
 
-- [ ] Return the existing JSON error envelope for invalid input, missing DEM/profile,
+- [x] Return the existing JSON error envelope for invalid input, missing DEM/profile,
   unavailable route, model configuration failure, provider rejection, budget limit,
   and retry-too-early states.
-- [ ] Ensure unhandled exceptions are logged server-side but returned as a safe
+- [x] Ensure unhandled exceptions are logged server-side but returned as a safe
   `INTERNAL_ERROR` JSON response.
-- [ ] Keep provider/model errors classified without leaking secrets or paths.
-- [ ] Do not call the provider during readiness checks.
+- [x] Keep provider/model errors classified without leaking secrets or paths.
+- [x] Do not call the provider during readiness checks.
 
 ### SAM-4 — Readiness and A0 status
 
-- [ ] Keep `GET /api/v1/ready` explicit about planning, storage, and credential checks.
-- [ ] Keep `GET /api/v1/a0/status` explicit about deterministic/agentic mode,
+- [x] Keep `GET /api/v1/ready` explicit about planning, storage, and credential checks.
+- [x] Keep `GET /api/v1/a0/status` explicit about deterministic/agentic mode,
   configuration presence, model, usage/budget, and last provider failure when available.
-- [ ] Distinguish configured credentials from confirmed provider availability.
+- [x] Distinguish configured credentials from confirmed provider availability.
 
 ### SAM-5 — Shared fixtures for Sheng
 
-- [ ] Provide stable JSON examples for:
+- [x] Provide stable JSON examples for:
   - `plan-running`
   - `plan-succeeded`
   - `plan-failed-retryable`
@@ -180,7 +182,7 @@ Rules:
   - `plan-unknown`
   - `chat-failed-retryable`
   - `chat-succeeded-revision`
-- [ ] Add backend tests for replay, concurrent duplicate calls, explicit retry,
+- [x] Add backend tests for replay, concurrent duplicate calls, explicit retry,
   backend restart retrieval, provider rejection, and unknown outcome behavior.
 
 ## Parallel execution schedule

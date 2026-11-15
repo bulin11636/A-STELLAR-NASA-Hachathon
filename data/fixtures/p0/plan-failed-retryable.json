@@ -1,0 +1,13 @@
+{
+  "request_id": "fixture-plan-failed-retryable",
+  "state": "failed",
+  "attempt": 1,
+  "retry_allowed": true,
+  "retry_after_seconds": 0,
+  "error": {
+    "code": "A0_RATE_LIMITED",
+    "message": "The API request or token rate limit was reached. Wait according to Retry-After, then reduce request bursts or request size. No automatic retry was made; the previous route is preserved.",
+    "details": null
+  },
+  "updated_at": "2026-11-15T00:00:00Z"
+}

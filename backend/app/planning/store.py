@@ -23,6 +23,10 @@ def write_json(path, data):
 
 
 def sync_dir(path):
+    # Windows has no POSIX directory-fsync equivalent. Individual artifacts are
+    # flushed before publication; atomic rename remains the publication boundary.
+    if os.name == 'nt':
+        return
     fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
     try:
         os.fsync(fd)
@@ -45,7 +49,10 @@ class RouteStore:
             manifest = {name:digest(stage/name) for name in ['record.json',*FILES.values()]}
             write_json(stage/'complete.json', manifest)
             for child in stage.iterdir():
-                with child.open('rb') as f:
+                # Windows rejects fsync on a read-only descriptor (WinError 9).
+                # Artifact files are immutable at this point, but use a writable
+                # handle solely to request their durable flush before publication.
+                with child.open('r+b') as f:
                     os.fsync(f.fileno())
             sync_dir(stage)
             # Unique server-generated ID, never a client-selected destination.

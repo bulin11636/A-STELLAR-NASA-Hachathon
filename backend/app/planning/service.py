@@ -210,7 +210,7 @@ class PlanningService:
                         workers[index]={**worker,**observed}
                         if observed['agent_id'] in context.get('private_evidence',{}):
                             workers[index]['artifact_ids']=[route_id+':provenance#'+observed['agent_id']]
-            facts = [f'Validated {len(stops)-1} ordered route leg(s), including {len(request.waypoints)} required waypoint(s).',
+            facts = [f'Computed {len(stops)-1} ordered route leg(s), including {len(request.waypoints)} required waypoint(s).',
                 f'Projected planar distance: {distance:.2f} m; objective: {request.mode}.',
                 f'Grid: {g.metadata.width} by {g.metadata.height} cells at {dx:g} by {dy:g} m.',
                 f'Unknown cells are impassable; slope threshold is {g.profile.slope_threshold_deg:g} degrees (research policy).']
@@ -220,7 +220,7 @@ class PlanningService:
                 facts.extend([f'Regional search uses conservative {factor} by {factor} native-cell blocks; any blocked or unknown constituent blocks traversal.',
                     f'Independently checked {native_validation["touched_native_cells"]} touched native cells after planning.',
                     'Optimality applies to the aggregated search graph; narrow native corridors can be excluded.'])
-            rationale = dict(summary='A* minimized '+('projected distance' if request.mode=='shortest' else 'terrain-weighted distance')+' while preserving the requested stop order.',
+            rationale = dict(summary='A* computed a terrain-only route using '+('projected distance' if request.mode=='shortest' else 'terrain-weighted distance')+' cost and the requested stop order.',
                 facts=facts,limitations=list(WARNINGS),model_commentary=context.get('commentary'),evidence_ids=context.get('evidence_ids',[]))
             metadata = RouteMetadata(route_id=route_id,created_at=datetime.now(timezone.utc),request=request,
                 coordinator=dict(public_name=ROLES['A0'][0],responsibility=ROLES['A0'][1],implementation_version='python-a0-v1'),

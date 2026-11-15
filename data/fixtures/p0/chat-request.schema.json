@@ -1,0 +1,119 @@
+{
+  "$defs": {
+    "AdvancedContext": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "interface_mode": {
+          "const": "advanced",
+          "title": "Interface Mode",
+          "type": "string"
+        },
+        "route_objective": {
+          "enum": [
+            "shortest",
+            "safest"
+          ],
+          "title": "Route Objective",
+          "type": "string"
+        },
+        "required_waypoints": {
+          "items": {
+            "$ref": "#/$defs/MarsCoordinate"
+          },
+          "maxItems": 16,
+          "title": "Required Waypoints",
+          "type": "array"
+        },
+        "analysis_focus": {
+          "items": {
+            "enum": [
+              "terrain",
+              "science",
+              "operations"
+            ],
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Analysis Focus",
+          "type": "array",
+          "uniqueItems": true
+        },
+        "allow_supported_revision": {
+          "title": "Allow Supported Revision",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "schema_version",
+        "interface_mode",
+        "route_objective",
+        "required_waypoints",
+        "analysis_focus",
+        "allow_supported_revision"
+      ],
+      "title": "AdvancedContext",
+      "type": "object"
+    },
+    "MarsCoordinate": {
+      "additionalProperties": false,
+      "description": "Named API fields; east-positive [0,360), planetocentric [-90,90].",
+      "properties": {
+        "longitude": {
+          "exclusiveMaximum": 360,
+          "minimum": 0,
+          "title": "Longitude",
+          "type": "number"
+        },
+        "latitude": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "Latitude",
+          "type": "number"
+        }
+      },
+      "required": [
+        "longitude",
+        "latitude"
+      ],
+      "title": "MarsCoordinate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "message": {
+      "maxLength": 1600,
+      "minLength": 1,
+      "title": "Message",
+      "type": "string"
+    },
+    "request_id": {
+      "pattern": "^[A-Za-z0-9_-]{16,64}$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "advanced_context": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AdvancedContext"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "message",
+    "request_id"
+  ],
+  "title": "ChatRequest",
+  "type": "object"
+}

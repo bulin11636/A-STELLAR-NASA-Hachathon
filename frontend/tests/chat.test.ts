@@ -46,6 +46,17 @@ test("chat transport sends one bounded route-scoped request and preserves idempo
   assert.equal(calls, 1);
 });
 
+test("advanced chat transport sends Sam's typed advanced context without changing the route-scoped endpoint", async () => {
+  const context = { schema_version: "1" as const, interface_mode: "advanced" as const, route_objective: "safest" as const,
+    required_waypoints: [], analysis_focus: ["terrain"] as const, allow_supported_revision: true };
+  globalThis.fetch = async (url, init) => {
+    assert.equal(url, `/api/v1/routes/${parent}/chat`);
+    assert.deepEqual(JSON.parse(init!.body as string), { message: "Why?", request_id: "request-0000000001", advanced_context: context });
+    return Response.json(message());
+  };
+  await sendChat(parent, "Why?", "request-0000000001", undefined, context);
+});
+
 test("route chat displays failed requests while preserving the current route", async () => {
   globalThis.fetch = async (_url, init) => init?.method === "POST"
     ? Response.json({ error: { code: "A0_BUDGET_EXHAUSTED", message: "Budget exhausted.", details: null } }, { status: 429 })
