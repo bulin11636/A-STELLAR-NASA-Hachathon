@@ -21,6 +21,7 @@ function isErrorEnvelope(body: unknown): body is ErrorEnvelope {
 interface RequestOptions {
   method?: "GET" | "POST";
   body?: unknown;
+  headers?: Record<string, string>;
   signal?: AbortSignal;
   timeoutMs?: number;
 }
@@ -29,14 +30,14 @@ interface RequestOptions {
 export async function apiRequest<T>(
   path: `/api/v1/${string}`,
   decode: (body: unknown) => T,
-  { method = "GET", body, signal, timeoutMs = 20_000 }: RequestOptions = {},
+  { method = "GET", body, headers = {}, signal, timeoutMs = 20_000 }: RequestOptions = {},
 ): Promise<T> {
   const timeout = new AbortController();
   const timer = setTimeout(() => timeout.abort(), timeoutMs);
   try {
     const response = await fetch(path, {
       method,
-      headers: { Accept: "application/json", ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
+      headers: { Accept: "application/json", ...(body === undefined ? {} : { "Content-Type": "application/json" }), ...headers },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       signal: signal ? AbortSignal.any([signal, timeout.signal]) : timeout.signal,
     });

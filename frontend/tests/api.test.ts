@@ -46,6 +46,18 @@ test("both modes are serialized exactly", async () => {
   assert.equal((await planRoute({ ...request, mode: "shortest" })).mode, "shortest");
 });
 
+test("computed retry headers are serialized only when explicitly requested", async () => {
+  const key = "plan_request_123456";
+  globalThis.fetch = async (_url, init) => {
+    const headers = init?.headers as Record<string, string>;
+    assert.equal(headers["Idempotency-Key"], key);
+    assert.equal(headers["X-A-Stellar-Retry-Attempt"], "2");
+    return json(response());
+  };
+  await planRoute(request, undefined, { idempotencyKey: key, retryAttempt: 2 });
+  await assert.rejects(planRoute(request, undefined, { retryAttempt: 1 }), { code: "VALIDATION_ERROR" });
+});
+
 test("health uses the canonical v1 endpoint and validates its response", async () => {
   globalThis.fetch = async (url) => {
     assert.equal(url, "/api/v1/health");

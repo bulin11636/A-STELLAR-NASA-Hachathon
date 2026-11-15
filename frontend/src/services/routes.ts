@@ -59,13 +59,28 @@ export function decodeRouteResponse(body: unknown, request: PlanRouteRequest): P
   return body as unknown as PlanRouteResponse;
 }
 
-export function planRoute(request: PlanRouteRequest, signal?: AbortSignal): Promise<PlanRouteResponse> {
+export interface PlanRouteOptions {
+  idempotencyKey?: string;
+  retryAttempt?: number;
+}
+
+export function planRoute(request: PlanRouteRequest, signal?: AbortSignal, options: PlanRouteOptions = {}): Promise<PlanRouteResponse> {
   try { validateRouteRequest(request); }
   catch (error) {
     return Promise.reject(new ApiError(error instanceof Error ? error.message : "Invalid route selection.", "VALIDATION_ERROR"));
   }
+  if (options.idempotencyKey !== undefined && !/^[A-Za-z0-9_-]{16,64}$/.test(options.idempotencyKey)) {
+    return Promise.reject(new ApiError("Invalid idempotency key.", "VALIDATION_ERROR"));
+  }
+  if (options.retryAttempt !== undefined && (!Number.isInteger(options.retryAttempt) || options.retryAttempt < 1 || !options.idempotencyKey)) {
+    return Promise.reject(new ApiError("A retry requires an idempotency key and a positive attempt number.", "VALIDATION_ERROR"));
+  }
   return apiRequest("/api/v1/routes/plan", (body) => decodeRouteResponse(body, request), {
     method: "POST", body: request, signal, timeoutMs: 90_000,
+    headers: {
+      ...(options.idempotencyKey ? { "Idempotency-Key": options.idempotencyKey } : {}),
+      ...(options.retryAttempt ? { "X-A-Stellar-Retry-Attempt": String(options.retryAttempt) } : {}),
+    },
   });
 }
 
