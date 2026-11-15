@@ -101,6 +101,15 @@ def test_plan_route_runs_metered_a0_before_real_astar(tmp_path):
         assert provider.totals()['attempts']==1  # invalid coverage must not make a paid attempt
 
 
+def test_plan_route_accepts_an_explanation_only_model_proposal(tmp_path):
+    planning,agent,provider=configured(tmp_path,lambda request:httpx.Response(200,json=model_response(decision('answer'))))
+    with TestClient(create_app(planning=planning,route_agent=agent)) as client:
+        response=client.post('/api/v1/routes/plan',json=request_for(planning.grid).model_dump())
+    assert response.status_code==200,response.text
+    assert planning.store.get(response.json()['route_id']).metadata.usage.calls==1
+    assert provider.totals()['attempts']==1
+
+
 def test_chat_answer_revision_idempotency_and_restart(tmp_path):
     count=0
     def handler(request):

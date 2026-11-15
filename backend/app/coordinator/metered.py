@@ -120,7 +120,6 @@ class MeteredProvider:
         def validate(decision):
             known={e['id'] for e in snapshot.get('evidence',[]) if e.get('status') in ('ready','partial') and e.get('kind') in ('observed','scenario')}
             if any(item not in known for item in decision.citations): raise ValueError('Unknown or unassessed evidence citation')
-            if force_plan and decision.action!='replan': raise ValueError('Plan request not accepted')
         return self._invoke(snapshot,message,'propose_route_action',RouteDecision,instructions,validate)
 
     def select_specialists(self, capabilities, request, message, *, advanced_context=None):
