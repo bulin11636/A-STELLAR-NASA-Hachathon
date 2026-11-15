@@ -3,6 +3,9 @@
 ## P1 joint acceptance
 
 - [ ] Finish the Journey Briefing/tab hierarchy and source/layer-bound verified NASA overlay acceptance after real controls pass.
+- [ ] Rebase `sam/ui-workspace-ux` onto current `main`; selectively integrate its
+  preserved workspace state, actionable A0 recovery, and browser coverage only
+  after contract and regression review.
 
 ## Deferred: deployment operations
 

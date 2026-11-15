@@ -57,12 +57,34 @@ tasks must remain in English.
 - [ ] Add browser acceptance checks for map fitting and nearby-stop usability.
 - [ ] Publish a short English demo script for judges and project contributors.
 
+## Candidate integration from Sam's workspace branch
+
+These items were identified on `origin/sam/ui-workspace-ux`. They are not
+merged or accepted yet: that branch must first be rebased onto current `main`,
+then each item must pass the existing contract and browser checks without
+regressing the completed Plan/Route/Briefing/Evidence/A0 layout.
+
+- [ ] Preserve unsent A0 messages and coordinate drafts while switching workspace
+  tabs, and provide WAI-ARIA keyboard tab navigation plus focus restoration.
+- [ ] Add concise, actionable A0/provider recovery guidance that distinguishes
+  credentials, provider credit, rate limits, input size, timeout, and unknown
+  request outcome; never expose credentials or automatically repeat a paid call.
+- [ ] Add a compact stored-route summary and a revision summary before replacing
+  the currently displayed route.
+- [ ] Expand browser acceptance coverage for NASA/DEM navigation, map scales,
+  narrow layouts, 16 ordered visits, long user requirements, and request
+  recovery. Keep all provider calls mocked in these tests.
+- [ ] Review Sam's stricter layer/registration display helper against the current
+  real-registration guard; adopt only if it preserves the verified-only overlay
+  rule and the pending evidence workflow.
+
 ## Suggested delivery order
 
 1. P0 request lifecycle, runtime state, and text/encoding fixes.
 2. P1 guided planning and result hierarchy.
 3. P1 A0 conversation and evidence presentation.
-4. P2 responsive, accessibility, and browser acceptance coverage.
+4. Candidate integration from Sam's workspace branch after rebase and review.
+5. P2 responsive, accessibility, and browser acceptance coverage.
 
 ## Explicit non-goals for this frontend backlog
 
