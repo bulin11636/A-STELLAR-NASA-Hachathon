@@ -188,10 +188,21 @@ test("walking mission is explicit, validated, frozen for retry and cleared", asy
   assert.equal(current().walkingSpeed,'');assert.equal(current().waypointDwell,'0');assert.deepEqual(current().requiredAnalyses,[]);
 });
 
+test("Advanced mission profile is sent, restored from metadata, and reset on clear", async () => {
+  const calls = mockSuccess(); const current = await harness();
+  await act(() => { current().setInterfaceMode('advanced'); current().setAdditionalRequirements('Prioritize science observations.'); current().setMissionProfile('science_priority'); });
+  await act(async () => current().submit(true));
+  assert.equal(calls.find(call => call.url.endsWith('/plan')).body.mission_profile, 'science_priority');
+  assert.equal(current().missionProfile, 'science_priority');
+  await act(() => current().clear());
+  assert.equal(current().missionProfile, 'balanced');
+});
+
 test("Quick requests omit Advanced walking assumptions", async () => {
   const calls=mockSuccess();const current=await harness();
-  await act(() => {current().setInterfaceMode('advanced');current().setWalkingSpeed('1');current().setRequiredAnalyses(['A3']);});
+  await act(() => {current().setInterfaceMode('advanced');current().setWalkingSpeed('1');current().setRequiredAnalyses(['A3']);current().setMissionProfile('science_priority');});
   await act(() => current().setInterfaceMode('quick'));
   await act(async () => current().submit(true));
   assert.equal(calls.find(c=>c.url.endsWith('/plan')).body.mission,undefined);
+  assert.equal(calls.find(c=>c.url.endsWith('/plan')).body.mission_profile,'balanced');
 });

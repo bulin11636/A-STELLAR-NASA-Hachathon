@@ -70,9 +70,9 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
       </dl>
       <CoordinateEditor planner={planner} />
       {planner.interfaceMode === "advanced" && <WaypointEditor planner={planner} />}
-      <label className="mode-label">Requested terrain objective
+      <label className="mode-label">{planner.interfaceMode === "quick" ? "Route preference" : "Requested terrain objective"}
         <select value={planner.mode} onChange={(event) => planner.changeMode(event.target.value as "shortest" | "safest")}>
-          <option value="safest">Safest</option><option value="shortest">Shortest</option>
+          <option value="safest">Safest</option><option value="shortest">{planner.interfaceMode === "quick" ? "Fastest" : "Shortest"}</option>
         </select>
       </label>
       {planner.interfaceMode === "advanced" && <section aria-label="Advanced planning options">

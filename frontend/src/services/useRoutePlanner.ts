@@ -13,6 +13,7 @@ import { asApiError, inspectFailure, localAttempt, readPending, rememberPending,
 export type { AnalysisFocus } from "./advancedContext.ts";
 export type PickMode = "inspect" | "start" | "goal" | "waypoint";
 export type PlanningInterfaceMode = "quick" | "advanced";
+type MissionProfileId = NonNullable<PlanRouteRequest["mission_profile"]>;
 type AdvancedInput = { message: string; focus: AnalysisFocus[]; allowRevision: boolean };
 type PlanWork = { kind: "plan"; id: string; request: PlanRouteRequest; computed: boolean; advanced?: AdvancedInput };
 type ChatWork = { kind: "chat"; id: string; routeId: string; message: string; context: AdvancedContext; baseRequest: PlanRouteRequest };
@@ -56,6 +57,7 @@ export function useRoutePlanner() {
   const [mode, setMode] = useState<RouteMode>("safest");
   const [waypoints, setWaypoints] = useState<MarsCoordinate[]>([]);
   const [interfaceMode, setInterfaceModeState] = useState<PlanningInterfaceMode>("quick");
+  const [missionProfile, setMissionProfileState] = useState<MissionProfileId>("balanced");
   const [analysisFocus, setAnalysisFocus] = useState<AnalysisFocus[]>(["terrain"]);
   const [allowSupportedRevision, setAllowSupportedRevision] = useState(true);
   const [additionalRequirements, setAdditionalRequirements] = useState("");
@@ -102,6 +104,7 @@ export function useRoutePlanner() {
     if (updateDraft) {
       setStart(meta?.request.start ?? value.route[0]); setGoal(meta?.request.goal ?? value.route[value.route.length - 1]);
       setMode(value.mode); setWaypoints(meta?.request.waypoints ?? []); setPickMode("inspect");
+      setMissionProfileState(meta?.request.mission_profile ?? "balanced");
       const mission=meta?.request.mission;
       if (mission) setInterfaceModeState("advanced");
       setWalkingSpeed(mission?.speed_m_s == null ? "" : String(mission.speed_m_s));
@@ -133,12 +136,13 @@ export function useRoutePlanner() {
   function setInterfaceMode(value: PlanningInterfaceMode) { editDraft(); setInterfaceModeState(value); setPickMode("inspect"); }
   function loadExample(request: PlanRouteRequest) {
     validateRouteRequest(request); editDraft();
-    setStart(request.start); setGoal(request.goal); setMode(request.mode); setPickMode("inspect"); setWaypoints(request.waypoints ?? []);
+    setStart(request.start); setGoal(request.goal); setMode(request.mode); setMissionProfileState(request.mission_profile ?? "balanced"); setPickMode("inspect"); setWaypoints(request.waypoints ?? []);
   }
   function clear() {
     cancelFlight(); savePending(null); displayed.current = null;
     rememberRoute(null); setResult(null); setMetadata(null); setMetadataError(null); setError(null); setAttemptStatus(null);
     setWalkingSpeed(""); setWaypointDwell("0"); setExposureDuration(""); setRadiationBudget(""); setRequiredAnalyses([]);
+    setMissionProfileState("balanced");
     setAdvancedReply(null); setStatus("idle"); setStart(null); setGoal(null); setWaypoints([]); setPickMode("inspect");
   }
   function moveWaypoint(index: number, direction: -1 | 1) {
@@ -161,7 +165,8 @@ export function useRoutePlanner() {
   }
   function currentRequest(): PlanRouteRequest {
     if (!start || !goal) throw new Error("Select both Start and Goal.");
-    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode, mission_profile: "balanced",
+    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode,
+      mission_profile: interfaceMode === "advanced" ? missionProfile : "balanced",
       ...(interfaceMode === "advanced" && waypoints.length ? { waypoints } : {}), ...(missionSettings() ? { mission: missionSettings() } : {}) };
   }
   function sameDraft(work: Work | null) {
@@ -294,7 +299,7 @@ export function useRoutePlanner() {
 
   return { start, goal, waypoints, pickMode, setPickMode, mode, changeMode, loadExample, acceptRevision, status, result, metadata,
     metadataError, error, attemptStatus, selectPoint, addWaypoint, clear, moveWaypoint, removeWaypoint, submit, selectionError,
-    interfaceMode, setInterfaceMode, analysisFocus, setAnalysisFocus: (value: AnalysisFocus[]) => { editDraft(); setAnalysisFocus(value); },
+    interfaceMode, setInterfaceMode, missionProfile, setMissionProfile: (value: MissionProfileId) => { editDraft(); setMissionProfileState(value); }, analysisFocus, setAnalysisFocus: (value: AnalysisFocus[]) => { editDraft(); setAnalysisFocus(value); },
     allowSupportedRevision, setAllowSupportedRevision: (value: boolean) => { editDraft(); setAllowSupportedRevision(value); },
     additionalRequirements, setAdditionalRequirements: (value: string) => { editDraft(); setAdditionalRequirements(value); }, pendingKind: pending?.kind ?? null, canSubmit, retry, recover, refreshAttempt,
     advancedReply, chatRefresh, draftVersion, inputError,

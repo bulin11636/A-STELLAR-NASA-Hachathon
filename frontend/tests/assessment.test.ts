@@ -20,6 +20,14 @@ test('specialist display separates selection, execution and evidence application
  const html=renderToStaticMarkup(createElement(SpecialistTrace,{traces:[trace]}));
  for(const text of [trace.public_name,'Required','Selected','execution: unavailable','No evidence applied',trace.selection_reason])assert(html.includes(text),text);
 });
+test('assessment presents profile, gate, confidence, and factor provenance',()=>{
+ const html=renderToStaticMarkup(createElement(RouteAssessment,{assessment:{...assessment,
+   mission_profile:{schema_version:'1',profile_id:'safest',version:'mission-profile-v1',risk_weights:{A1:0.5},confidence_weights:{A1:1}},
+   hard_gate_status:'blocked',risk_score:null,assessment_confidence:0.75,
+   risk_factors:[{agent_id:'A1',kind:'risk',status:'assessed',risk_score:0.4,evidence_quality:{availability:1,route_coverage:1,temporal_applicability:0.5,validation_provenance:0.5},evidence_ids:['dem'],message:'Terrain evidence is available.'}]
+ }}));
+ assert.match(html,/Hard safety gate/);assert.match(html,/Blocked/);assert.match(html,/Assessment confidence/);assert.match(html,/75%/);assert.match(html,/Terrain evidence is available/);assert.match(html,/Profile weight: 50%/);
+});
 test('stored time must match the walking assessment',()=>{
  const stored=structuredClone(fixture);stored.metadata.assessment=assessment;stored.result.metrics.distance_m=600;stored.metadata.request.waypoints=[stored.result.route[3],stored.result.route[7]];stored.metadata.request.mission={mode:'walking',speed_m_s:1,stop_minutes_per_waypoint:3,exposure_duration_min:null,radiation_budget_usv:null,required_analyses:[]};stored.result.metrics.estimated_time_min=16;
  assert(decodeStoredRoute(stored,stored.result.route_id));
