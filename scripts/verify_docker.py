@@ -2,9 +2,9 @@
 """Offline Docker acceptance with isolated state and no model generation.
 
 Builds the real image, checks mounted inputs and readiness, creates a terrain
-route/chat, and verifies both after a container restart. Only this run's unique
+route/chat, and verifies both after container restart and recreation. Only this run's unique
 Compose project and volume are removed. Reports and logs remain under the repo's
-ignored processed directory. No private runtime file is used.
+ignored processed directory. No user credential file is used.
 """
 import argparse
 from datetime import datetime, timezone
@@ -99,6 +99,14 @@ def main():
             raise RuntimeError('Acceptance requires traversable demo cells (20,20) and (100,100) in a grid larger than 100 cells per axis.')
         request=PlanRouteRequest(region_id='jezero',coordinate_system=COORDINATE_SYSTEM,
             start=grid.wire(*grid.center((20,20))),goal=grid.wire(*grid.center((100,100))),mode='shortest').model_dump(mode='json')
+        summary['planning_extent']='native_demo'
+        if not args.synthetic:
+            from app.planning.service import PlanningService
+            planning=PlanningService('computed',profile,run/'preflight-routes',dataset_root=datasets)
+            regional=planning.regional_example()
+            if regional is not None:
+                request=regional.model_dump(mode='json')
+                summary['planning_extent']='regional_example'
         source_hash=digest(grid.source_path)
         runtime=run/'runtime.env'; runtime.write_text(''); runtime.chmod(0o600)
         with socket.socket() as probe:
@@ -151,6 +159,8 @@ def main():
                 stored=client.get('/api/v1/routes/'+route_id).json()
                 assert stored['metadata']['validation']['status']=='passed'
                 assert stored['metadata']['sources'][0]['sha256']==source_hash
+                summary.update(distance_m=result['metrics']['distance_m'],
+                    planning_resolution_m=stored['metadata']['grid']['planning_resolution_m'])
                 save('stored-route.json',stored)
                 body=dict(message='Explain the terrain-only limits.',request_id='docker-chat-'+suffix)
                 chat_url='/api/v1/routes/'+route_id+'/chat'

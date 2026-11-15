@@ -115,8 +115,27 @@ HTTP tests or a prepared fixture do not establish a successful Docker image run.
 ## Scope kept for this delivery
 
 Retain regional terrain A*, ordered waypoint editing/revisions, grounded rationale,
-durable routes/chat and provider diagnostics. Live-model acceptance remains a
-separate controlled check when provider access is available.
+durable routes/chat and provider diagnostics. The selected live-model workflow
+and Docker acceptance have passed; see the [checkpoint](backend-verification.md)
+for test boundaries and evidence. Repeat live checks only when explicitly requested.
+
+This delivery demonstrates the core workflow rather than production readiness.
+Acceptance means a user can plan a regional route, inspect its geometry and
+rationale, explicitly add or reorder stops through chat, and retrieve saved
+results after a restart. Show whether a result uses the live agent or deterministic
+mode. Mock-provider tests do not establish live-agent acceptance. Verify the Docker
+image before describing the packaged deployment as tested.
+
+The frontend owner handles map fitting, zoom and presentation. A usable DEM view
+can support the demo while NASA registration remains explicitly unverified;
+display adjustments must not change that status. A1 terrain currently affects
+planning costs; contextual A4/A6 evidence and unassessed A2/A3 inputs must not be
+presented as fully fused mission constraints.
+
+Until this acceptance sequence passes, prioritize failures that block it and
+integration fixes. The deferred tasks in [TODO](TODO.md) are future exploration,
+not requirements for this demo. Advanced retry controls, operational backup/restore
+and general-purpose model support do not expand this delivery's acceptance scope.
 
 Deferred: avoidance geometry, optional visits, automatic stop-order optimization,
 long conversation summaries, progress/cancellation jobs, additional model adapters,

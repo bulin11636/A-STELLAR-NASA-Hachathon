@@ -164,7 +164,8 @@ From the repository root, the default uses real DEM data and a mocked model:
 ```
 
 An explicitly paid verification uses the private backend credential and makes
-at most three requests (plan, question, waypoint revision):
+at most four requests (plan, question, three-point addition and reversed visit
+order), with no automatic retries:
 
 ```bash
 /home/sam/miniconda3/envs/nasa/bin/python scripts/verify_agent_workflow.py --live-model
@@ -172,5 +173,9 @@ at most three requests (plan, question, waypoint revision):
 
 Reports go under ignored `data/processed/a0-workflow/`. Failures stop the sequence;
 mocked usage is synthetic and must not be described as actual API billing.
+The live command retains the shared persistent request ledger and any stricter
+configured limit. Replayed successful plan/revision requests are checked without
+additional generation. See the [current checkpoint](backend-verification.md)
+for the observed live result.
 The older `app.planning.verify` command now explicitly forces deterministic A0
 mode for its server, even when a private `.env` exists.

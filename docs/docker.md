@@ -6,6 +6,10 @@ allowlist includes only application source, frontend build inputs and runtime
 dependency metadata. The image does not include datasets, `.env` files, local
 environments, test output or route records.
 
+The runtime installs `libexpat1`, required by the terrain dependencies on the
+slim base image. The build imports Rasterio and PyProj so missing shared
+libraries fail during image construction rather than first use.
+
 ## Start
 
 Install Docker Engine/Desktop with Compose v2. In WSL, enable Docker Desktop's
@@ -91,9 +95,13 @@ portable source paths and secret-free launcher arguments. The regional and
 browser verifiers exercise the production UI/API, durable records and real DEM.
 See [regional verification](regional-verification.md).
 
-Actual image build, bind permissions, named-volume initialization and restart
-acceptance still require an available Docker engine. They have not been run in
-the current WSL distribution because Docker Desktop integration is disabled.
+Actual image build/run passed in Docker Desktop with WSL integration on
+2026-11-15, using both a synthetic fixture and the real Jezero DEM. The real-data
+verifier uses the advertised crater-scale example when available; this run
+computed a 60.04 km route. Non-root execution, read-only mounts, health checks,
+named-volume initialization and persistence after restart/recreation passed.
+These container checks use deterministic mode and make no model requests; the
+separate live A0 check is recorded in the [current checkpoint](backend-verification.md).
 
 The packaging follows Docker's [multi-stage build](https://docs.docker.com/build/building/multi-stage/)
 and [Compose service/mount](https://docs.docker.com/reference/compose-file/services/) documentation.
