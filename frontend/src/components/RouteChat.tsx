@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { chatHistory, sendChat, type ChatResponse } from "../services/chat.ts";
 import type { RouteMetadata } from "../services/metadata.ts";
 import type { PlanRouteResponse } from "../types/api.ts";
+import type { AdvancedContext } from "../services/advancedContext.ts";
 
-export default function RouteChat({ routeId, onRevision }: { routeId: string; onRevision: (result: PlanRouteResponse, metadata: RouteMetadata) => void }) {
+export default function RouteChat({ routeId, onRevision, advancedContext }: { routeId: string; onRevision: (result: PlanRouteResponse, metadata: RouteMetadata) => void; advancedContext?: AdvancedContext }) {
   const [messages, setMessages] = useState<ChatResponse[]>([]);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -36,7 +37,7 @@ export default function RouteChat({ routeId, onRevision }: { routeId: string; on
         if (pendingId.current?.route !== routeId || pendingId.current?.text !== input) {
           pendingId.current = { route: routeId, text: input, id: crypto.randomUUID() };
         }
-        const response = await sendChat(routeId, input, pendingId.current.id, controller.signal);
+        const response = await sendChat(routeId, input, pendingId.current.id, controller.signal, advancedContext);
         if (controller.signal.aborted || currentRoute.current !== routeId) return;
         setMessages((items) => [...items, response]); setText(""); pendingId.current = null;
         if (response.result && response.metadata) onRevision(response.result, response.metadata);
