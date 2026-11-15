@@ -27,6 +27,7 @@
 | [Frontend improvement TODO](FRONTEND_TODO.md) | English, prioritized frontend reliability, UX, accessibility, and test backlog |
 | [Frontend TODO（繁中對照）](FRONTEND_TODO_繁中.md) | Frontend backlog 的繁中討論版；產品 UI 仍維持英文 |
 | [P0 parallel implementation plan](P0_PARALLEL_IMPLEMENTATION_PLAN.md) | Sheng frontend and Sam backend workstreams, shared recovery contract, and joint acceptance |
+| [P0 分工計畫（繁中）](P0_分工計畫_繁中.md) | Sheng/Sam 平行工作、同步節點與 P0 完成條件的繁中討論版 |
 | [Quick and Advanced route planning contract](ADVANCED_ROUTE_PLANNING_CONTRACT.md) | Sheng/Sam P0 contract for simple planning, advanced parameters, and A0 chat context |
 
 Setup guides and overlapping agent reports are merged here. Scientific fixtures live in `data/fixtures/`; documentation contains no datasets. The repository-root README is the entry point.
