@@ -319,7 +319,27 @@ export default function MarsMap() {
               <dt>Map alignment</dt><dd>{planner.metadata?.validation.map_alignment ?? "Unassessed"}</dd>
               <dt>Grid resolution</dt><dd>{planner.metadata?.grid.planning_resolution_m.join(" × ") ?? "Not available"} m</dd>
             </dl>
-            {planner.metadata ? <><RouteAssessment assessment={planner.metadata.assessment} /><SpecialistTrace traces={planner.metadata.specialist_trace} /></> : <p>Route metadata is not available yet.</p>}
+            {planner.metadata ? <>
+              <section className="route-details" aria-labelledby="route-legs-title">
+                <h3 id="route-legs-title">Route legs</h3>
+                {planner.metadata.legs.length ? <ol className="route-leg-list">{planner.metadata.legs.map((leg) => <li key={leg.index}>
+                  <strong>Leg {leg.index}</strong><span>{leg.distance_m.toFixed(1)} m</span>
+                  <span>Travel: {leg.travel_time_min === null ? "Not estimated" : `${leg.travel_time_min.toFixed(1)} min`}</span>
+                  <span>Dwell: {leg.stop_time_min.toFixed(1)} min</span>
+                </li>)}</ol> : <p>Per-leg timing is unavailable because this route has no walking-mission estimate.</p>}
+              </section>
+              <section className="route-details" aria-labelledby="route-grid-title">
+                <h3 id="route-grid-title">Planning grid & limits</h3>
+                <dl className="route-metrics">
+                  <dt>Actual cell size</dt><dd>{planner.metadata.planning_policy?.actual_cell_size_m.join(" × ") ?? planner.metadata.grid.planning_resolution_m.join(" × ")} m</dd>
+                  <dt>Grid cells</dt><dd>{(planner.metadata.grid.width * planner.metadata.grid.height).toLocaleString()}</dd>
+                  <dt>Resolution profile</dt><dd>{planner.metadata.planning_policy ? `${planner.metadata.planning_policy.resolution_profile} (${planner.metadata.planning_policy.resolution_version})` : "Legacy / not selected"}</dd>
+                  <dt>Search limit</dt><dd>{(planner.metadata.planning_policy?.limits.max_expanded_nodes ?? planner.metadata.policy.limits.max_expanded_nodes).toLocaleString()} expanded nodes</dd>
+                  <dt>Time limit</dt><dd>{planner.metadata.planning_policy?.limits.max_elapsed_seconds ?? planner.metadata.policy.limits.max_elapsed_seconds} s</dd>
+                </dl>
+              </section>
+              <RouteAssessment assessment={planner.metadata.assessment} /><SpecialistTrace traces={planner.metadata.specialist_trace} />
+            </> : <p>Route metadata is not available yet.</p>}
           </>}
         </section>}
         {sidebarTab === "evidence" && <section id="evidence-panel" role="tabpanel" aria-labelledby="evidence-tab">

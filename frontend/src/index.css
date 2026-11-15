@@ -69,6 +69,11 @@ select { width: 100%; padding: .55rem; font: inherit; background: #24323c; color
 .route-result ul { padding-left: 1.2rem; color: #ffe0b7; }
 .route-metrics { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .3rem 1rem; }
 .route-metrics dt { margin: 0; }
+.route-details { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid #44515d; }
+.route-details h3 { margin: 0; font-size: .9rem; }
+.route-leg-list { margin: .65rem 0 0; padding-left: 1.25rem; display: grid; gap: .45rem; }
+.route-leg-list li { display: grid; gap: .05rem; color: #c9d5db; }
+.route-leg-list span { font-variant-numeric: tabular-nums; }
 .layer-panel { margin-top: 1.2rem; padding-block: 1rem; border-block: 1px solid #536573; }
 .panel-intro { margin: .65rem 0; color: #b9c5cc; font-size: .78rem; }
 .layer-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .55rem; }
