@@ -11,13 +11,13 @@ class PlanRequests:
     def parse(self, data, expected_hash):
         response = PlanRouteResponse.model_validate(data)
         stored = self.agent.planning.store.get(response.route_id)
-        if stored.result != response or expected_hash and payload_hash(stored.metadata.request.model_dump(mode='json')) != expected_hash:
+        if stored.result != response or expected_hash and payload_hash(stored.metadata.request.model_dump(mode='json',exclude_none=True)) != expected_hash:
             raise ValueError('Plan response and request disagree')
         return response
 
     def plan(self, request, request_id, retry_attempt=None):
-        return self.attempts.execute(request_id,request.model_dump(mode='json'),
-            lambda: self.agent.plan(request),self.parse,retry_attempt=retry_attempt)
+        return self.attempts.execute(request_id,request.model_dump(mode='json',exclude_none=True),
+            lambda: self.agent.plan(request,request_id=request_id),self.parse,retry_attempt=retry_attempt)
 
     def status(self, request_id):
         return self.attempts.status(request_id,self.parse)

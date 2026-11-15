@@ -21,17 +21,22 @@ export function createRouteOverlay() {
   const source = new VectorSource({ wrapX: false });
   const layer = new VectorLayer({
     source,
-    style: (feature) => feature.get("kind") === "route" ? lineStyles : markerStyles[feature.get("kind") as "start" | "goal"],
+    style: (feature) => feature.get("kind") === "route" ? lineStyles : feature.get("kind") === "waypoint" ? new Style({
+      image: new Circle({ radius: 10, fill: new Fill({ color: "#b7b9ff" }), stroke: new Stroke({ color: "#101820", width: 2 }) }),
+      text: new Text({ text: feature.get("label"), font: "bold 12px sans-serif", fill: new Fill({ color: "#101820" }) }), zIndex: 2,
+    }) : markerStyles[feature.get("kind") as "start" | "goal"],
   });
   layer.setZIndex(10);
   return { source, layer };
 }
 
-export function updateRouteOverlay(source: VectorSource, start: MarsCoordinate | null, goal: MarsCoordinate | null, result: PlanRouteResponse | null) {
+export function updateRouteOverlay(source: VectorSource, start: MarsCoordinate | null, goal: MarsCoordinate | null, result: PlanRouteResponse | null, waypoints: MarsCoordinate[] = []) {
   source.clear();
   if (result && (result.source === "mock" || MAP_REGISTRATION_VALIDATED)) {
     source.addFeature(new Feature({ kind: "route", geometry: new MultiLineString(routeToMapSegments(result.route, "wmts-display")) }));
   }
+  waypoints.forEach((point, index) => source.addFeature(new Feature({ kind: "waypoint", label: `W${index + 1}`,
+    geometry: new Point(apiCoordinateToMapView(point, "wmts-display")) })));
   for (const [kind, point] of [["start", start], ["goal", goal]] as const) {
     if (point) source.addFeature(new Feature({ kind, geometry: new Point(apiCoordinateToMapView(point, "wmts-display")) }));
   }

@@ -102,3 +102,15 @@ textarea { width: 100%; resize: vertical; padding: .55rem; font: inherit; color:
   .map-frame { min-height: 55dvh; }
   .map-info { border-left: 0; border-top: 1px solid #35414a; padding: 1rem; max-height: none; overflow-y: visible; }
 }
+
+.request-recovery { margin-block: 1rem; padding: .8rem; border: 1px solid #71899c; border-left: 4px solid #f5c27b; border-radius: 4px; }
+.request-recovery button { margin: .3rem .4rem .1rem 0; }
+.waypoint-editor { margin-block: 1rem; }
+.waypoint-editor form { display: grid; gap: .6rem; }
+.waypoint-editor label { display: grid; gap: .3rem; }
+.waypoint-editor input { width: 100%; padding: .5rem; background: #24323c; border: 1px solid #536573; color: white; border-radius: 4px; font: inherit; }
+.waypoint-editor li { margin-block: .7rem; overflow-wrap: anywhere; }
+.waypoint-editor li button { margin: .2rem .3rem .2rem 0; }
+
+.specialist-trace article { border-top: 1px solid #44515d; padding-block: .5rem; }
+.specialist-trace small { overflow-wrap: anywhere; }

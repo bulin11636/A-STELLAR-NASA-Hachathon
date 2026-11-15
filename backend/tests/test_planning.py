@@ -229,10 +229,10 @@ def test_health_not_blocked_by_planning(tmp_path,monkeypatch):
     s=PlanningService('computed',fixture_profile(tmp_path),tmp_path/'routes')
     entered=threading.Event(); release=threading.Event()
     original=s.plan
-    def delayed(req):
+    def delayed(req, **kwargs):
         entered.set()
         assert release.wait(3)
-        return original(req)
+        return original(req, **kwargs)
     monkeypatch.setattr(s,'plan',delayed)
     async def run():
         async with httpx.AsyncClient(transport=httpx.ASGITransport(app=create_app(planning=s)),base_url='http://test') as c:

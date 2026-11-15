@@ -212,8 +212,8 @@ export default function MarsMap() {
   }, [layerDisplay, ready]);
 
   useEffect(() => {
-    if (overlayRef.current) updateRouteOverlay(overlayRef.current.source, planner.start, planner.goal, planner.result);
-  }, [ready, planner.start, planner.goal, planner.result]);
+    if (overlayRef.current) updateRouteOverlay(overlayRef.current.source, planner.start, planner.goal, planner.result, planner.interfaceMode === "advanced" ? planner.waypoints : []);
+  }, [ready, planner.start, planner.goal, planner.result, planner.interfaceMode, planner.waypoints]);
 
   const tileIssue = progress.failed > 0 || progress.missing > 0;
   const status = error ? error : !ready ? "Loading NASA WMTS metadata…"

@@ -107,6 +107,8 @@ def main():
             if regional is not None:
                 request=regional.model_dump(mode='json')
                 summary['planning_extent']='regional_example'
+        request['mission']=dict(mode='walking',speed_m_s=1.0,stop_minutes_per_waypoint=3.0,
+            exposure_duration_min=None,radiation_budget_usv=None,required_analyses=['A3'])
         source_hash=digest(grid.source_path)
         runtime=run/'runtime.env'; runtime.write_text(''); runtime.chmod(0o600)
         with socket.socket() as probe:
@@ -159,6 +161,11 @@ def main():
                 stored=client.get('/api/v1/routes/'+route_id).json()
                 assert stored['metadata']['validation']['status']=='passed'
                 assert stored['metadata']['sources'][0]['sha256']==source_hash
+                assert result['metrics']['estimated_time_min']==result['metrics']['distance_m']/60
+                assert stored['metadata']['assessment']['required_unassessed']==['A3']
+                assert next(t for t in stored['metadata']['specialist_trace'] if t['agent_id']=='A3')['selected']
+                capabilities=client.get('/api/v1/a0/capabilities').json()
+                assert capabilities['mission_mode']=='walking' and capabilities['max_model_calls_per_action']==0
                 summary.update(distance_m=result['metrics']['distance_m'],
                     planning_resolution_m=stored['metadata']['grid']['planning_resolution_m'])
                 save('stored-route.json',stored)
@@ -197,7 +204,7 @@ def main():
                 verify_persistence()
                 assert digest(grid.source_path)==source_hash
                 summary.update(status='passed',route_id=route_id,checks=['production_ui_assets_api','image_health_check','non_root_runtime','read_only_source_and_private_file_mounts',
-                    'missing_profile_readiness','missing_explicit_env_rejected','terrain_plan_and_chat','failed_request_persistence',
+                    'missing_profile_readiness','missing_explicit_env_rejected','terrain_plan_and_chat','explicit_walking_time_and_required_unknowns','local_capability_inspection','failed_request_persistence',
                     'restart_route_history_and_idempotent_replay','recreation_with_persistent_named_state','source_bytes_unchanged'])
     except (Exception,KeyboardInterrupt) as error:
         summary.update(status='blocked' if summary.get('stage')=='check_engine' else 'failed',error_type=type(error).__name__,

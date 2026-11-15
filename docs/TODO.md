@@ -1,13 +1,5 @@
 # TODO
 
-## P0 frontend integration and acceptance
-
-- [ ] Revalidate map fitting, nearby-stop usability and the supported route view after the frontend owner's presentation changes; retain the unverified NASA registration status until independent registration checks pass.
-- [ ] Revalidate active-mode labels, actionable failures and unassessed evidence after the frontend owner's presentation changes.
-
-- [ ] Complete Sheng's Quick/Advanced controls, required-waypoint interactions and plan-to-chat flow against the shared P0 fixtures and backend.
-- [ ] Integrate request status, stable IDs and explicit versioned retry controls without automatic model retries; run the joint P0 acceptance matrix.
-
 ## Deferred: deployment operations
 
 - [ ] Document and exercise backup/restore and upgrades for persistent application state.
@@ -33,10 +25,10 @@
 
 ## Deferred: specialist evidence
 
-- [ ] Bind required mission constraints explicitly and distinguish missing, stale, incompatible and unassessed evidence.
-- [ ] Define how compatible evidence affects costs, mission constraints or waypoint selection.
+- [ ] Add evidence-age policies and finer stale/incompatible reason codes beyond configured/selected/executed/unavailable traces.
+- [ ] Define and independently verify spatial environmental costs beyond the existing terrain costs, contextual waypoint proposals and mission-level radiation scenarios.
 - [ ] Replace A2 visual-raster heuristics with calibrated observations before supporting thermal constraints.
-- [ ] Provide a supported A3 scenario/model with explicit duration, units and applicability; keep rejected RAD products excluded.
+- [ ] Validate a Jezero exposure model beyond the explicitly configured historical constant-rate scenario; keep rejected RAD products excluded.
 - [ ] Revalidate A4 geology associations and define a reproducible science-priority rubric.
 - [ ] Verify A6 localization/clock joins and observation links for the selected release.
 - [ ] Complete provenance for local inputs with missing receipts or embedded unit metadata.

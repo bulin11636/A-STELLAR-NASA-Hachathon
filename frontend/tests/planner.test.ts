@@ -44,7 +44,7 @@ test("computed POST retrieves metadata and renders research labels, source, reso
   assert.equal(current().metadata?.route_id, fixture.result.route_id);
   assert.equal(current().metadataError, null);
   const html = renderToStaticMarkup(createElement(RoutePlannerPanel, { planner: current(), mapReady: true, onViewJezero() {} }));
-  for (const value of ["COMPUTED / RESEARCH TERRAIN ONLY", "synthetic-plane", "20 × 30", "Surface Traversability and Terrain Hazard Agent", "—", "Computed geometry is withheld"]) assert(html.includes(value), value);
+  for (const value of ["COMPUTED / RESEARCH TERRAIN ONLY", "synthetic-plane", "20 × 30", "Surface Traversability and Terrain Hazard Agent", "Not estimated", "Not assessed", "Computed geometry is withheld"]) assert(html.includes(value), value);
   assert(!html.includes("MOCK / NOT SAFETY-VALIDATED"));
 });
 
@@ -108,7 +108,7 @@ test("metadata mismatch or unavailable record is explicit while computed result 
     };
     const current = await harness();
     await act(async () => { await current().submit(); });
-    assert.equal(current().status, "success"); assert(current().result);
+    assert.equal(current().status, "error"); assert(current().result);
     assert.equal(current().metadata, null);
     assert.match(current().metadataError!, mismatch ? /differs/ : /unavailable/);
     await act(() => { renderer!.unmount(); }); renderer = null;

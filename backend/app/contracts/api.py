@@ -1,6 +1,8 @@
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import Field, model_validator
+from app.contracts.base import ContractModel
+from app.contracts.assessment import WalkingMission
 
 COORDINATE_SYSTEM = "MARS_2000_PLANETOCENTRIC_EAST_360_V1"
 MAX_WAYPOINTS = 16
@@ -8,11 +10,6 @@ CoordinateSystem = Literal["MARS_2000_PLANETOCENTRIC_EAST_360_V1"]
 RouteMode = Literal["shortest", "safest"]
 NonEmptyString = Annotated[str, Field(strict=True, min_length=1)]
 NonNegative = Annotated[float, Field(strict=True, ge=0, allow_inf_nan=False)]
-
-
-class ContractModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", allow_inf_nan=False, frozen=True,
-                              json_schema_serialization_defaults_required=True)
 
 
 class MarsCoordinate(ContractModel):
@@ -31,6 +28,8 @@ class PlanRouteRequest(ContractModel):
     goal: MarsCoordinate
     mode: RouteMode
     waypoints: Annotated[list[MarsCoordinate], Field(max_length=MAX_WAYPOINTS)] = Field(default_factory=list)
+
+    mission: WalkingMission | None = None
 
     @model_validator(mode="after")
     def distinct_stops(self):

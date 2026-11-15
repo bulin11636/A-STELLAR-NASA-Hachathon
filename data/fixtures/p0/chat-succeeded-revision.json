@@ -374,7 +374,8 @@
         "latitude": 18.422194386916075
       },
       "mode": "safest",
-      "waypoints": []
+      "waypoints": [],
+      "mission": null
     },
     "coordinator": {
       "agent_id": "A0",
@@ -463,7 +464,7 @@
       "objective_cost": 2262.741699796954,
       "objective_units": "terrain-weighted metres",
       "expanded_nodes": 81,
-      "elapsed_ms": 0.4090970032848418,
+      "elapsed_ms": 0.41536100616212934,
       "distance_convention": "Native projected planar polyline including endpoint connectors"
     },
     "validation": {
@@ -511,13 +512,12 @@
         "public_name": "Thermal Environment and Exposure Context Agent",
         "responsibility": "Describe day/night thermal observations, units, times and coverage. Calibrated constraints require separate validation.",
         "requested": false,
-        "status": "unavailable",
+        "status": "unassessed",
         "evidence_kind": "unavailable",
         "dataset_ids": [],
         "artifact_ids": [],
         "warnings": [
-          "Context only; not fused into terrain costs.",
-          "Worker inputs are unconfigured or unavailable."
+          "Thermal context; calibrated limits unavailable."
         ],
         "unassessed_constraints": [
           "Thermal Environment and Exposure Context Agent"
@@ -528,13 +528,12 @@
         "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
         "responsibility": "Evaluate explicitly configured dose scenarios against a mission duration and user-supplied budget, retaining assumptions and uncertainty.",
         "requested": false,
-        "status": "unavailable",
+        "status": "unassessed",
         "evidence_kind": "unavailable",
         "dataset_ids": [],
         "artifact_ids": [],
         "warnings": [
-          "Context only; not fused into terrain costs.",
-          "Worker inputs are unconfigured or unavailable."
+          "Configured constant-rate dose scenario; no spatial avoidance model."
         ],
         "unassessed_constraints": [
           "Radiation Exposure and Mission Dose Assessment Agent"
@@ -545,13 +544,12 @@
         "public_name": "Geological Context and Science Opportunity Agent",
         "responsibility": "Associate source-attributed sampling POIs with regional geology, retain ambiguity and explain scientific relevance. Priority scoring requires a documented rubric.",
         "requested": false,
-        "status": "unavailable",
+        "status": "unassessed",
         "evidence_kind": "unavailable",
         "dataset_ids": [],
         "artifact_ids": [],
         "warnings": [
-          "Context only; not fused into terrain costs.",
-          "Worker inputs are unconfigured or unavailable."
+          "Science-site context and explicit waypoint suggestions."
         ],
         "unassessed_constraints": [
           "Geological Context and Science Opportunity Agent"
@@ -562,13 +560,12 @@
         "public_name": "Rover Traverse and Observation Evidence Agent",
         "responsibility": "Normalize historical rover positions and segments, compute supported proximity measures and attach verified observation references. Historical traversal does not establish astronaut safety.",
         "requested": false,
-        "status": "unavailable",
+        "status": "unassessed",
         "evidence_kind": "unavailable",
         "dataset_ids": [],
         "artifact_ids": [],
         "warnings": [
-          "Context only; not fused into terrain costs.",
-          "Worker inputs are unconfigured or unavailable."
+          "Historical rover context; not proof of safe terrain."
         ],
         "unassessed_constraints": [
           "Rover Traverse and Observation Evidence Agent"
@@ -586,7 +583,7 @@
       },
       "provenance": {
         "artifact_id": "route-11111111111111111111111111111111:provenance",
-        "sha256": "0a39cc203bf38be781a23114e24fbe706a3681678b9f726a0f4e43899c72fd91"
+        "sha256": "dd9953e2f0eee0eb85ea5fe5eff53a15f73cdd2e460216a6858b91002242882d"
       }
     },
     "warnings": [
@@ -627,7 +624,119 @@
       "estimated_cost_usd": 0.002,
       "price_version": "2026-11-14-standard-short-context"
     },
-    "parent_route_id": "route-00000000000000000000000000000000"
+    "parent_route_id": "route-00000000000000000000000000000000",
+    "specialist_trace": [
+      {
+        "agent_id": "A1",
+        "public_name": "Surface Traversability and Terrain Hazard Agent",
+        "configured": true,
+        "selected": true,
+        "required": true,
+        "selection_source": "host_policy",
+        "selection_reason": "Terrain coverage, slope policy and native route checks are mandatory.",
+        "execution_state": "succeeded",
+        "data_kind": "observed",
+        "result_status": "ready",
+        "application": "terrain_cost",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Optical obstacles and non-terrain environmental constraints remain unassessed."
+        ],
+        "dataset_ids": [
+          "docker-synthetic-plane"
+        ],
+        "artifact_id": "route-11111111111111111111111111111111:grid"
+      },
+      {
+        "agent_id": "A2",
+        "public_name": "Thermal Environment and Exposure Context Agent",
+        "configured": false,
+        "selected": false,
+        "required": false,
+        "selection_source": "deterministic",
+        "selection_reason": "No compatible worker is configured for this dataset scope.",
+        "execution_state": "not_requested",
+        "data_kind": "unavailable",
+        "result_status": null,
+        "application": "none",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Thermal context; calibrated limits unavailable."
+        ],
+        "dataset_ids": [],
+        "artifact_id": null
+      },
+      {
+        "agent_id": "A3",
+        "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
+        "configured": false,
+        "selected": false,
+        "required": false,
+        "selection_source": "deterministic",
+        "selection_reason": "No compatible worker is configured for this dataset scope.",
+        "execution_state": "not_requested",
+        "data_kind": "unavailable",
+        "result_status": null,
+        "application": "none",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Configured constant-rate dose scenario; no spatial avoidance model."
+        ],
+        "dataset_ids": [],
+        "artifact_id": null
+      },
+      {
+        "agent_id": "A4",
+        "public_name": "Geological Context and Science Opportunity Agent",
+        "configured": false,
+        "selected": false,
+        "required": false,
+        "selection_source": "deterministic",
+        "selection_reason": "No compatible worker is configured for this dataset scope.",
+        "execution_state": "not_requested",
+        "data_kind": "unavailable",
+        "result_status": null,
+        "application": "none",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Science-site context and explicit waypoint suggestions."
+        ],
+        "dataset_ids": [],
+        "artifact_id": null
+      },
+      {
+        "agent_id": "A6",
+        "public_name": "Rover Traverse and Observation Evidence Agent",
+        "configured": false,
+        "selected": false,
+        "required": false,
+        "selection_source": "deterministic",
+        "selection_reason": "No compatible worker is configured for this dataset scope.",
+        "execution_state": "not_requested",
+        "data_kind": "unavailable",
+        "result_status": null,
+        "application": "none",
+        "constraint_status": "unknown",
+        "limitations": [
+          "Historical rover context; not proof of safe terrain."
+        ],
+        "dataset_ids": [],
+        "artifact_id": null
+      }
+    ],
+    "assessment": {
+      "time": null,
+      "radiation_duration_min": null,
+      "radiation_duration_basis": "unavailable",
+      "dose_estimate_usv": null,
+      "dose_uncertainty_usv": null,
+      "radiation_constraint_status": "unknown",
+      "required_unassessed": [],
+      "required_failed": [],
+      "limitations": [
+        "Combined thermal/radiation risk is not calibrated; risk_score remains unknown."
+      ]
+    }
   },
   "usage": {
     "model": "gpt-6.1-sol",
@@ -639,5 +748,104 @@
     "reasoning_tokens": 0,
     "estimated_cost_usd": 0.002,
     "price_version": "2026-11-14-standard-short-context"
-  }
+  },
+  "specialist_trace": [
+    {
+      "agent_id": "A1",
+      "public_name": "Surface Traversability and Terrain Hazard Agent",
+      "configured": true,
+      "selected": true,
+      "required": true,
+      "selection_source": "host_policy",
+      "selection_reason": "Terrain coverage, slope policy and native route checks are mandatory.",
+      "execution_state": "succeeded",
+      "data_kind": "observed",
+      "result_status": "ready",
+      "application": "terrain_cost",
+      "constraint_status": "unknown",
+      "limitations": [
+        "Optical obstacles and non-terrain environmental constraints remain unassessed."
+      ],
+      "dataset_ids": [
+        "docker-synthetic-plane"
+      ],
+      "artifact_id": "route-11111111111111111111111111111111:grid"
+    },
+    {
+      "agent_id": "A2",
+      "public_name": "Thermal Environment and Exposure Context Agent",
+      "configured": false,
+      "selected": false,
+      "required": false,
+      "selection_source": "deterministic",
+      "selection_reason": "No compatible worker is configured for this dataset scope.",
+      "execution_state": "not_requested",
+      "data_kind": "unavailable",
+      "result_status": null,
+      "application": "none",
+      "constraint_status": "unknown",
+      "limitations": [
+        "Thermal context; calibrated limits unavailable."
+      ],
+      "dataset_ids": [],
+      "artifact_id": null
+    },
+    {
+      "agent_id": "A3",
+      "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
+      "configured": false,
+      "selected": false,
+      "required": false,
+      "selection_source": "deterministic",
+      "selection_reason": "No compatible worker is configured for this dataset scope.",
+      "execution_state": "not_requested",
+      "data_kind": "unavailable",
+      "result_status": null,
+      "application": "none",
+      "constraint_status": "unknown",
+      "limitations": [
+        "Configured constant-rate dose scenario; no spatial avoidance model."
+      ],
+      "dataset_ids": [],
+      "artifact_id": null
+    },
+    {
+      "agent_id": "A4",
+      "public_name": "Geological Context and Science Opportunity Agent",
+      "configured": false,
+      "selected": false,
+      "required": false,
+      "selection_source": "deterministic",
+      "selection_reason": "No compatible worker is configured for this dataset scope.",
+      "execution_state": "not_requested",
+      "data_kind": "unavailable",
+      "result_status": null,
+      "application": "none",
+      "constraint_status": "unknown",
+      "limitations": [
+        "Science-site context and explicit waypoint suggestions."
+      ],
+      "dataset_ids": [],
+      "artifact_id": null
+    },
+    {
+      "agent_id": "A6",
+      "public_name": "Rover Traverse and Observation Evidence Agent",
+      "configured": false,
+      "selected": false,
+      "required": false,
+      "selection_source": "deterministic",
+      "selection_reason": "No compatible worker is configured for this dataset scope.",
+      "execution_state": "not_requested",
+      "data_kind": "unavailable",
+      "result_status": null,
+      "application": "none",
+      "constraint_status": "unknown",
+      "limitations": [
+        "Historical rover context; not proof of safe terrain."
+      ],
+      "dataset_ids": [],
+      "artifact_id": null
+    }
+  ]
 }

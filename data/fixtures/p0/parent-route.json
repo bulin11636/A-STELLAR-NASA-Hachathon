@@ -369,7 +369,8 @@
         "latitude": 18.422194386916075
       },
       "mode": "shortest",
-      "waypoints": []
+      "waypoints": [],
+      "mission": null
     },
     "coordinator": {
       "agent_id": "A0",
@@ -458,7 +459,7 @@
       "objective_cost": 2262.741699796954,
       "objective_units": "m",
       "expanded_nodes": 81,
-      "elapsed_ms": 0.6945790082681924,
+      "elapsed_ms": 0.6489929946837947,
       "distance_convention": "Native projected planar polyline including endpoint connectors"
     },
     "validation": {
@@ -577,7 +578,7 @@
       },
       "provenance": {
         "artifact_id": "route-00000000000000000000000000000000:provenance",
-        "sha256": "899085629140ccd89dc876143d0a7fc2c9e4e42bc4f5f2fe8ec15e2ca386c43e"
+        "sha256": "2bd8439e63d9739f8d2c3d2a7c74244972fe9d74c1b6c451c5748e6e64a6a4df"
       }
     },
     "warnings": [
@@ -606,6 +607,20 @@
       "evidence_ids": []
     },
     "usage": null,
-    "parent_route_id": null
+    "parent_route_id": null,
+    "specialist_trace": [],
+    "assessment": {
+      "time": null,
+      "radiation_duration_min": null,
+      "radiation_duration_basis": "unavailable",
+      "dose_estimate_usv": null,
+      "dose_uncertainty_usv": null,
+      "radiation_constraint_status": "unknown",
+      "required_unassessed": [],
+      "required_failed": [],
+      "limitations": [
+        "Combined thermal/radiation risk is not calibrated; risk_score remains unknown."
+      ]
+    }
   }
 }

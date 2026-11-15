@@ -8,6 +8,10 @@ A2, A3, A4 and A6. Internal IDs and imports remain stable. Short IDs in the
 usage sections below identify existing packages; they are not substitutes for
 the complete public descriptions in new documentation or presentation metadata.
 
+The web planner now uses bounded optional specialist selection and explicit walking
+assumptions; see [the current integration guide](SPECIALIST_ROUTING_AND_WALKING.md).
+CLI experiments below retain their separate availability gates.
+
 ## Package interface for A0
 
 ```text

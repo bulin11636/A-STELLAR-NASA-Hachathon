@@ -65,6 +65,16 @@ export function decodeStoredRoute(body: unknown, routeId: string): StoredRouteRe
       m.sources[0].provenance_record_id !== `${routeId}:provenance`) {
     throw new Error("Stored route identity or metadata is inconsistent.");
   }
+  if (m.assessment) {
+    const expected=m.assessment.time?.total_min ?? null, actual=result.metrics.estimated_time_min;
+    if ((expected === null) !== (actual === null) || expected !== null && actual !== null && Math.abs(expected-actual) > 1e-9*Math.max(1,Math.abs(expected))) throw new Error("Walking assessment and route time disagree.");
+    if (m.assessment.time) {
+      const estimate=m.assessment.time, mission=m.request.mission;
+      if (!mission || mission.speed_m_s !== estimate.speed_m_s) throw new Error("Walking estimate requires matching explicit mission assumptions.");
+      const travel=result.metrics.distance_m!/mission.speed_m_s!/60, stop=m.request.waypoints.length*mission.stop_minutes_per_waypoint;
+      if ([[estimate.travel_min,travel],[estimate.stop_min,stop],[estimate.total_min,travel+stop]].some(([a,b])=>Math.abs(a-b)>1e-9*Math.max(1,Math.abs(b)))) throw new Error("Walking estimate does not match the route distance and dwell assumptions.");
+    }
+  }
   return stored;
 }
 

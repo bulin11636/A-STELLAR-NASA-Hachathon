@@ -20,7 +20,7 @@ afterEach(async () => {
 });
 function message(replan = false) {
   return { message_id: "message-0000000001", route_id: parent, created_at: "2026-11-14T08:00:00Z",
-    user_message: "Explain or revise", assistant_message: "Terrain-only answer.", usage: null,
+    user_message: "Explain or revise", assistant_message: "Terrain-only answer.", specialist_trace: [], usage: null,
     result: replan ? stored.result : null,
     metadata: replan ? { ...stored.metadata, parent_route_id: parent } : null };
 }

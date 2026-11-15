@@ -313,6 +313,17 @@
           "maxItems": 16,
           "title": "Waypoints",
           "type": "array"
+        },
+        "mission": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WalkingMission"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -321,7 +332,8 @@
         "start",
         "goal",
         "mode",
-        "waypoints"
+        "waypoints",
+        "mission"
       ],
       "title": "PlanRouteRequest",
       "type": "object"
@@ -570,6 +582,127 @@
       "title": "Rationale",
       "type": "object"
     },
+    "RouteAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "time": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeEstimate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "radiation_duration_min": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Radiation Duration Min"
+        },
+        "radiation_duration_basis": {
+          "default": "unavailable",
+          "enum": [
+            "user_supplied",
+            "route_estimate",
+            "unavailable"
+          ],
+          "title": "Radiation Duration Basis",
+          "type": "string"
+        },
+        "dose_estimate_usv": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dose Estimate Usv"
+        },
+        "dose_uncertainty_usv": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dose Uncertainty Usv"
+        },
+        "radiation_constraint_status": {
+          "default": "unknown",
+          "enum": [
+            "pass",
+            "fail",
+            "unknown"
+          ],
+          "title": "Radiation Constraint Status",
+          "type": "string"
+        },
+        "required_unassessed": {
+          "items": {
+            "enum": [
+              "A2",
+              "A3",
+              "A4",
+              "A6"
+            ],
+            "type": "string"
+          },
+          "title": "Required Unassessed",
+          "type": "array"
+        },
+        "required_failed": {
+          "items": {
+            "enum": [
+              "A2",
+              "A3",
+              "A4",
+              "A6"
+            ],
+            "type": "string"
+          },
+          "title": "Required Failed",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "time",
+        "radiation_duration_min",
+        "radiation_duration_basis",
+        "dose_estimate_usv",
+        "dose_uncertainty_usv",
+        "radiation_constraint_status",
+        "required_unassessed",
+        "required_failed",
+        "limitations"
+      ],
+      "title": "RouteAssessment",
+      "type": "object"
+    },
     "RouteMetadata": {
       "additionalProperties": false,
       "properties": {
@@ -673,6 +806,24 @@
           ],
           "default": null,
           "title": "Parent Route Id"
+        },
+        "specialist_trace": {
+          "items": {
+            "$ref": "#/$defs/SpecialistTrace"
+          },
+          "title": "Specialist Trace",
+          "type": "array"
+        },
+        "assessment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RouteAssessment"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -692,7 +843,9 @@
         "warnings",
         "rationale",
         "usage",
-        "parent_route_id"
+        "parent_route_id",
+        "specialist_trace",
+        "assessment"
       ],
       "title": "RouteMetadata",
       "type": "object"
@@ -857,6 +1010,211 @@
       "title": "Source",
       "type": "object"
     },
+    "SpecialistTrace": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "enum": [
+            "A1",
+            "A2",
+            "A3",
+            "A4",
+            "A6"
+          ],
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "public_name": {
+          "title": "Public Name",
+          "type": "string"
+        },
+        "configured": {
+          "title": "Configured",
+          "type": "boolean"
+        },
+        "selected": {
+          "title": "Selected",
+          "type": "boolean"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "selection_source": {
+          "enum": [
+            "host_policy",
+            "user_requirement",
+            "a0",
+            "deterministic"
+          ],
+          "title": "Selection Source",
+          "type": "string"
+        },
+        "selection_reason": {
+          "title": "Selection Reason",
+          "type": "string"
+        },
+        "execution_state": {
+          "enum": [
+            "not_requested",
+            "succeeded",
+            "cached",
+            "unavailable",
+            "failed"
+          ],
+          "title": "Execution State",
+          "type": "string"
+        },
+        "data_kind": {
+          "enum": [
+            "observed",
+            "scenario",
+            "mock",
+            "unavailable"
+          ],
+          "title": "Data Kind",
+          "type": "string"
+        },
+        "result_status": {
+          "anyOf": [
+            {
+              "enum": [
+                "ready",
+                "partial",
+                "unavailable",
+                "failed"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Result Status"
+        },
+        "application": {
+          "enum": [
+            "terrain_cost",
+            "context_only",
+            "dose_scenario",
+            "none"
+          ],
+          "title": "Application",
+          "type": "string"
+        },
+        "constraint_status": {
+          "default": "unknown",
+          "enum": [
+            "pass",
+            "fail",
+            "unknown"
+          ],
+          "title": "Constraint Status",
+          "type": "string"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Limitations",
+          "type": "array"
+        },
+        "dataset_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dataset Ids",
+          "type": "array"
+        },
+        "artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Artifact Id"
+        }
+      },
+      "required": [
+        "agent_id",
+        "public_name",
+        "configured",
+        "selected",
+        "required",
+        "selection_source",
+        "selection_reason",
+        "execution_state",
+        "data_kind",
+        "result_status",
+        "application",
+        "constraint_status",
+        "limitations",
+        "dataset_ids",
+        "artifact_id"
+      ],
+      "title": "SpecialistTrace",
+      "type": "object"
+    },
+    "TimeEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "const": "walking",
+          "default": "walking",
+          "title": "Mode",
+          "type": "string"
+        },
+        "model": {
+          "const": "constant_projected_speed_v1",
+          "default": "constant_projected_speed_v1",
+          "title": "Model",
+          "type": "string"
+        },
+        "speed_m_s": {
+          "exclusiveMinimum": 0,
+          "title": "Speed M S",
+          "type": "number"
+        },
+        "travel_min": {
+          "minimum": 0,
+          "title": "Travel Min",
+          "type": "number"
+        },
+        "stop_min": {
+          "minimum": 0,
+          "title": "Stop Min",
+          "type": "number"
+        },
+        "total_min": {
+          "minimum": 0,
+          "title": "Total Min",
+          "type": "number"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "mode",
+        "model",
+        "speed_m_s",
+        "travel_min",
+        "stop_min",
+        "total_min",
+        "assumptions"
+      ],
+      "title": "TimeEstimate",
+      "type": "object"
+    },
     "Usage": {
       "additionalProperties": false,
       "properties": {
@@ -978,6 +1336,89 @@
         "map_alignment"
       ],
       "title": "Validation",
+      "type": "object"
+    },
+    "WalkingMission": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "const": "walking",
+          "default": "walking",
+          "title": "Mode",
+          "type": "string"
+        },
+        "speed_m_s": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 20,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speed M S"
+        },
+        "stop_minutes_per_waypoint": {
+          "default": 0,
+          "maximum": 1440,
+          "minimum": 0,
+          "title": "Stop Minutes Per Waypoint",
+          "type": "number"
+        },
+        "exposure_duration_min": {
+          "anyOf": [
+            {
+              "maximum": 10080,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exposure Duration Min"
+        },
+        "radiation_budget_usv": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Radiation Budget Usv"
+        },
+        "required_analyses": {
+          "items": {
+            "enum": [
+              "A2",
+              "A3",
+              "A4",
+              "A6"
+            ],
+            "type": "string"
+          },
+          "maxItems": 4,
+          "title": "Required Analyses",
+          "type": "array"
+        }
+      },
+      "required": [
+        "mode",
+        "speed_m_s",
+        "stop_minutes_per_waypoint",
+        "exposure_duration_min",
+        "radiation_budget_usv",
+        "required_analyses"
+      ],
+      "title": "WalkingMission",
       "type": "object"
     },
     "Worker": {
@@ -1127,6 +1568,13 @@
         }
       ],
       "default": null
+    },
+    "specialist_trace": {
+      "items": {
+        "$ref": "#/$defs/SpecialistTrace"
+      },
+      "title": "Specialist Trace",
+      "type": "array"
     }
   },
   "required": [
@@ -1137,7 +1585,8 @@
     "assistant_message",
     "result",
     "metadata",
-    "usage"
+    "usage",
+    "specialist_trace"
   ],
   "title": "ChatResponse",
   "type": "object"

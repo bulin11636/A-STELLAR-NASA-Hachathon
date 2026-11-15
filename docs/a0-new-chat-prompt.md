@@ -3,9 +3,9 @@
 Use this prompt in a new chat with this repository open.
 
 ```text
-Work in ~/nasa/repo/A-STELLAR-NASA-Hachathon on sam/backend.
+Work in ~/nasa/repo/A-STELLAR-NASA-Hachathon on main.
 Inspect repository instructions and git status first. Preserve existing changes.
-Read docs/P0_BACKEND_DELIVERY.md, docs/backend-handoff.md, docs/TODO.md,
+Read docs/SPECIALIST_ROUTING_AND_WALKING.md, docs/P0_UI_ACCEPTANCE.md, docs/P0_BACKEND_DELIVERY.md, docs/backend-handoff.md, docs/TODO.md,
 docs/ADVANCED_ROUTE_PLANNING_CONTRACT.md and docs/docker.md. Repository documentation must be English.
 Keep TODO limited to pending work; do not record personal usage or billing.
 
@@ -13,10 +13,14 @@ The current scope is reliable delivery of the existing prototype. Retain
 regional terrain A*, up to 16 ordered waypoints, chat additions/reordering,
 persisted rationale, immutable routes, source validation and provider diagnostics.
 UI styling and map fitting belong to the frontend owner; keep frontend source
-and successful plan/chat response contracts stable. Sam's P0 work is complete;
+stable except for the coordinated optional mission, assessment and specialist-trace
+contract extension documented in the specialist integration guide. Preserve walking-only
+assumptions, required-analysis enforcement, metered two-stage selection and its
+durable retry checkpoints. Do not introduce calibrated risk values without data. Sam's P0 work is complete;
 chat additionally accepts the optional typed advanced_context. Preserve its
 parent-route matching, context-bound request identity and host-enforced
-explanation-only permission. Remaining P0 UI work belongs to Sheng.
+explanation-only permission. The joint P0 UI fixes are also complete; use the latest acceptance report
+before treating historical gap reports as pending work.
 
 Backend recovery uses durable request states and explicit, versioned retries.
 Known failed requests replay their saved error unless explicitly retried;

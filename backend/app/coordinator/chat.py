@@ -69,10 +69,10 @@ class RouteChat:
             save_json(self._input_path(route_id, request.request_id), request.model_dump(mode='json', exclude_none=True))
             recent=[{'user':item.user_message[:180],'assistant':item.assistant_message[:120]}
                     for item in self.history(route_id).messages[-2:]]
-            answer,revised,usage=self.agent.respond(stored,request.message,recent_dialogue=recent, advanced_context=request.advanced_context)
+            answer,revised,usage,traces=self.agent.respond(stored,request.message,recent_dialogue=recent, advanced_context=request.advanced_context,request_id=request.request_id)
             return ChatResponse(message_id=request.request_id,route_id=route_id,created_at=datetime.now(timezone.utc),
                 user_message=request.message,assistant_message=answer,result=revised.result if revised else None,
-                metadata=revised.metadata if revised else None,usage=usage)
+                metadata=revised.metadata if revised else None,usage=usage,specialist_trace=traces)
         return attempts.execute(request.request_id,self._payload(request),respond,
             self._parse(route_id,request.request_id),retry_attempt=retry_attempt,
             response_path=directory/(request.request_id+'.json'),legacy_claim=directory/(request.request_id+'.claim'))

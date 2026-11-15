@@ -14,7 +14,20 @@ export function validateRouteRequest(request: PlanRouteRequest): void {
   validateApiCoordinate(request.goal);
   const waypoints = request.waypoints ?? [];
   if (!Array.isArray(waypoints) || waypoints.length > 16) throw new Error("Use at most 16 ordered waypoints.");
+  if (request.mission) {
+    const mission = request.mission;
+    if (mission.mode !== "walking") throw new Error("This mission supports walking only.");
+    if (mission.speed_m_s !== null && (!Number.isFinite(mission.speed_m_s) || mission.speed_m_s <= 0 || mission.speed_m_s > 20)) throw new Error("Enter a positive walking speed within the supported input range (up to 20 m/s).");
+    if (!Number.isFinite(mission.stop_minutes_per_waypoint) || mission.stop_minutes_per_waypoint < 0 || mission.stop_minutes_per_waypoint > 1440) throw new Error("Waypoint dwell must be between 0 and 1,440 minutes.");
+    if (mission.exposure_duration_min !== null && (!Number.isFinite(mission.exposure_duration_min) || mission.exposure_duration_min < 0 || mission.exposure_duration_min > 10080)) throw new Error("Exposure duration must be between 0 and 10,080 minutes.");
+    if (mission.radiation_budget_usv !== null && (!Number.isFinite(mission.radiation_budget_usv) || mission.radiation_budget_usv < 0)) throw new Error("Enter a finite nonnegative scenario dose budget.");
+    if (!Array.isArray(mission.required_analyses) || mission.required_analyses.length > 4 || new Set(mission.required_analyses).size !== mission.required_analyses.length || mission.required_analyses.some(a => !["A2", "A3", "A4", "A6"].includes(a))) throw new Error("Choose unique supported required analyses.");
+  }
   waypoints.forEach(validateApiCoordinate);
+  const stops = [request.start, ...waypoints, request.goal];
+  if (stops.some((point, index) => index > 0 && point.longitude === stops[index - 1].longitude && point.latitude === stops[index - 1].latitude)) {
+    throw new Error("Consecutive route stops must differ.");
+  }
   if (request.start.longitude === request.goal.longitude && request.start.latitude === request.goal.latitude) {
     throw new Error("Start and Goal must be different points.");
   }

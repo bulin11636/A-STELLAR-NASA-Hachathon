@@ -43,7 +43,7 @@ def test_advanced_context_is_persisted_typed_forwarded_and_replayed_after_restar
     with TestClient(create_app(planning=planning, route_agent=agent)) as client:
         response = client.post(url, json=body)
         assert response.status_code == 200, response.text
-        assert set(response.json()) == {'message_id','route_id','created_at','user_message','assistant_message','result','metadata','usage'}
+        assert set(response.json()) == {'message_id','route_id','created_at','user_message','assistant_message','result','metadata','usage','specialist_trace'}
         assert snapshots[0]['advanced_context'] == body['advanced_context']
         saved = planning.store.root/'requests'/'chat'/previous.route_id/(body['request_id']+'.input')
         assert ChatRequest.model_validate_json(saved.read_text()).advanced_context.model_dump(mode='json') == body['advanced_context']

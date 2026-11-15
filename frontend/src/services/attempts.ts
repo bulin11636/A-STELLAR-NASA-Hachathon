@@ -32,10 +32,18 @@ function validRouteId(routeId: string) {
 
 export function getPlanRequestStatus(requestId: string, signal?: AbortSignal): Promise<RequestAttemptStatus> {
   validRequestId(requestId);
-  return apiRequest(`/api/v1/routes/requests/${requestId}`, decodeRequestAttemptStatus, { signal });
+  return apiRequest(`/api/v1/routes/requests/${requestId}`, body => {
+    const value = decodeRequestAttemptStatus(body);
+    if (value.request_id !== requestId) throw new Error("Request status identity mismatch.");
+    return value;
+  }, { signal });
 }
 
 export function getChatAttemptStatus(routeId: string, requestId: string, signal?: AbortSignal): Promise<RequestAttemptStatus> {
   validRouteId(routeId); validRequestId(requestId);
-  return apiRequest(`/api/v1/routes/${routeId}/chat/attempts/${requestId}`, decodeRequestAttemptStatus, { signal });
+  return apiRequest(`/api/v1/routes/${routeId}/chat/attempts/${requestId}`, body => {
+    const value = decodeRequestAttemptStatus(body);
+    if (value.request_id !== requestId) throw new Error("Request status identity mismatch.");
+    return value;
+  }, { signal });
 }

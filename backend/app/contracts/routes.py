@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Annotated, Literal
 from pydantic import Field, model_validator
 from app.contracts.api import ContractModel, PlanRouteRequest, PlanRouteResponse, NonNegative
+from app.contracts.assessment import SpecialistTrace, RouteAssessment
 
 
 class Bounds(ContractModel):
@@ -153,6 +154,9 @@ class RouteMetadata(ContractModel):
     usage: Usage | None = None
     parent_route_id: str | None = Field(default=None, pattern=r'^route-[a-f0-9]{32}$')
 
+    specialist_trace: list[SpecialistTrace] = Field(default_factory=list)
+    assessment: RouteAssessment | None = None
+
     @model_validator(mode='after')
     def utc_timestamp(self):
         if self.created_at.utcoffset() is None or self.created_at.utcoffset().total_seconds() != 0:
@@ -172,6 +176,21 @@ class StoredRouteResponse(ContractModel):
             or r.route[0] != m.request.start or r.route[-1] != m.request.goal
             or r.metrics.distance_m is None or not r.warnings):
             raise ValueError('Inconsistent persisted result')
+        if m.assessment is not None:
+            import math
+            expected=m.assessment.time.total_min if m.assessment.time else None
+            actual=r.metrics.estimated_time_min
+            if (expected is None) != (actual is None) or expected is not None and not math.isclose(expected,actual,rel_tol=1e-9,abs_tol=1e-9):
+                raise ValueError('Walking assessment and route time disagree')
+            if m.assessment.time is not None:
+                estimate=m.assessment.time;mission=m.request.mission
+                if mission is None or mission.speed_m_s != estimate.speed_m_s:
+                    raise ValueError('Walking estimate requires matching explicit mission assumptions')
+                travel=r.metrics.distance_m/mission.speed_m_s/60
+                stop=len(m.request.waypoints)*mission.stop_minutes_per_waypoint
+                if not all(math.isclose(a,b,rel_tol=1e-9,abs_tol=1e-9) for a,b in
+                    [(estimate.travel_min,travel),(estimate.stop_min,stop),(estimate.total_min,travel+stop)]):
+                    raise ValueError('Walking estimate does not match the route distance and dwell assumptions')
         index = 0
         for stop in m.request.waypoints:
             while index < len(r.route) and r.route[index] != stop:

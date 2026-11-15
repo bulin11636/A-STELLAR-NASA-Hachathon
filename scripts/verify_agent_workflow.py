@@ -25,7 +25,8 @@ def main():
     parser.add_argument('--dataset-dir',type=Path,default=Path.home()/'nasa/project/dataset')
     parser.add_argument('--profile',type=Path,default=ROOT/'data/samples/a0-planning-profile.example.json')
     parser.add_argument('--output-root',type=Path,default=ROOT/'data/processed/a0-workflow')
-    parser.add_argument('--live-model',action='store_true',help='Make at most four real model requests using backend credentials and the shared persistent budget; never retry automatically')
+    parser.add_argument('--live-model',action='store_true',help='Use real model requests under an explicit call cap and shared budget; never retry automatically')
+    parser.add_argument('--max-live-calls',type=int,choices=range(1,9),default=4,help='Explicit live-call cap (default 4); optional tool selection can require 8 for the full workflow')
     args=parser.parse_args()
     run=args.output_root.resolve()/('run-'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')+'-'+uuid4().hex[:8])
     run.mkdir(parents=True)
@@ -52,7 +53,10 @@ def main():
         else:
             settings.api_key='synthetic-test-key'
             def handler(req):
+                from mock_specialists import selection_response
                 data=json.loads(req.content)
+                selected=selection_response(data)
+                if selected is not None: return httpx.Response(200,json=selected)
                 message=json.loads(data['input'][1]['content'])['message']
                 answer=message.startswith('Why')
                 revision=message.startswith('Add')
@@ -64,9 +68,13 @@ def main():
             provider=MeteredProvider(settings,run/'mock-usage',httpx.MockTransport(handler))
         before=provider.totals()['attempts']
         # Keep the shared ledger and any stricter configured cap. Never permit
-        # this acceptance invocation to reserve more than four new requests.
-        settings.max_calls=min(settings.max_calls,before+4)
+        # live invocation to reserve more than four new requests. Offline mocks
+        # allow two requests per action for optional specialist selection.
+        settings.max_calls=min(settings.max_calls,before+(args.max_live_calls if args.live_model else 8))
         agent=RouteAgent(settings,planning,provider)
+        expected_calls=4*(2 if any(c['configured'] for c in agent.catalog()) else 1)
+        if args.live_model and settings.max_calls-before<expected_calls:
+            raise RuntimeError(f'The full workflow requires up to {expected_calls} provider requests. Increase --max-live-calls explicitly and ensure the shared cap has capacity; no live request was made.')
         with TestClient(create_app(planning=planning,route_agent=agent)) as client:
             plan_body=request.model_dump(mode='json')
             plan_headers={'Idempotency-Key':uuid4().hex}
@@ -107,12 +115,12 @@ def main():
         with TestClient(create_app(planning=planning,route_agent=fresh)) as client:
             assert len(client.get('/api/v1/routes/'+final+'/chat').json()['messages'])==3
             assert client.get('/api/v1/routes/'+final).status_code==200
-        assert provider.totals()['attempts']-before==4
+        assert provider.totals()['attempts']-before==expected_calls
         summary.update(status='passed',route_id=route_id,revision_id=child,reordered_route_id=final,
             initial_window=[g.metadata.width,g.metadata.height],expanded_window=[preflight_record.metadata.grid.width,preflight_record.metadata.grid.height],
             usage=provider.totals(),checks=['dynamic_crop_outside_initial_window','a0_before_astar','grounded_rationale',
                 'question_without_route_change','explicit_three_waypoint_addition','reverse_three_visits',
-                'idempotent_plan_and_revision_replay','fresh_app_history_and_route_retrieval','four_provider_requests_only'])
+                'idempotent_plan_and_revision_replay','fresh_app_history_and_route_retrieval','bounded_selection_and_decision_requests'])
     except ApiProblem as error:
         summary.update(status='failed',error_code=error.code,message=error.message)
     except Exception as error:

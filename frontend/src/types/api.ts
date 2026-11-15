@@ -1,3 +1,6 @@
+import type { WalkingMission } from "./routeMetadata.ts";
+export type { WalkingMission } from "./routeMetadata.ts";
+
 export const COORDINATE_SYSTEM = "MARS_2000_PLANETOCENTRIC_EAST_360_V1" as const;
 export type CoordinateSystem = typeof COORDINATE_SYSTEM;
 export type RouteMode = "shortest" | "safest";
@@ -16,6 +19,7 @@ export interface PlanRouteRequest {
   goal: MarsCoordinate;
   mode: RouteMode;
   waypoints?: MarsCoordinate[];
+  mission?: WalkingMission | null;
 }
 
 export interface PlanRouteResponse {

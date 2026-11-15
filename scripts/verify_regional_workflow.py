@@ -47,6 +47,9 @@ def main():
             raise RuntimeError('The selected real-DEM stop fixture includes a blocked cell.')
         settings = AgentSettings(enabled=True,api_key='synthetic-verification-key')
         def handler(req):
+            from mock_specialists import selection_response
+            selected=selection_response(json.loads(req.content))
+            if selected is not None: return httpx.Response(200,json=selected)
             message = json.loads(json.loads(req.content)['input'][1]['content'])['message']
             ordered = list(reversed(stops)) if message.startswith('Reverse') else stops
             answer = message.startswith('Why')

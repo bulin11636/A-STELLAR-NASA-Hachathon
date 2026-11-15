@@ -32,7 +32,7 @@ export default function RoutePreview({ result, metadata }: { result: PlanRouteRe
   }, []);
   if (!(width > 0 && height > 0 && bounds.east > bounds.west && bounds.north > bounds.south)) return null;
   const size = view.width / 55;
-  const stopLabel = (index: number) => index === 0 ? "S" : index === stops.length - 1 ? "G" : String(index);
+  const stopLabel = (index: number) => index === 0 ? "S" : index === stops.length - 1 ? "G" : `W${index}`;
   const visibleLabels: number[][] = [];
   return <figure ref={figure} className="route-preview"><figcaption>DEM route preview · {metadata.grid.planning_resolution_m.join(" × ")} m cells</figcaption>
     <div className="preview-controls" aria-label="DEM preview controls">
@@ -64,6 +64,6 @@ export default function RoutePreview({ result, metadata }: { result: PlanRouteRe
       title={`${p.longitude.toFixed(7)}, ${p.latitude.toFixed(7)}`}
       onClick={() => { const [x,y] = xy(p); const span = nativeSpacing * 8; setView({ x: x-span/2, y: y-span/2, width: span, height: span }); setFocused(i); }}>
       Focus {stopLabel(i)}</button>)}</div>
-    <p>Validated route geometry on DEM axes. Terrain costs are not drawn. NASA basemap registration remains unverified.</p>
+    <p>Computed route geometry on DEM axes. Terrain costs are not drawn. NASA basemap registration remains unverified.</p>
   </figure>;
 }
