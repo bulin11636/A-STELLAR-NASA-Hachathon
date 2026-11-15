@@ -108,6 +108,12 @@ textarea { width: 100%; resize: vertical; padding: .55rem; font: inherit; color:
 .briefing-summary { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .3rem .8rem; }
 .briefing-summary dt { margin: 0; }
 .mission-briefing > p { color: #b9c5cc; }
+.briefing-section { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid #44515d; }
+.briefing-section h3, .briefing-technical h3 { margin: 0; font-size: .9rem; }
+.briefing-section p { color: #b9c5cc; }
+.briefing-section ul, .briefing-technical ul { margin: .6rem 0 0; padding-left: 1.2rem; }
+.briefing-technical { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid #44515d; }
+.briefing-technical summary { cursor: pointer; font-weight: 600; }
 .a0-assistant { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid #536573; font-size: .78rem; }
 .a0-assistant > p { color: #b9c5cc; }
 @media (max-width: 800px) {

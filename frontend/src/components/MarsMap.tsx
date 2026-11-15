@@ -90,7 +90,7 @@ export default function MarsMap() {
   };
 
   const fitRegional = () => {
-    const bounds = planningRegion?.source_bounds ?? planningRegion?.bounds;
+    const bounds = planningRegion?.planning?.source_bounds ?? planningRegion?.planning?.bounds;
     if (!bounds) return;
     fitMapPoints([
       { longitude: bounds.west, latitude: bounds.south },
@@ -351,7 +351,7 @@ export default function MarsMap() {
         </section>}
         {sidebarTab === "briefing" && <section id="briefing-panel" role="tabpanel" aria-labelledby="briefing-tab">
         <MissionBriefing objective={missionObjective} onObjectiveChange={setMissionObjective}
-          start={planner.start} goal={planner.goal} route={planner.result} assessment={planner.metadata?.assessment ?? null} layers={layerDisplay}
+          start={planner.start} goal={planner.goal} route={planner.result} assessment={planner.metadata?.assessment ?? null} metadata={planner.metadata} layers={layerDisplay}
           evidence={inspectedPoint ? evidenceAtPoint(inspectedPoint) : null} />
         </section>}
         {sidebarTab === "a0" && <section id="a0-panel" role="tabpanel" aria-labelledby="a0-tab"><A0AssistantPanel planner={planner} /></section>}
