@@ -49,9 +49,9 @@ after capture; do not copy placeholder hashes into production.
   "latitude_type": "planetographic",
   "semi_major_m": 3396190.0,
   "inverse_flattening": 169.894447223612,
-  "capabilities_file": "registration/jezero-wmts-capabilities.xml",
+  "capabilities_file": "jezero-wmts-capabilities.xml",
   "capabilities_sha256": "<sha256>",
-  "measurement_file": "registration/jezero-independent-measurements.json",
+  "measurement_file": "jezero-independent-measurements.json",
   "measurement_sha256": "<sha256>",
   "observations": []
 }
