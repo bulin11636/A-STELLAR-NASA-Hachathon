@@ -17,8 +17,11 @@ import LayerPanel, { type LayerDisplayState } from "./LayerPanel.tsx";
 import EvidenceSelection from "./EvidenceSelection.tsx";
 import EvidenceDrawer from "./EvidenceDrawer.tsx";
 import MissionBriefing from "./MissionBriefing.tsx";
+import RouteAssessment from "./RouteAssessment.tsx";
+import SpecialistTrace from "./SpecialistTrace.tsx";
 
 type Progress = { pending: number; loaded: number; missing: number; failed: number };
+type SidebarTab = "plan" | "route" | "briefing" | "evidence";
 const initialProgress: Progress = { pending: 0, loaded: 0, missing: 0, failed: 0 };
 
 export default function MarsMap() {
@@ -55,6 +58,7 @@ export default function MarsMap() {
   const [evidenceSelection, setEvidenceSelection] = useState<SelectedEvidence | null>(null);
   const [inspectedPoint, setInspectedPoint] = useState<import("../types/api.ts").MarsCoordinate | null>(null);
   const [missionObjective, setMissionObjective] = useState("Inspect Jezero science and historical rover evidence without treating the demonstration route as safety validated.");
+  const [sidebarTab, setSidebarTab] = useState<SidebarTab>("plan");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -236,17 +240,40 @@ export default function MarsMap() {
         <div className="info-heading"><h2>Explore the surface</h2><span className="badge">F1.5</span></div>
         <p>Drag to pan. Scroll, pinch, or use + / − to zoom. Focus the map to use arrow keys. Click to inspect a location.</p>
         <div className="coordinates" aria-live="polite">{coordinates ?? "Click the map to inspect coordinates."}</div>
+        <div className="workspace-tabs" role="tablist" aria-label="Mission workspace">
+          {(["plan", "route", "briefing", "evidence"] as const).map((tab) => <button type="button" key={tab} id={`${tab}-tab`} role="tab"
+            aria-selected={sidebarTab === tab} aria-controls={`${tab}-panel`} onClick={() => setSidebarTab(tab)}>{tab[0].toUpperCase() + tab.slice(1)}</button>)}
+        </div>
+        {sidebarTab === "plan" && <section id="plan-panel" role="tabpanel" aria-labelledby="plan-tab">
         <RoutePlannerPanel planner={planner} mapReady={ready} planningRegion={planningRegion} planningError={planningError} onViewJezero={() => {
           mapRef.current?.getView().fit([77.0, 17.95, 78.1, 18.95], { padding: [32, 32, 32, 32], duration: 300 });
         }} />
+        </section>}
+        {sidebarTab === "route" && <section id="route-panel" role="tabpanel" aria-labelledby="route-tab" className="route-workspace">
+          <div className="info-heading"><h2>Route assessment</h2><span className="badge">P1</span></div>
+          {!planner.result ? <p>Plan a route to view distance, timing, gate status, and specialist evidence.</p> : <>
+            <dl className="route-metrics">
+              <dt>Distance</dt><dd>{planner.result.metrics.distance_m?.toFixed(1) ?? "Not assessed"} m</dd>
+              <dt>Estimated time</dt><dd>{planner.result.metrics.estimated_time_min?.toFixed(1) ?? "Not estimated"} min</dd>
+              <dt>Map alignment</dt><dd>{planner.metadata?.validation.map_alignment ?? "Unassessed"}</dd>
+              <dt>Grid resolution</dt><dd>{planner.metadata?.grid.planning_resolution_m.join(" × ") ?? "Not available"} m</dd>
+            </dl>
+            {planner.metadata ? <><RouteAssessment assessment={planner.metadata.assessment} /><SpecialistTrace traces={planner.metadata.specialist_trace} /></> : <p>Route metadata is not available yet.</p>}
+          </>}
+        </section>}
+        {sidebarTab === "evidence" && <section id="evidence-panel" role="tabpanel" aria-labelledby="evidence-tab">
         <LayerPanel layers={layerDisplay} onLayerChange={(id, change) => {
           setLayerDisplay((current) => ({ ...current, [id]: { ...(current[id] ?? { visible: false, opacity: 1 }), ...change } }));
         }} />
         <EvidenceSelection selection={evidenceSelection} />
         <EvidenceDrawer evidence={inspectedPoint ? evidenceAtPoint(inspectedPoint) : null} />
+        </section>}
+        {sidebarTab === "briefing" && <section id="briefing-panel" role="tabpanel" aria-labelledby="briefing-tab">
         <MissionBriefing objective={missionObjective} onObjectiveChange={setMissionObjective}
           start={planner.start} goal={planner.goal} route={planner.result} assessment={planner.metadata?.assessment ?? null} layers={layerDisplay}
           evidence={inspectedPoint ? evidenceAtPoint(inspectedPoint) : null} />
+        </section>}
+        {sidebarTab === "evidence" && <>
         <dl>
           <dt>Coordinate system</dt><dd>Mars 2000 · NASA service label <code>urn:ogc:def:crs:EPSG::104905</code> (ESRI:104905 definition)</dd>
           <dt>Native units and axes</dt><dd>Degrees · X longitude, east positive (−180° to +180°); Y native latitude (−90° to +90°).</dd>
@@ -262,6 +289,7 @@ export default function MarsMap() {
         <button type="button" onClick={() => setAttempt((value) => value + 1)}>Reload NASA map</button>
         <p className="sources"><a href={CAPABILITIES_URL} target="_blank" rel="noreferrer">WMTS metadata ↗</a><a href={CATALOG_URL} target="_blank" rel="noreferrer">NASA source catalog ↗</a></p>
         <p className="credit">NASA / JPL-Caltech · Mars Global Surveyor / MOLA. Colorized topography, not natural-color photography.</p>
+        </>}
       </aside>
     </section>
   );

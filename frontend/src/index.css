@@ -25,6 +25,11 @@ h2 { font-size: 1.1rem; margin: 0; }
 .info-heading { display: flex; align-items: center; justify-content: space-between; gap: .7rem; }
 .badge { border: 1px solid #687e8d; border-radius: 3px; color: #b9c5cc; padding: .05rem .4rem; font-size: .7rem; }
 .coordinates { padding: .85rem; background: #24323c; border: 1px solid #536573; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.workspace-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .35rem; margin-top: 1rem; padding-bottom: .85rem; border-bottom: 1px solid #536573; }
+.workspace-tabs button { padding: .45rem .3rem; font-size: .72rem; }
+.workspace-tabs button[aria-selected="true"] { border-color: #f5c27b; background: #3b454a; color: #ffe0b7; }
+.route-workspace { margin-top: 1rem; }
+.route-workspace > p { color: #b9c5cc; }
 dt { margin-top: 1rem; color: #9cabb5; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; }
 dd { margin: .2rem 0 0; }
 code { font-size: .72rem; overflow-wrap: anywhere; }
