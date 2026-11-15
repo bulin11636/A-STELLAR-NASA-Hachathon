@@ -114,6 +114,7 @@ integration, review, and acceptance rather than duplicating backend work.
 See [P1 backend handoff](P1_BACKEND_HANDOFF.md) and `data/fixtures/p1/` for the
 implemented policy catalog, request fields, actual resolution metadata, factor
 and confidence formulas, gate behavior, durable records and verified/unverified
-synthetic fixtures. Profile/resolution UI and assessment presentation remain
-Sheng's scope. Real independent NASA feature measurements remain a joint
+synthetic fixtures. Sheng's initial profile/briefing UI is now integrated with the backend policy
+catalog and assessment scale; expanded Journey Briefing/tab/map presentation
+remains Sheng's scope. Real independent NASA feature measurements remain a joint
 registration prerequisite; a synthetic verified fixture does not satisfy it.

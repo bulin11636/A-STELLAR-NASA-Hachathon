@@ -775,6 +775,7 @@
       "risk_factors": [
         {
           "agent_id": "A1",
+          "public_name": "Surface Traversability and Terrain Hazard Agent",
           "kind": "risk",
           "status": "assessed",
           "risk_score": 0.001458931957320605,
@@ -812,6 +813,7 @@
         },
         {
           "agent_id": "A2",
+          "public_name": "Thermal Environment and Exposure Context Agent",
           "kind": "context",
           "status": "unassessed",
           "risk_score": null,
@@ -834,6 +836,7 @@
         },
         {
           "agent_id": "A3",
+          "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
           "kind": "risk",
           "status": "assessed",
           "risk_score": 0.008310774402203775,
@@ -872,6 +875,7 @@
         },
         {
           "agent_id": "A4",
+          "public_name": "Geological Context and Science Opportunity Agent",
           "kind": "context",
           "status": "unavailable",
           "risk_score": null,
@@ -894,6 +898,7 @@
         },
         {
           "agent_id": "A5",
+          "public_name": "Surface Obstacle Context (merged into the Surface Traversability and Terrain Hazard Agent)",
           "kind": "context",
           "status": "not_applicable",
           "risk_score": null,
@@ -913,6 +918,7 @@
         },
         {
           "agent_id": "A6",
+          "public_name": "Rover Traverse and Observation Evidence Agent",
           "kind": "context",
           "status": "unavailable",
           "risk_score": null,

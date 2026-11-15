@@ -2,8 +2,7 @@
 
 ## P1 joint acceptance
 
-- [ ] Integrate Sheng's profile/resolution controls and paired risk/confidence presentation against the P1 fixtures.
-- [ ] Complete joint browser acceptance for gate states and the source/layer-bound verified NASA overlay after real controls pass.
+- [ ] Finish the Journey Briefing/tab hierarchy and source/layer-bound verified NASA overlay acceptance after real controls pass.
 
 ## Deferred: deployment operations
 

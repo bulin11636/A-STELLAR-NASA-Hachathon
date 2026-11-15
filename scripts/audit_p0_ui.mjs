@@ -35,6 +35,7 @@ async function ready(){
 async function open(){
  const current=await browser.newPage({viewport:{width:1440,height:1000}});
  current.setDefaultTimeout(20000);
+ current.on('pageerror',error=>{(summary.page_errors??=[]).push(error.message);});
  await current.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
  await current.goto(base);await current.getByRole('button',{name:'Load in-coverage example endpoints',exact:true}).waitFor();return current;
 }
@@ -69,6 +70,9 @@ try{
 
  summary.stage='advanced_plan_then_chat';page=await open();await endpoints();
  await page.getByRole('tab',{name:'Advanced',exact:true}).click();
+ await page.getByLabel('Mission profile',{exact:true}).selectOption('fastest');
+ await page.getByLabel('Planning resolution',{exact:true}).selectOption('fine');
+ assert.equal(await page.getByLabel('Requested terrain objective',{exact:true}).inputValue(),'shortest');
  const advanced=page.getByRole('button',{name:'Plan and Ask A0',exact:true});assert(await advanced.isDisabled());
  const {stops}=await (await fetch(base+'/__test/scenario')).json();
  for(const point of stops.slice(0,2)){
@@ -88,6 +92,10 @@ try{
  await page.getByRole('region',{name:'Advanced A0 response',exact:true}).waitFor();
  assert.equal(response.body.metrics.estimated_time_min,response.body.metrics.distance_m/60+6);
  const walking=await (await fetch(base+'/api/v1/routes/'+response.body.route_id)).json();
+ assert.equal(walking.metadata.request.mission_profile,'fastest');
+ assert.equal(walking.metadata.request.resolution_profile,'fine');
+ assert.equal(walking.metadata.planning_policy.mission_profile_version,'fastest-v2');
+ summary.checks.push('catalog_profile_sets_backend_objective','selected_profile_and_resolution_persist');
  assert.deepEqual(walking.metadata.assessment.required_unassessed,['A2','A3']);
  assert.equal(walking.metadata.assessment.hard_gate_status,'unassessed');
  assert.equal(walking.metadata.assessment.risk_score,null);
@@ -103,7 +111,7 @@ try{
  await page.getByRole('button',{name:'Zoom in DEM preview',exact:true}).click();
  await page.locator('.route-preview').screenshot({path:run+'/advanced-stops.png'});
  // A draft objective must not rewrite the parent context used for discussion.
- await page.locator('.route-planner select').selectOption('safest');
+ await page.getByLabel('Requested terrain objective',{exact:true}).selectOption('safest');
  const explanation=await chat('Why this terrain-only route?');assert.equal(explanation.status,200,JSON.stringify(explanation.body));
  assert.equal(explanation.request.advanced_context.route_objective,'shortest');assert.equal(explanation.body.result,null);
  await page.getByRole('checkbox',{name:'Allow A0 to propose a supported route revision',exact:true}).check();
@@ -163,7 +171,7 @@ try{
  summary.checks.push('explicit_chat_result_recovery_without_generation');await page.close();
 
  summary.stage='unknown_and_backend_restart';page=await open();await endpoints();assert.equal((await plan()).http_status,200);await page.locator('.route-preview polyline').waitFor();
- await page.locator('.route-planner select').selectOption('safest');await control('timeout_once','plan');
+ await page.getByLabel('Route preference',{exact:true}).selectOption('safest');await control('timeout_once','plan');
  const timed=await plan();assert.equal(timed.http_status,503);
  await page.getByRole('status').filter({hasText:'Planning request: unknown.'}).waitFor();
  assert.equal(await page.getByRole('button',{name:/^Retry planning/}).count(),0);assert(await page.locator('.route-preview polyline').isVisible());

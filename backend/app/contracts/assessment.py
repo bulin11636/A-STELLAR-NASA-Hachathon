@@ -94,6 +94,7 @@ class EvidenceDescription(ContractModel):
 
 class RiskFactor(ContractModel):
     agent_id: AssessmentAgentId
+    public_name: str = ""
     kind: Literal['risk','context']
     status: Literal['assessed','contextual','unavailable','stale','incompatible','unassessed','not_applicable']
     risk_score: UnitScore | None = None
@@ -105,6 +106,15 @@ class RiskFactor(ContractModel):
     component_reasons: dict[str,str] = Field(default_factory=dict)
     confidence_contribution: PercentScore = 0
     risk_contribution: PercentScore | None = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def complete_public_name(cls,value):
+        if isinstance(value,dict):
+            from app.contracts.agent_names import PUBLIC_AGENT_NAMES
+            value=dict(value)
+            if value.get('agent_id') in PUBLIC_AGENT_NAMES: value['public_name']=PUBLIC_AGENT_NAMES[value['agent_id']]
+        return value
 
     @model_validator(mode='after')
     def grounded_scores_only(self):

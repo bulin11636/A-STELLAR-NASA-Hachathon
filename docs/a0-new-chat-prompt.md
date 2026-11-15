@@ -11,7 +11,9 @@ Keep TODO limited to pending work; do not record personal usage or billing.
 
 The current scope follows the P1 ownership plan. Sam owns backend policy, factor
 assessment, durable metadata, fixtures and numerical registration controls. Sheng
-owns product selectors, briefing, tabs and map presentation. Real NASA alignment
+owns product presentation. Preserve the integrated catalog-driven selectors and
+briefing, paired 0..100 scores and backend-owned quality contributions. Remaining
+Journey Briefing/tab/map work follows the handoff. Real NASA alignment
 remains unverified without independent feature measurements. Use the P1 handoff
 before treating older implementation-status reports as current. Retain
 regional terrain A*, up to 16 ordered waypoints, chat additions/reordering,

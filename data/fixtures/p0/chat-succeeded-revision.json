@@ -469,7 +469,7 @@
       "objective_cost": 2262.741699796954,
       "objective_units": "terrain-weighted metres",
       "expanded_nodes": 81,
-      "elapsed_ms": 0.42367400601506233,
+      "elapsed_ms": 0.40970199916046113,
       "distance_convention": "Native projected planar polyline including endpoint connectors"
     },
     "validation": {
@@ -589,7 +589,7 @@
       },
       "provenance": {
         "artifact_id": "route-11111111111111111111111111111111:provenance",
-        "sha256": "fd072561c31bda8255f527e8dcfe95dca0410bef2738bc47a431166bbd8ddd56"
+        "sha256": "4692229447c8fc1e4c9df259b0e48e5997473cbefbfdf41df33fe4fb7df30a2d"
       }
     },
     "warnings": [
@@ -782,6 +782,7 @@
       "risk_factors": [
         {
           "agent_id": "A1",
+          "public_name": "Surface Traversability and Terrain Hazard Agent",
           "kind": "risk",
           "status": "assessed",
           "risk_score": 0.0,
@@ -819,6 +820,7 @@
         },
         {
           "agent_id": "A2",
+          "public_name": "Thermal Environment and Exposure Context Agent",
           "kind": "context",
           "status": "unavailable",
           "risk_score": null,
@@ -841,6 +843,7 @@
         },
         {
           "agent_id": "A3",
+          "public_name": "Radiation Exposure and Mission Dose Assessment Agent",
           "kind": "risk",
           "status": "unavailable",
           "risk_score": null,
@@ -860,6 +863,7 @@
         },
         {
           "agent_id": "A4",
+          "public_name": "Geological Context and Science Opportunity Agent",
           "kind": "context",
           "status": "unavailable",
           "risk_score": null,
@@ -882,6 +886,7 @@
         },
         {
           "agent_id": "A5",
+          "public_name": "Surface Obstacle Context (merged into the Surface Traversability and Terrain Hazard Agent)",
           "kind": "context",
           "status": "not_applicable",
           "risk_score": null,
@@ -901,6 +906,7 @@
         },
         {
           "agent_id": "A6",
+          "public_name": "Rover Traverse and Observation Evidence Agent",
           "kind": "context",
           "status": "unavailable",
           "risk_score": null,

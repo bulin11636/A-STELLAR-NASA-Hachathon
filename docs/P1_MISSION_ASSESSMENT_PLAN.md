@@ -205,6 +205,8 @@ null. Interim v1 records retain a separately identified score-scale migration.
 
 Independent registration machinery and synthetic verified/unverified fixtures
 are implemented. Real Jezero NASA alignment remains unverified pending independent
-feature measurements and adequate layer precision. Sheng's P1 selectors,
-briefing/tabs and paired assessment/map presentation remain pending. This status
+feature measurements and adequate layer precision. Sheng's initial profile selector, briefing and paired assessment presentation
+have been integrated with the backend catalog, resolution selector and correct
+percentage scale. Expanded Journey Briefing/tab hierarchy and verified-map
+acceptance remain pending. This status
 does not replace joint acceptance or claim the real registration gate has passed.

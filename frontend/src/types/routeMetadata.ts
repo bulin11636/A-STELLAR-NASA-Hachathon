@@ -172,6 +172,7 @@ export type Rationale = {
 
 export type RiskFactor = {
   agent_id: "A1" | "A2" | "A3" | "A4" | "A5" | "A6";
+  public_name: string;
   kind: "risk" | "context";
   status: "assessed" | "contextual" | "unavailable" | "stale" | "incompatible" | "unassessed" | "not_applicable";
   risk_score: number | null;

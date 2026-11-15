@@ -166,7 +166,7 @@ export function useRoutePlanner() {
   }
   function currentRequest(): PlanRouteRequest {
     if (!start || !goal) throw new Error("Select both Start and Goal.");
-    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode, ...(missionProfile ? { mission_profile: missionProfile } : {}), ...(resolutionProfile ? { resolution_profile: resolutionProfile } : {}),
+    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode, ...(interfaceMode === "advanced" && missionProfile ? { mission_profile: missionProfile } : {}), ...(interfaceMode === "advanced" && resolutionProfile ? { resolution_profile: resolutionProfile } : {}),
       ...(interfaceMode === "advanced" && waypoints.length ? { waypoints } : {}), ...(missionSettings() ? { mission: missionSettings() } : {}) };
   }
   function sameDraft(work: Work | null) {
@@ -303,7 +303,7 @@ export function useRoutePlanner() {
     allowSupportedRevision, setAllowSupportedRevision: (value: boolean) => { editDraft(); setAllowSupportedRevision(value); },
     additionalRequirements, setAdditionalRequirements: (value: string) => { editDraft(); setAdditionalRequirements(value); }, pendingKind: pending?.kind ?? null, canSubmit, retry, recover, refreshAttempt,
     advancedReply, chatRefresh, draftVersion, inputError,
-    missionProfile, setMissionProfile: (value: PlanRouteRequest["mission_profile"]) => { editDraft(); setMissionProfile(value); },
+    missionProfile, setMissionProfile: (value: PlanRouteRequest["mission_profile"], objective?: RouteMode) => { editDraft(); setMissionProfile(value); if (objective) setMode(objective); },
     resolutionProfile, setResolutionProfile: (value: PlanRouteRequest["resolution_profile"]) => { editDraft(); setResolutionProfile(value); },
     walkingSpeed, setWalkingSpeed: (value: string) => { editDraft(); setWalkingSpeed(value); },
     waypointDwell, setWaypointDwell: (value: string) => { editDraft(); setWaypointDwell(value); },

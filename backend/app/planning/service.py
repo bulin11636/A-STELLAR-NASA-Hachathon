@@ -8,17 +8,18 @@ from uuid import uuid4
 from app.api.errors import ApiProblem
 from app.contracts.api import COORDINATE_SYSTEM, PlanRouteRequest, PlanRouteResponse, PlanningInfo, Region, RouteMetrics
 from app.contracts.routes import RouteMetadata, StoredRouteResponse
+from app.contracts.agent_names import PUBLIC_AGENT_NAMES
 from app.planning.grid import load_grid, grid_for_request, regional_grid, source_bounds, digest, VERSION
 from app.planning.store import RouteStore, write_json
 
 REPO = Path(__file__).resolve().parents[3]
 ROLES = {
-    'A0': ('Mission Orchestration and Route Planning Coordinator', 'Validate mission inputs and available data, dispatch registered analysis tools, request deterministic fusion/planning/validation, preserve provenance, persist results and explain unmet requirements.'),
-    'A1': ('Surface Traversability and Terrain Hazard Agent', 'Derive slope and supported terrain descriptors from a DEM; supply metric costs, coverage, unknown and blocked masks. Optical obstacle analysis requires aligned imagery.'),
-    'A2': ('Thermal Environment and Exposure Context Agent', 'Describe day/night thermal observations, units, times and coverage. Calibrated constraints require separate validation.'),
-    'A3': ('Radiation Exposure and Mission Dose Assessment Agent', 'Evaluate explicitly configured dose scenarios against a mission duration and user-supplied budget, retaining assumptions and uncertainty.'),
-    'A4': ('Geological Context and Science Opportunity Agent', 'Associate source-attributed sampling POIs with regional geology, retain ambiguity and explain scientific relevance. Priority scoring requires a documented rubric.'),
-    'A6': ('Rover Traverse and Observation Evidence Agent', 'Normalize historical rover positions and segments, compute supported proximity measures and attach verified observation references. Historical traversal does not establish astronaut safety.'),
+    'A0': (PUBLIC_AGENT_NAMES['A0'], 'Validate mission inputs and available data, dispatch registered analysis tools, request deterministic fusion/planning/validation, preserve provenance, persist results and explain unmet requirements.'),
+    'A1': (PUBLIC_AGENT_NAMES['A1'], 'Derive slope and supported terrain descriptors from a DEM; supply metric costs, coverage, unknown and blocked masks. Optical obstacle analysis requires aligned imagery.'),
+    'A2': (PUBLIC_AGENT_NAMES['A2'], 'Describe day/night thermal observations, units, times and coverage. Calibrated constraints require separate validation.'),
+    'A3': (PUBLIC_AGENT_NAMES['A3'], 'Evaluate explicitly configured dose scenarios against a mission duration and user-supplied budget, retaining assumptions and uncertainty.'),
+    'A4': (PUBLIC_AGENT_NAMES['A4'], 'Associate source-attributed sampling POIs with regional geology, retain ambiguity and explain scientific relevance. Priority scoring requires a documented rubric.'),
+    'A6': (PUBLIC_AGENT_NAMES['A6'], 'Normalize historical rover positions and segments, compute supported proximity measures and attach verified observation references. Historical traversal does not establish astronaut safety.'),
 }
 WARNINGS = [
     'Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.',

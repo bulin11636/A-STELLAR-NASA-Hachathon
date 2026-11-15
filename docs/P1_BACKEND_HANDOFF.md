@@ -1,8 +1,10 @@
 # P1 backend policy and assessment handoff
 
 This implements Sam's backend scope in [the ownership plan](P1_TOKEN_WEIGHTED_OWNERSHIP_PLAN.md).
-Work is based on `main` at `a2be88b`. Product layout, profile/resolution selectors,
-Journey Briefing and the verified-map presentation remain Sheng's work.
+Work is based on `main` at `a2be88b` and integrates Sheng's subsequent
+`12ac270` / `4ea7615` frontend updates. The merged selectors and briefing consume
+the backend catalog and paired percentage-scale assessment values. Expanded
+Journey Briefing/tab layout and verified-map acceptance remain follow-up work.
 
 ## Stable frontend entry points
 
@@ -17,7 +19,8 @@ Generated types live in `frontend/src/types/routeMetadata.ts`. Runtime schemas
 include `policies.schema.json`, `storedRoute.schema.json` and `chat.schema.json`.
 `getPlanningPolicies()` provides a strict browser client. Shared planner state
 exposes profile/resolution values and preserves them in frozen requests, retry,
-metadata retrieval and reload. No profile or resolution UI control is added here.
+metadata retrieval and reload. The merged Advanced selectors load this catalog and apply its objective mapping;
+Quick keeps the existing route preference without hidden Advanced overrides.
 
 Use the advertised `mode` with the selected profile. For example, extend a valid
 Jezero request with:
@@ -87,8 +90,8 @@ Both assessment scores use 0..100, explicitly identified by `schema_version: "2"
 `score_scale: "0..100"`. The older `result.metrics.risk_score` remains null and
 retains its legacy 0..1 schema; do not put a percentage into that field.
 
-Every assessment includes six factors, including the explicit A5 entry. Internal
-IDs join the full specialist public names already present in worker/trace data.
+Every assessment includes six factors, including the explicit A5 entry. Each factor supplies its full `public_name`; internal IDs remain available for
+joining provenance and specialist trace data.
 A5 describes the former surface obstacle responsibility merged into the Surface
 Traversability and Terrain Hazard Agent; it has explicit zero weights and
 `not_applicable` state. No weight is silently reassigned.
@@ -128,8 +131,9 @@ confidence = 100 * sum(profile confidence weight * applicable quality)
 Missing/unassessed/stale/incompatible factors contribute zero confidence even if
 some raw components are known. Component values, reasons, evidence IDs, source
 URLs, acquisition/observation periods, route coverage (null if unknown), model
-versions and weighted contributions are persisted. The frontend renders values;
-it does not reproduce the formulas.
+versions and weighted contributions are persisted. The frontend renders backend contributions and the individual quality components;
+it does not reproduce or average the quality formula. Briefing export preserves
+the scale, formula, profile weights, time assumptions and evidence details.
 
 Current explicit quality rubric:
 
@@ -228,7 +232,7 @@ file and real independent controls to attempt route-specific acceptance. It neve
 calls a model. Other listed checks are deterministic or use mocked providers.
 
 The remaining joint gate is real independent NASA registration evidence plus
-Sheng's P1 presentation and acceptance. Numerical control machinery and synthetic
+the remaining Journey Briefing/tab/map presentation and acceptance. Numerical control machinery and synthetic
 verified fixtures do not close that real-data gate.
 
 ## Observed delivery verification
@@ -269,3 +273,27 @@ The capabilities response SHA-256 was
 These are local acceptance records, not new source datasets or real registration
 certification. Product-level P1 presentation and joint acceptance are still
 required before claiming the complete increment.
+
+### Concurrent frontend integration acceptance
+
+Before publication, upstream `12ac270` and `4ea7615` were integrated. Advanced
+profile/resolution selectors now read the backend catalog and select its advertised
+objective. Quick omits hidden Advanced overrides. Briefing and assessment views
+use direct 0..100 values, full backend-owned specialist names and backend quality
+contributions; they no longer multiply aggregate percentages or average quality
+components in the browser. Briefing export retains formula/scale/time/evidence.
+
+The combined result passed **418 backend tests**, **84 frontend tests**, production
+build, **31 browser recovery/profile checks**, the **13-check eight-stop browser
+workflow**, and the **13-check final Docker workflow**. All model responses in
+these checks were mocked or disabled. No source datasets or environment secrets
+are part of the publication.
+
+Final integration evidence:
+
+- `data/processed/p0-ui-audit/run-2026-11-15T08-12-08-824Z/summary.json`
+- `data/processed/ui-verification/run-2026-11-15T08-09-06-136Z/summary.json`
+- `data/processed/docker-verification/run-20261115T081457Z-7b6fa7bf1a0d/summary.json`
+
+Real independent NASA registration and the remaining expanded tab/map acceptance
+remain explicitly pending; the production overlay guard stays in place.
