@@ -19,6 +19,13 @@ export type Coordinator = {
   implementation_version: string;
 };
 
+export type EvidenceQuality = {
+  availability: number;
+  route_coverage: number;
+  temporal_applicability: number;
+  validation_provenance: number;
+};
+
 export type GridMetadata = {
   grid_id: string;
   source_crs: string;
@@ -48,6 +55,14 @@ export type MarsCoordinate = {
   latitude: number;
 };
 
+export type MissionProfile = {
+  schema_version: "1";
+  profile_id: "safest" | "fastest" | "science_priority" | "balanced";
+  version: string;
+  risk_weights: Record<string, number>;
+  confidence_weights: Record<string, number>;
+};
+
 export type PlanRouteRequest = {
   region_id: string;
   coordinate_system: string;
@@ -56,6 +71,7 @@ export type PlanRouteRequest = {
   mode: "shortest" | "safest";
   waypoints: Array<MarsCoordinate>;
   mission: WalkingMission | null;
+  mission_profile: "safest" | "fastest" | "science_priority" | "balanced";
 };
 
 export type PlanRouteResponse = {
@@ -101,6 +117,16 @@ export type Rationale = {
   evidence_ids: Array<string>;
 };
 
+export type RiskFactor = {
+  agent_id: "A1" | "A2" | "A3" | "A4" | "A5" | "A6";
+  kind: "risk" | "context";
+  status: "assessed" | "contextual" | "unavailable" | "stale" | "incompatible" | "unassessed" | "not_applicable";
+  risk_score: number | null;
+  evidence_quality: EvidenceQuality;
+  evidence_ids: Array<string>;
+  message: string;
+};
+
 export type RouteAssessment = {
   time: TimeEstimate | null;
   radiation_duration_min: number | null;
@@ -110,6 +136,11 @@ export type RouteAssessment = {
   radiation_constraint_status: "pass" | "fail" | "unknown";
   required_unassessed: Array<"A2" | "A3" | "A4" | "A6">;
   required_failed: Array<"A2" | "A3" | "A4" | "A6">;
+  mission_profile: MissionProfile | null;
+  hard_gate_status: "pass" | "blocked" | "unassessed";
+  risk_score: number | null;
+  assessment_confidence: number | null;
+  risk_factors: Array<RiskFactor>;
   limitations: Array<string>;
 };
 

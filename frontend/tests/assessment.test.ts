@@ -8,7 +8,7 @@ import { decodeStoredRoute } from '../src/services/metadata.ts';
 import { fixture } from './helpers/p0.ts';
 import type { RouteAssessment as Assessment, SpecialistTrace as Trace } from '../src/types/routeMetadata.ts';
 
-const assessment: Assessment={time:{mode:'walking',model:'constant_projected_speed_v1',speed_m_s:1,travel_min:10,stop_min:6,total_min:16,assumptions:['Explicit synthetic speed.']},radiation_duration_min:16,radiation_duration_basis:'route_estimate',dose_estimate_usv:null,dose_uncertainty_usv:null,radiation_constraint_status:'unknown',required_unassessed:['A3'],required_failed:[],limitations:['Combined risk is unknown.']};
+const assessment: Assessment={time:{mode:'walking',model:'constant_projected_speed_v1',speed_m_s:1,travel_min:10,stop_min:6,total_min:16,assumptions:['Explicit synthetic speed.']},radiation_duration_min:16,radiation_duration_basis:'route_estimate',dose_estimate_usv:null,dose_uncertainty_usv:null,radiation_constraint_status:'unknown',required_unassessed:['A3'],required_failed:[],mission_profile:null,hard_gate_status:'unassessed',risk_score:null,assessment_confidence:null,risk_factors:[],limitations:['Combined risk is unknown.']};
 test('walking estimates expose assumptions and unassessed required constraints',()=>{
  const html=renderToStaticMarkup(createElement(RouteAssessment,{assessment}));
  for(const text of ['1 m/s','total: 16.0 min','Explicit synthetic speed.','Required analyses remain unassessed','Not assessed','unknown'])assert(html.includes(text),text);
