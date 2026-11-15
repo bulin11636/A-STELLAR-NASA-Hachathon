@@ -245,7 +245,7 @@ export default function MarsMap() {
         <EvidenceSelection selection={evidenceSelection} />
         <EvidenceDrawer evidence={inspectedPoint ? evidenceAtPoint(inspectedPoint) : null} />
         <MissionBriefing objective={missionObjective} onObjectiveChange={setMissionObjective}
-          start={planner.start} goal={planner.goal} route={planner.result} layers={layerDisplay}
+          start={planner.start} goal={planner.goal} route={planner.result} assessment={planner.metadata?.assessment ?? null} layers={layerDisplay}
           evidence={inspectedPoint ? evidenceAtPoint(inspectedPoint) : null} />
         <dl>
           <dt>Coordinate system</dt><dd>Mars 2000 · NASA service label <code>urn:ogc:def:crs:EPSG::104905</code> (ESRI:104905 definition)</dd>

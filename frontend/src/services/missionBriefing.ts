@@ -2,6 +2,7 @@ import { EVIDENCE_LAYERS } from "../map/layerRegistry.ts";
 import type { LayerDisplayState } from "../components/LayerPanel.tsx";
 import type { LocationEvidence } from "./evidenceAtPoint.ts";
 import type { MarsCoordinate, PlanRouteResponse } from "../types/api.ts";
+import type { RouteAssessment } from "../types/routeMetadata.ts";
 
 export interface MissionBriefingInput {
   generatedAt: string;
@@ -9,6 +10,7 @@ export interface MissionBriefingInput {
   start: MarsCoordinate | null;
   goal: MarsCoordinate | null;
   route: PlanRouteResponse | null;
+  assessment: RouteAssessment | null;
   activeLayers: Readonly<Record<string, LayerDisplayState>>;
   evidenceAtPoint: LocationEvidence | null;
 }
@@ -45,6 +47,20 @@ export function buildMissionBriefing(input: MissionBriefingInput) {
       metrics: { distance_m: null, estimated_time_min: null, risk_score: null },
       warnings: ["No route has been requested."],
     },
+    assessment: input.assessment ? {
+      hard_gate_status: input.assessment.hard_gate_status,
+      risk_score: input.assessment.risk_score,
+      assessment_confidence: input.assessment.assessment_confidence,
+      mission_profile: input.assessment.mission_profile && {
+        profile_id: input.assessment.mission_profile.profile_id,
+        version: input.assessment.mission_profile.version,
+      },
+      factors: input.assessment.risk_factors.map((factor) => ({
+        agent_id: factor.agent_id, kind: factor.kind, status: factor.status, risk_score: factor.risk_score,
+        evidence_quality: factor.evidence_quality, evidence_ids: factor.evidence_ids, message: factor.message,
+      })),
+      limitations: input.assessment.limitations,
+    } : null,
     enabled_layers: enabledLayers,
     evidence_at_selected_point: input.evidenceAtPoint ? {
       point: input.evidenceAtPoint.point,
