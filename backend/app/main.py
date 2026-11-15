@@ -9,6 +9,7 @@ from app.coordinator.mission import MissionCoordinator, default_registry
 from app.coordinator.settings import AgentSettings, environment
 from app.coordinator.route_agent import RouteAgent
 from app.coordinator.chat import RouteChat
+from app.coordinator.plan_requests import PlanRequests
 
 
 def create_app(coordinator: MissionCoordinator | None = None, *, planning: PlanningService | None = None, route_agent=None, static_dir=None) -> FastAPI:
@@ -26,6 +27,7 @@ def create_app(coordinator: MissionCoordinator | None = None, *, planning: Plann
     application.state.planning = planning
     application.state.route_agent = route_agent or RouteAgent(settings,planning)
     application.state.chat = RouteChat(application.state.route_agent)
+    application.state.plan_requests = PlanRequests(application.state.route_agent)
     register_error_handlers(application)
     application.include_router(router)
     if static_dir:

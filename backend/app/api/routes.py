@@ -1,8 +1,12 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Response, Header, Path
+from typing import Annotated
 from starlette.concurrency import run_in_threadpool
 from starlette.responses import JSONResponse
 from app.contracts.routes import StoredRouteResponse
 from app.contracts.chat import ChatRequest, ChatResponse, ChatHistory
+from app.contracts.attempts import REQUEST_ID_PATTERN, RequestAttemptStatus
+
+RequestId = Annotated[str,Path(pattern=REQUEST_ID_PATTERN)]
 
 from app.api.errors import ApiProblem
 from app.contracts.api import (
@@ -44,18 +48,34 @@ async def regions(request: Request):
 
 
 @router.post("/routes/plan", response_model=PlanRouteResponse, tags=["routes"], responses={
-    status: {"model": ErrorEnvelope} for status in (400, 404, 422, 500, 503)
+    status: {"model": ErrorEnvelope} for status in (400, 404, 409, 422, 429, 500, 503)
 })
-async def plan_route(body: PlanRouteRequest, request: Request):
+async def plan_route(body: PlanRouteRequest, request: Request,
+                     idempotency_key: str | None = Header(default=None,alias='Idempotency-Key',pattern=REQUEST_ID_PATTERN),
+                     retry_attempt: int | None = Header(default=None,alias='X-A-Stellar-Retry-Attempt',ge=1)):
     if body.coordinate_system != COORDINATE_SYSTEM:
         raise ApiProblem(400, "UNSUPPORTED_COORDINATE_SYSTEM", "The requested Mars coordinate convention is not supported.")
     if body.region_id != "jezero":
         raise ApiProblem(404, "UNKNOWN_REGION", "The requested region is not supported.")
     if body.start == body.goal:
         raise ApiProblem(400, "INVALID_ROUTE", "Start and Goal must be different points.")
+    if retry_attempt is not None and idempotency_key is None:
+        raise ApiProblem(400,'IDEMPOTENCY_KEY_REQUIRED','Explicit plan retries require the original Idempotency-Key.')
     if request.app.state.planning.mode == "computed":
+        if idempotency_key is not None:
+            return await run_in_threadpool(request.app.state.plan_requests.plan,body,idempotency_key,retry_attempt)
         return await run_in_threadpool(request.app.state.route_agent.plan, body)
+    if idempotency_key is not None:
+        raise ApiProblem(400,'IDEMPOTENCY_REQUIRES_COMPUTED','Persistent plan idempotency requires computed routing.')
     return await request.app.state.coordinator.plan_mock_route(body)
+
+
+@router.get('/routes/requests/{request_id}',response_model=RequestAttemptStatus,tags=['routes'],responses={
+    status: {'model':ErrorEnvelope} for status in (404,409,422,500,503)
+})
+async def plan_request_status(request_id: RequestId,request: Request,response: Response):
+    response.headers['Cache-Control']='no-store'
+    return await run_in_threadpool(request.app.state.plan_requests.status,request_id)
 
 
 @router.get("/routes/{route_id}", response_model=StoredRouteResponse, tags=["routes"], responses={
@@ -76,9 +96,20 @@ async def agent_status(request: Request):
     return result
 
 
-@router.post('/routes/{route_id}/chat',response_model=ChatResponse,tags=['chat'])
-async def chat_route(route_id: str,body: ChatRequest,request: Request):
-    return await run_in_threadpool(request.app.state.chat.send,route_id,body)
+@router.post('/routes/{route_id}/chat',response_model=ChatResponse,tags=['chat'],responses={
+    status: {'model':ErrorEnvelope} for status in (400,404,409,422,429,500,503)
+})
+async def chat_route(route_id: str,body: ChatRequest,request: Request,
+                     retry_attempt: int | None = Header(default=None,alias='X-A-Stellar-Retry-Attempt',ge=1)):
+    return await run_in_threadpool(request.app.state.chat.send,route_id,body,retry_attempt=retry_attempt)
+
+
+@router.get('/routes/{route_id}/chat/attempts/{request_id}',response_model=RequestAttemptStatus,tags=['chat'],responses={
+    status: {'model':ErrorEnvelope} for status in (404,409,422,500,503)
+})
+async def chat_attempt_status(route_id: str,request_id: RequestId,request: Request,response: Response):
+    response.headers['Cache-Control']='no-store'
+    return await run_in_threadpool(request.app.state.chat.status,route_id,request_id)
 
 
 @router.get('/routes/{route_id}/chat',response_model=ChatHistory,tags=['chat'])

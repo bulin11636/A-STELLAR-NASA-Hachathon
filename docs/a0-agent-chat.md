@@ -133,8 +133,10 @@ Timeouts/unknown charges retain reservations. Do not delete the ledger to bypass
 the configured limits.
 
 Other models need an explicit supported adapter rather than a silent switch.
-Chat message IDs prevent duplicate automatic generation; replaying a
-failed/in-progress ID produces a conflict instead of another paid call.
+Chat message IDs prevent duplicate automatic generation. A running request
+returns a conflict; a failed request repeats its saved error without another
+model call. Known rejections support explicit versioned retries; timeouts and
+abandoned requests remain unknown. See the [backend recovery protocol](backend-handoff.md).
 
 ## API additions
 
@@ -146,6 +148,8 @@ failed/in-progress ID produces a conflict instead of another paid call.
   optional validated revision result/metadata and usage.
 - `GET /api/v1/routes/{route_id}/chat`: bounded persisted current/ancestor history
   (latest 40 messages across at most 12 parent revisions).
+- `GET /api/v1/routes/{route_id}/chat/attempts/{request_id}`: durable chat outcome and retry eligibility.
+- `GET /api/v1/routes/requests/{request_id}`: status for a computed plan sent with an optional `Idempotency-Key`.
 
 Route metadata now includes nullable `rationale`, `usage` and `parent_route_id`.
 Older stored records parse with default values. Regenerate browser types and
@@ -160,7 +164,8 @@ From the repository root, the default uses real DEM data and a mocked model:
 ```
 
 An explicitly paid verification uses the private backend credential and makes
-at most three requests (plan, question, waypoint revision):
+at most four requests (plan, question, three-point addition and reversed visit
+order), with no automatic retries:
 
 ```bash
 /home/sam/miniconda3/envs/nasa/bin/python scripts/verify_agent_workflow.py --live-model
@@ -168,5 +173,9 @@ at most three requests (plan, question, waypoint revision):
 
 Reports go under ignored `data/processed/a0-workflow/`. Failures stop the sequence;
 mocked usage is synthetic and must not be described as actual API billing.
+The live command retains the shared persistent request ledger and any stricter
+configured limit. Replayed successful plan/revision requests are checked without
+additional generation. See the [current checkpoint](backend-verification.md)
+for the observed live result.
 The older `app.planning.verify` command now explicitly forces deterministic A0
 mode for its server, even when a private `.env` exists.

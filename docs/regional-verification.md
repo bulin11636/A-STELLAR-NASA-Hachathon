@@ -77,15 +77,15 @@ stops, reversing eight visits, parent comparison, reload recovery, nearby-stop
 focus, zoom/pan, expansion/explicit close and crater-scale route display. Model calls were mocked and
 external NASA requests were blocked.
 
-The final local suites passed 276 backend tests and 47 frontend tests. The
+The latest local suites passed 309 backend tests and 48 frontend tests. The
 production build passed without the earlier oversized-chunk warning; Affine
 operator warnings were removed from planning and its tests. React renderer
 deprecation remains a test-maintenance task.
 
 Ignored machine-generated evidence under `data/processed/`:
 
-- Regional API: `regional-verification/run-20261114T105852Z-7f7daa69/summary.json`.
-- Browser: `ui-verification/run-2026-11-14T11-02-35-555Z/summary.json`.
+- Regional API: `regional-verification/run-20261115T000026Z-dca13878/summary.json`.
+- Browser: `ui-verification/run-2026-11-15T00-02-08-504Z/summary.json`.
 - Screenshots: that browser run's `eight-stops.png`, `regional-route.png` and `ui.png`.
 
 The UI supports up to 16 required ordered waypoints. **Load crater-scale example
@@ -93,6 +93,7 @@ endpoints** uses DEM-derived demo positions when both targets are source-covered
 Use preview fit/focus/zoom/pan/expand controls to inspect results. Computed NASA
 overlays remain gated pending independent registration controls.
 
-Remaining acceptance gates are a successful live-provider workflow after HTTP
-429 is resolved, actual Docker build/mount/restart execution, and independently
-verified NASA alignment. See the [TODO](TODO.md) for pending work only.
+The selected live-provider workflow and actual Docker build/mount/restart tests
+have passed; see the [current checkpoint](backend-verification.md) for evidence
+and boundaries. Independent NASA alignment and final frontend presentation
+validation remain separate. See the [TODO](TODO.md) for pending work only.

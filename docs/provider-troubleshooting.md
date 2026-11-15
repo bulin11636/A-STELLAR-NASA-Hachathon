@@ -20,6 +20,12 @@ available. No credential or response body is retained in these diagnostics.
 Older records containing only `http_429` cannot recover the missing cause.
 There are no automatic generation retries.
 
+Known failed chat requests repeat their recorded error on ordinary replay.
+After resolving the cause, an explicit versioned retry can be requested when
+the status endpoint permits it. Timeouts and abandoned requests remain blocked
+under the original key. See the [backend handoff](backend-handoff.md) before
+wiring retry controls; do not clear claims or silently create a new request ID.
+
 From the repository root, inspect configuration and recorded errors locally:
 
 ```bash

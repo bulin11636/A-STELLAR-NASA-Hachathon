@@ -3,7 +3,7 @@ services:
   app:
     build:
       context: .
-    image: a-stellar:local
+    image: ${A_STELLAR_IMAGE:-a-stellar:local}
     init: true
     user: "${A_STELLAR_RUNTIME_UID:-10001}:${A_STELLAR_RUNTIME_GID:-10001}"
     ports:

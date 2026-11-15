@@ -7,9 +7,10 @@ import re
 REPO = Path(__file__).resolve().parents[3]
 
 
-def environment():
+def environment(process=None):
+    process = os.environ if process is None else process
     values = {}
-    path = Path(os.environ.get('A_STELLAR_ENV_FILE', str(REPO/'.env'))).expanduser()
+    path = Path(process.get('A_STELLAR_ENV_FILE', str(REPO/'.env'))).expanduser()
     if path.is_file():
         for raw in path.read_text(encoding='utf-8-sig').splitlines():
             line = raw.strip()
@@ -24,9 +25,9 @@ def environment():
             else:
                 value = value.split(' #', 1)[0].strip()
             values[key] = value
-    elif 'A_STELLAR_ENV_FILE' in os.environ:
+    elif 'A_STELLAR_ENV_FILE' in process:
         raise ValueError('The explicitly configured env file is unavailable.')
-    return {**values, **os.environ}
+    return {**values, **process}
 
 
 @dataclass

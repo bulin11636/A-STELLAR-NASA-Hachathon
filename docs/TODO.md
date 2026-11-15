@@ -1,32 +1,35 @@
 # TODO
 
-## Deployment
+## Demo acceptance: frontend handoff
 
-- [ ] Build and run the image on an available Docker engine; verify read-only binds, private-file permissions and named-volume initialization.
-- [ ] Verify real container restart/recreation persistence for routes, chat, evidence and application state.
+- [ ] Revalidate map fitting, nearby-stop usability and the supported route view after the frontend owner's presentation changes; retain the unverified NASA registration status until independent registration checks pass.
+- [ ] Revalidate active-mode labels, actionable failures and unassessed evidence after the frontend owner's presentation changes.
+
+## Deferred: deployment operations
+
 - [ ] Document and exercise backup/restore and upgrades for persistent application state.
 
-## Route revisions and chat
+## Deferred: route revisions and chat
 
+- [ ] Connect explicit request status/retry controls and optional planning Idempotency-Key in the frontend without automatic model retries.
 - [ ] Support explicit avoidance areas with typed geometry, bounded masks and independent validation.
 - [ ] Define optional visits, soft preferences and unspecified visit order without weakening required constraints.
 - [ ] Add cooperative cancellation for specialist/model/planning work and expose progress without applying stale results.
 - [ ] Support longer conversations with bounded, source-grounded summaries and retained typed preferences.
 
-## Planning coverage
+## Deferred: planning coverage
 
 - [ ] Refine narrow passages or endpoint neighborhoods excluded by conservative regional aggregation while retaining bounded native validation.
 - [ ] Discover generic example endpoints for supported profiles beyond the explicit CTX/Jezero demonstrations.
 - [ ] Verify other DEMs' source identity, units, datum, masks and registration before integration.
 
-## Coordinates and map display
+## Deferred: NASA map registration
 
 - [ ] Establish independent NASA map/wire/DEM controls with justified tolerances.
 - [ ] Resolve the source-radius discrepancy and NASA latitude semantics.
-- [x] Implement and unit-test the documented planetocentric/planetographic coordinate adapter; it does not establish map registration. See [coordinate-map-display.md](coordinate-map-display.md).
 - [ ] Verify computed NASA route alignment and tile behavior in a real browser after registration is established.
 
-## Specialist evidence
+## Deferred: specialist evidence
 
 - [ ] Bind required mission constraints explicitly and distinguish missing, stale, incompatible and unassessed evidence.
 - [ ] Define how compatible evidence affects costs, mission constraints or waypoint selection.
@@ -36,11 +39,9 @@
 - [ ] Verify A6 localization/clock joins and observation links for the selected release.
 - [ ] Complete provenance for local inputs with missing receipts or embedded unit metadata.
 
-## Provider integration and quality
+## Deferred: provider integration and quality
 
-- [ ] Complete a successful live-provider planning/chat workflow after the existing HTTP 429 blocker is resolved.
-- [ ] Evaluate live-model interpretation of additions, removals, ambiguous places and multi-stop reordering.
+- [ ] Evaluate live-model interpretation of removals and ambiguous places beyond the explicit additions and reordering required for the demo.
 - [ ] Support explicitly configured model adapters and validate their capabilities before use.
 - [ ] Replace the conservative serialized-input guard with tested tokenizer-based context accounting.
 - [ ] Migrate deprecated React renderer tests to a maintained DOM testing approach.
-- [ ] Reconcile remote frontend branch ancestry while preserving integrated source and local work.

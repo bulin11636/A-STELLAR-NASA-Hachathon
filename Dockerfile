@@ -17,10 +17,14 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     A_STELLAR_ROUTE_STORE=/var/lib/a-stellar/routes \
     A_STELLAR_A0_USAGE_STORE=/var/lib/a-stellar/a0-usage
 WORKDIR /app/backend
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libexpat1 \
+    && rm -rf /var/lib/apt/lists/*
 COPY backend/pyproject.toml backend/constraints-runtime.txt ./
 COPY backend/app ./app
 RUN python -m pip install --no-cache-dir --only-binary=numpy,rasterio,pyproj \
       -c constraints-runtime.txt '.[planning,agentic]' \
+    && python -c "import rasterio, pyproj" \
     && groupadd --gid 10001 stellar \
     && useradd --uid 10001 --gid stellar --no-create-home stellar \
     && mkdir -p /var/lib/a-stellar /run/a-stellar \
