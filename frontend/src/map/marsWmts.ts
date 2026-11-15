@@ -5,10 +5,11 @@ import WMTS, { optionsFromCapabilities } from "ol/source/WMTS.js";
 import WMTSTileGrid from "ol/tilegrid/WMTS.js";
 import type { Extent } from "ol/extent.js";
 
-// A NASA Jezero mosaic gives the registration workflow suitable imagery for
-// the local 20 m CTX DEM. It remains unregistered until independent controls
-// pass in the backend; source selection is not evidence of alignment.
-export const LAYER_ID = "NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018";
+export const GLOBAL_LAYER_ID = "Mars_MGS_MOLA_ClrShade_merge_global_463m";
+// This layer is visual context and the target for the independent registration
+// workflow. Selecting it is not evidence that it aligns to the local DEM.
+export const JEZERO_LAYER_ID = "NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018";
+export const LAYER_ID = GLOBAL_LAYER_ID;
 export const NASA_CRS = "urn:ogc:def:crs:EPSG::104905";
 export const CAPABILITIES_URL =
   `https://trek.nasa.gov/tiles/Mars/EQ/${LAYER_ID}/1.0.0/WMTSCapabilities.xml`;
@@ -32,19 +33,23 @@ function pair(value: string): number[] {
   return values;
 }
 
-export async function loadMarsWmts(signal: AbortSignal) {
-  const response = await fetch(CAPABILITIES_URL, {
+export function capabilitiesUrl(layerId: string): string {
+  return `https://trek.nasa.gov/tiles/Mars/EQ/${layerId}/1.0.0/WMTSCapabilities.xml`;
+}
+
+export async function loadMarsWmts(signal: AbortSignal, layerId = LAYER_ID) {
+  const response = await fetch(capabilitiesUrl(layerId), {
     signal: AbortSignal.any([signal, AbortSignal.timeout(20_000)]),
   });
   if (!response.ok) throw new Error(`NASA metadata request failed (HTTP ${response.status}).`);
-  return createMarsWmts(await response.text());
+  return createMarsWmts(await response.text(), layerId);
 }
 
-export function createMarsWmts(xml: string) {
+export function createMarsWmts(xml: string, layerId = LAYER_ID) {
   const document = new DOMParser().parseFromString(xml, "application/xml");
   if (document.querySelector("parsererror")) throw new Error("NASA returned invalid WMTS XML.");
   const layer = [...document.getElementsByTagNameNS(WMTS_NS, "Layer")].find(
-    (element) => text(element, OWS_NS, "Identifier") === LAYER_ID,
+    (element) => text(element, OWS_NS, "Identifier") === layerId,
   );
   if (!layer) throw new Error("The expected NASA Mars layer was not found.");
   const matrixSetId = text(layer, WMTS_NS, "TileMatrixSet");
@@ -106,7 +111,7 @@ export function createMarsWmts(xml: string) {
 
   const capabilities = new WMTSCapabilities().read(xml);
   const options = optionsFromCapabilities(capabilities, {
-    layer: LAYER_ID, matrixSet: matrixSetId, requestEncoding: "REST",
+    layer: layerId, matrixSet: matrixSetId, requestEncoding: "REST",
   });
   if (!options?.urls?.length) throw new Error("NASA metadata has no usable REST tile URL.");
 

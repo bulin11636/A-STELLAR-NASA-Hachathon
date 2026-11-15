@@ -6,7 +6,7 @@ import { defaults as defaultControls } from "ol/control/defaults.js";
 import TileLayer from "ol/layer/Tile.js";
 import TileState from "ol/TileState.js";
 import { containsCoordinate, intersects } from "ol/extent.js";
-import { CAPABILITIES_URL, CATALOG_URL, LAYER_ID, loadMarsWmts } from "../map/marsWmts";
+import { CAPABILITIES_URL, CATALOG_URL, JEZERO_LAYER_ID, LAYER_ID, loadMarsWmts } from "../map/marsWmts";
 import { mapViewToApiCoordinate } from "../geo/marsCoordinates.ts";
 import { createRouteOverlay, updateRouteOverlay } from "../map/routeOverlay.ts";
 import { createEvidenceOverlays, type SelectedEvidence } from "../map/evidenceOverlays.ts";
@@ -31,6 +31,7 @@ export default function MarsMap() {
   const mapRef = useRef<Map | null>(null);
   const overlayRef = useRef<ReturnType<typeof createRouteOverlay> | null>(null);
   const basemapRef = useRef<TileLayer | null>(null);
+  const jezeroImageryRef = useRef<TileLayer | null>(null);
   const evidenceOverlayRef = useRef<ReturnType<typeof createEvidenceOverlays> | null>(null);
   const planner = useRoutePlanner();
   const [planningRegion, setPlanningRegion] = useState<PlanningRegion | null>(null);
@@ -54,9 +55,12 @@ export default function MarsMap() {
   const [outsideCoverage, setOutsideCoverage] = useState(false);
   const [layerDisplay, setLayerDisplay] = useState<Record<string, LayerDisplayState>>({
     mars_basemap: { visible: true, opacity: 1 },
+    jezero_imagery: { visible: true, opacity: 1 },
     science_pois: { visible: false, opacity: 1 },
     rover_history: { visible: false, opacity: 1 },
   });
+  const layerDisplayRef = useRef(layerDisplay);
+  useEffect(() => { layerDisplayRef.current = layerDisplay; }, [layerDisplay]);
   const [evidenceSelection, setEvidenceSelection] = useState<SelectedEvidence | null>(null);
   const [inspectedPoint, setInspectedPoint] = useState<import("../types/api.ts").MarsCoordinate | null>(null);
   const [missionObjective, setMissionObjective] = useState("Inspect Jezero science and historical rover evidence without treating the demonstration route as safety validated.");
@@ -146,7 +150,17 @@ export default function MarsMap() {
         }),
       });
       mapRef.current = map;
-      map.getView().fit(extent, { padding: [32, 32, 32, 32] });
+      map.getView().fit([77.0, 17.95, 78.1, 18.95], { padding: [32, 32, 32, 32] });
+      void loadMarsWmts(controller.signal, JEZERO_LAYER_ID).then(({ source: jezeroSource, extent: jezeroExtent }) => {
+        if (controller.signal.aborted || !map) return;
+        const display = layerDisplayRef.current.jezero_imagery;
+        const jezeroImagery = new TileLayer({ source: jezeroSource, extent: jezeroExtent, visible: display?.visible ?? true, opacity: display?.opacity ?? 1 });
+        jezeroImagery.setZIndex(1);
+        map.addLayer(jezeroImagery);
+        jezeroImageryRef.current = jezeroImagery;
+      }).catch(() => {
+        // The global NASA map remains usable if the optional Jezero mosaic is unavailable.
+      });
       map.on("singleclick", (event) => {
         const evidence = map?.forEachFeatureAtPixel(event.pixel, (feature) => {
           const kind = feature.get("kind");
@@ -190,6 +204,7 @@ export default function MarsMap() {
       mapRef.current = null;
       overlayRef.current = null;
       basemapRef.current = null;
+      jezeroImageryRef.current = null;
       evidenceOverlayRef.current = null;
       map?.setTarget(undefined);
       map?.dispose();
@@ -202,6 +217,11 @@ export default function MarsMap() {
     if (basemapRef.current && display) {
       basemapRef.current.setVisible(display.visible);
       basemapRef.current.setOpacity(display.opacity);
+    }
+    const jezeroImagery = layerDisplay.jezero_imagery;
+    if (jezeroImageryRef.current && jezeroImagery) {
+      jezeroImageryRef.current.setVisible(jezeroImagery.visible);
+      jezeroImageryRef.current.setOpacity(jezeroImagery.opacity);
     }
     const evidence = evidenceOverlayRef.current;
     if (evidence) {
@@ -282,7 +302,8 @@ export default function MarsMap() {
           <dt>Coordinate system</dt><dd>Mars 2000 · NASA service label <code>urn:ogc:def:crs:EPSG::104905</code> (ESRI:104905 definition)</dd>
           <dt>Native units and axes</dt><dd>Degrees · X longitude, east positive (−180° to +180°); Y native latitude (−90° to +90°).</dd>
           <dt>Latitude convention</dt><dd>WMTS planetographic latitude is converted to/from the API's Mars 2000 planetocentric latitude. WMTS/DEM pixel registration remains unverified.</dd>
-          <dt>Layer</dt><dd>NASA Jezero HiRISE / CTX / HRSC mosaic <code>{LAYER_ID}</code></dd>
+          <dt>Basemap</dt><dd>NASA MGS MOLA global color hillshade <code>{LAYER_ID}</code></dd>
+          <dt>High-resolution overlay</dt><dd>NASA Jezero HiRISE / CTX / HRSC mosaic <code>{JEZERO_LAYER_ID}</code></dd>
           <dt>Registration</dt><dd>{planner.metadata?.validation.map_alignment === "verified"
             ? "Verified only for this route's independently controlled footprint."
             : "Pending independent NASA WMTS, wire-coordinate, and DEM feature controls. Computed geometry remains hidden."}</dd>

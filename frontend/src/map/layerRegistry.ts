@@ -1,5 +1,5 @@
 import type { EvidenceLayer, EvidenceState } from "../types/evidence.ts";
-import { CATALOG_URL, NASA_CRS } from "./marsWmts.ts";
+import { CATALOG_URL, JEZERO_LAYER_ID, NASA_CRS } from "./marsWmts.ts";
 
 export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
   {
@@ -20,6 +20,26 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
       units: "Colorized topography; not natural-color imagery",
       coordinateSystem: NASA_CRS,
       limitations: ["Visual context only. NASA WMTS latitude convention has not been validated against the application wire convention or the local DEM."],
+    },
+  },
+  {
+    id: "jezero_imagery",
+    label: "High-resolution Jezero imagery",
+    family: "Optical / context",
+    state: "observed",
+    validationStatus: "not_validated",
+    renderable: true,
+    provenance: {
+      sourceName: "NASA Mars Trek — Jezero HiRISE / CTX / HRSC mosaic",
+      sourceUrl: CATALOG_URL,
+      origin: "official_source",
+      observationDate: null,
+      publicationDate: null,
+      ingestionDate: null,
+      resolution: "NASA WMTS Jezero mosaic",
+      units: "Visual context; not a verified route-registration surface",
+      coordinateSystem: NASA_CRS,
+      limitations: [`${JEZERO_LAYER_ID} covers Jezero only. Independent WMTS/wire/DEM controls are still required before computed routes can appear on NASA imagery.`],
     },
   },
   {
