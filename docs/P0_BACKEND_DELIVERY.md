@@ -124,6 +124,9 @@ claimed.
 
 ## Remaining joint work
 
+The later [P0 UI acceptance](P0_UI_ACCEPTANCE.md) supersedes the integration
+status below; it records completion of the joint UI fixes and checks.
+
 Sheng owns Quick/Advanced controls, waypoint interaction and lifecycle UI. After
 those changes merge, run the joint UI acceptance matrix. Computed geometry must
 remain off the NASA basemap until independent registration is established.

@@ -66,3 +66,11 @@ test("typed metadata GET reuses transport, validates IDs and preserves errors an
   const pending = getStoredRoute(fixture.result.route_id, controller.signal); controller.abort();
   await assert.rejects(pending, { name: "AbortError" });
 });
+
+test("ordered waypoint labels do not enable unregistered computed route geometry", () => {
+  const { source } = createRouteOverlay();
+  const result = fixture.result;
+  updateRouteOverlay(source, null, null, result, [result.route[0], result.route[result.route.length - 1]]);
+  assert.deepEqual(source.getFeatures().map(feature => feature.get("label")), ["W1", "W2"]);
+  assert(source.getFeatures().every(feature => feature.get("kind") === "waypoint"));
+});

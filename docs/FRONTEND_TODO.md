@@ -15,38 +15,6 @@ tasks must remain in English.
 - Preserve the existing typed API client, cancellation, stale-response protection,
   and backend error envelope handling.
 
-## P0 — Demo-blocking reliability and clarity
-
-### Request lifecycle and recoverable failures
-
-- [ ] Integrate the computed-plan request status endpoint:
-  `GET /api/v1/routes/requests/{request_id}`.
-- [ ] Integrate the chat-attempt status endpoint:
-  `GET /api/v1/routes/{route_id}/chat/attempts/{request_id}`.
-- [ ] Show `running`, `succeeded`, `failed`, and `unknown` request states in the UI.
-- [ ] Show retry eligibility and `retry_after_seconds`; never retry model calls automatically.
-- [ ] Send an `Idempotency-Key` for a computed planning request and retain it until
-  the request outcome is resolved.
-- [ ] Preserve the last successful route when a later plan or chat request fails.
-- [ ] Add focused tests for replay, conflict, eligible retry, and unknown outcomes.
-
-### Runtime state and mode disclosure
-
-- [ ] Make routing mode prominent: `mock`, `computed / deterministic`, or
-  `computed / agentic`.
-- [ ] Show whether the configured DEM, route store, and model credentials are ready.
-- [ ] Keep model configuration presence separate from confirmed provider access.
-- [ ] Display request count and estimated/reserved cost only when returned by the backend.
-- [ ] Use clear action-oriented errors for an unreachable API, a missing dataset,
-  invalid planning profile, missing credentials, and provider rejection.
-
-### Text and encoding quality
-
-- [ ] Replace mojibake characters such as `Â·`, `â€”`, and `â€¦` with valid UTF-8
-  punctuation or plain ASCII equivalents.
-- [ ] Keep every new and updated frontend string in English.
-- [ ] Standardize status vocabulary across planner, map, A0 status, and chat panels.
-
 ## P1 — Planning and evidence experience
 
 ### Guided planning workflow
@@ -56,16 +24,12 @@ tasks must remain in English.
 - [ ] Promote the backend-provided in-coverage DEM example as the first computed-mode path.
 - [ ] Explain why arbitrary map clicks can be outside planning coverage without
   suggesting that the basemap is registered to the DEM.
-- [ ] Keep a single visible primary action and disable it with an actionable reason.
 
 ### Route result hierarchy
 
 - [ ] Use a compact result summary for source, mode, distance, warnings, and next action.
 - [ ] Place detailed provenance, grid policy, worker status, and validation data in
   expandable sections.
-- [ ] Keep mock metrics visibly null and label mock routes as non-safety-validated.
-- [ ] Surface computed rationale, limitations, evidence IDs, and unassessed specialist inputs.
-- [ ] Preserve metadata consistency checks between POST results and stored-route retrieval.
 
 ### A0 conversation
 
@@ -79,7 +43,6 @@ tasks must remain in English.
 
 ### Map and evidence handling
 
-- [ ] Distinguish NASA imagery/tile failures from API failures.
 - [ ] Maintain the computed-geometry display guard until map registration is verified.
 - [ ] Show coverage, provenance, uncertainty, unavailable state, and source links for
   evidence layers without creating client-side hazard or temperature maps.

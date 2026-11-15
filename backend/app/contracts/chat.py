@@ -3,6 +3,7 @@ from typing import Annotated, Literal
 from pydantic import Field, field_validator, model_validator
 from app.contracts.api import ContractModel, MarsCoordinate, MAX_WAYPOINTS, PlanRouteResponse, RouteMode
 from app.contracts.routes import RouteMetadata, Usage
+from app.contracts.assessment import SpecialistTrace
 
 
 class AdvancedContext(ContractModel):
@@ -54,6 +55,7 @@ class ChatResponse(ContractModel):
     result: PlanRouteResponse | None = None
     metadata: RouteMetadata | None = None
     usage: Usage | None = None
+    specialist_trace: list[SpecialistTrace] = Field(default_factory=list)
 
 
 class ChatHistory(ContractModel):

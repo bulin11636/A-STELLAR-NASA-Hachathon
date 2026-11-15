@@ -55,6 +55,7 @@ export type PlanRouteRequest = {
   goal: MarsCoordinate;
   mode: "shortest" | "safest";
   waypoints: Array<MarsCoordinate>;
+  mission: WalkingMission | null;
 };
 
 export type PlanRouteResponse = {
@@ -100,6 +101,18 @@ export type Rationale = {
   evidence_ids: Array<string>;
 };
 
+export type RouteAssessment = {
+  time: TimeEstimate | null;
+  radiation_duration_min: number | null;
+  radiation_duration_basis: "user_supplied" | "route_estimate" | "unavailable";
+  dose_estimate_usv: number | null;
+  dose_uncertainty_usv: number | null;
+  radiation_constraint_status: "pass" | "fail" | "unknown";
+  required_unassessed: Array<"A2" | "A3" | "A4" | "A6">;
+  required_failed: Array<"A2" | "A3" | "A4" | "A6">;
+  limitations: Array<string>;
+};
+
 export type RouteMetadata = {
   schema_version: "1";
   route_id: string;
@@ -118,6 +131,8 @@ export type RouteMetadata = {
   rationale: Rationale | null;
   usage: Usage | null;
   parent_route_id: string | null;
+  specialist_trace: Array<SpecialistTrace>;
+  assessment: RouteAssessment | null;
 };
 
 export type RouteMetrics = {
@@ -144,6 +159,34 @@ export type Source = {
   provenance_record_id: string;
 };
 
+export type SpecialistTrace = {
+  agent_id: "A1" | "A2" | "A3" | "A4" | "A6";
+  public_name: string;
+  configured: boolean;
+  selected: boolean;
+  required: boolean;
+  selection_source: "host_policy" | "user_requirement" | "a0" | "deterministic";
+  selection_reason: string;
+  execution_state: "not_requested" | "succeeded" | "cached" | "unavailable" | "failed";
+  data_kind: "observed" | "scenario" | "mock" | "unavailable";
+  result_status: "ready" | "partial" | "unavailable" | "failed" | null;
+  application: "terrain_cost" | "context_only" | "dose_scenario" | "none";
+  constraint_status: "pass" | "fail" | "unknown";
+  limitations: Array<string>;
+  dataset_ids: Array<string>;
+  artifact_id: string | null;
+};
+
+export type TimeEstimate = {
+  mode: "walking";
+  model: "constant_projected_speed_v1";
+  speed_m_s: number;
+  travel_min: number;
+  stop_min: number;
+  total_min: number;
+  assumptions: Array<string>;
+};
+
 export type Usage = {
   model: string;
   reasoning_effort: string;
@@ -163,6 +206,15 @@ export type Validation = {
   control_fixture_ids: Array<string>;
   tolerances: Record<string, number>;
   map_alignment: "verified" | "unverified";
+};
+
+export type WalkingMission = {
+  mode: "walking";
+  speed_m_s: number | null;
+  stop_minutes_per_waypoint: number;
+  exposure_duration_min: number | null;
+  radiation_budget_usv: number | null;
+  required_analyses: Array<"A2" | "A3" | "A4" | "A6">;
 };
 
 export type Worker = {
@@ -192,4 +244,5 @@ export type ChatResponse = {
   result: PlanRouteResponse | null;
   metadata: RouteMetadata | null;
   usage: Usage | null;
+  specialist_trace: Array<SpecialistTrace>;
 };

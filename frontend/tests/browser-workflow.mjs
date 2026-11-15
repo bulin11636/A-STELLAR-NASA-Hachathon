@@ -78,7 +78,7 @@ try {
   await page.locator('.route-preview polyline').waitFor();
   const svg = page.locator('.route-preview svg');
   const before = (await svg.getAttribute('viewBox')).split(' ').map(Number);
-  await page.getByRole('button',{name:'Focus 1',exact:true}).click();
+  await page.getByRole('button',{name:'Focus W1',exact:true}).click();
   const focused = (await svg.getAttribute('viewBox')).split(' ').map(Number);
   assert(focused[2] < before[2],'Nearby stops must support a tighter view than the complete route.');
   await page.getByRole('button',{name:'Zoom in DEM preview',exact:true}).click();

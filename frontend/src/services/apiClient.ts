@@ -62,8 +62,8 @@ export async function apiRequest<T>(
     }
   } catch (error) {
     if (signal?.aborted) throw new DOMException("Request cancelled", "AbortError");
-    if (timeout.signal.aborted) throw new ApiError("The backend request timed out. Please retry.", "TIMEOUT");
+    if (timeout.signal.aborted) throw new ApiError("The backend request timed out. Check its recorded status before retrying.", "TIMEOUT");
     if (error instanceof ApiError) throw error;
-    throw new ApiError("Cannot reach the backend. Check your connection and that FastAPI is running on port 8000.", "NETWORK_ERROR");
+    throw new ApiError("Cannot reach the backend. Check your connection and that the application service is running.", "NETWORK_ERROR");
   } finally { clearTimeout(timer); }
 }

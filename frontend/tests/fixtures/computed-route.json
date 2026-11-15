@@ -81,7 +81,8 @@
         "latitude": 18.451633592393485
       },
       "mode": "shortest",
-      "waypoints": []
+      "waypoints": [],
+      "mission": null
     },
     "coordinator": {
       "agent_id": "A0",
@@ -301,6 +302,8 @@
     ],
     "rationale": null,
     "usage": null,
-    "parent_route_id": null
+    "parent_route_id": null,
+    "specialist_trace": [],
+    "assessment": null
   }
 }

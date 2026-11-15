@@ -21,9 +21,10 @@ function validId(id: string) {
   if (!/^route-[a-f0-9]{32}$/.test(id)) throw new ApiError("Invalid route identifier.", "VALIDATION_ERROR");
 }
 
-export function sendChat(routeId: string, message: string, requestId: string, signal?: AbortSignal, advancedContext?: AdvancedContext) {
+export function sendChat(routeId: string, message: string, requestId: string, signal?: AbortSignal, advancedContext?: AdvancedContext, retryAttempt?: number) {
   validId(routeId);
   return apiRequest(`/api/v1/routes/${routeId}/chat`, (body) => decodeChat(body, routeId), {
+    headers: retryAttempt === undefined ? {} : { "X-A-Stellar-Retry-Attempt": String(retryAttempt) },
     method: "POST", body: { message, request_id: requestId, ...(advancedContext ? { advanced_context: advancedContext } : {}) }, signal, timeoutMs: 90_000,
   });
 }

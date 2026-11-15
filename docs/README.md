@@ -2,7 +2,10 @@
 
 | Guide | Contents |
 | --- | --- |
+| [Specialist selection and walking assessment](SPECIALIST_ROUTING_AND_WALKING.md) | Bounded tool selection, auditable traces, explicit walking time, scenario assessment and offline verification |
 | [Current TODO](TODO.md) | Remaining demo handoff checks and deferred exploration; pending tasks only |
+| [P0 UI acceptance and walkthrough](P0_UI_ACCEPTANCE.md) | Completed integration fixes, Docker startup, real-data manual steps and acceptance results |
+| [Merged P0 integration gaps](P0_INTEGRATION_GAPS.md) | Historical merged-main findings, now resolved by the P0 UI delivery |
 | [Sam P0 backend delivery](P0_BACKEND_DELIVERY.md) | Advanced context, durable recovery, runtime status, shared fixtures and observed acceptance |
 | [Backend handoff](backend-handoff.md) | Current scope, portable startup, request status/retry protocol and Docker acceptance |
 | [Backend reliability checkpoint](backend-verification.md) | Observed backend, browser, Docker and live A0 acceptance, preserved evidence and remaining boundaries |
@@ -33,6 +36,6 @@
 
 Setup guides and overlapping agent reports are merged here. Scientific fixtures live in `data/fixtures/`; documentation contains no datasets. The repository-root README is the entry point.
 
-Implemented API endpoints: `GET /api/v1/health`, `GET /api/v1/ready`, `GET /api/v1/regions`, `POST /api/v1/routes/plan`, `GET /api/v1/routes/{route_id}`, `GET /api/v1/a0/status`, and `GET/POST /api/v1/routes/{route_id}/chat`. Routing defaults to mock; explicit computed configuration enables validated terrain planning and durable retrieval. Live schemas are available at FastAPI's `/docs` and `/openapi.json`.
+Implemented API endpoints: `GET /api/v1/health`, `GET /api/v1/ready`, `GET /api/v1/regions`, `POST /api/v1/routes/plan`, `GET /api/v1/routes/{route_id}`, `GET /api/v1/a0/status`, `GET /api/v1/a0/capabilities`, and `GET/POST /api/v1/routes/{route_id}/chat`. Routing defaults to mock; explicit computed configuration enables validated terrain planning and durable retrieval. Live schemas are available at FastAPI's `/docs` and `/openapi.json`.
 
 The `a0-*` documents preserve the approved scope and handoff. The implementation and API addendum are now exercised on a real CTX ROI; computed browser display remains pending alignment verification.

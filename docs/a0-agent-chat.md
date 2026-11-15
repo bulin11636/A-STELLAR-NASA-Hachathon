@@ -119,8 +119,12 @@ Science/rover outputs remain contextual; thermal and radiation inputs without
 configured validated models remain unavailable. A0 cannot invent a missing
 assessment or silently turn historical observations into per-cell safety costs.
 
-Each normal Plan Route or chat request makes at most one model request and does
-not retry paid generation automatically. The application checks a conservative
+Each Plan Route or chat action makes at most two model requests when optional
+workers are configured: selection, then a final proposal. Selection is omitted
+when no optional worker is configured. Advanced Plan and Ask A0 contains two
+actions (up to four model requests). No paid generation is retried automatically.
+See [specialist selection and walking assessment](SPECIALIST_ROUTING_AND_WALKING.md)
+for trace fields, required analyses, checkpoint reuse and explicit time inputs. The application checks a conservative
 6,000-byte serialized payload budget, including prompts/tools, with reserved
 protocol headroom; this is not an exact tokenizer measurement. Actual provider
 token usage is saved after response. Output is capped at 4,096 tokens including

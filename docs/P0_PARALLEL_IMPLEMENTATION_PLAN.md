@@ -55,6 +55,8 @@ Rules:
 
 ## Sheng — implementation work
 
+Joint integration fixes and final acceptance: [P0 UI delivery](P0_UI_ACCEPTANCE.md).
+
 ### Sheng boundaries
 
 - Own `frontend/` source and frontend tests.
@@ -67,56 +69,56 @@ Rules:
 
 ### SHENG-1 — Typed request-status client and fixtures
 
-- [ ] Define a `RequestAttemptStatus` TypeScript type and strict decoder.
-- [ ] Add `getPlanRequestStatus(requestId)`.
-- [ ] Add `getChatAttemptStatus(routeId, requestId)`.
-- [ ] Add frontend fixtures for `running`, `succeeded`, retryable `failed`,
+- [x] Define a `RequestAttemptStatus` TypeScript type and strict decoder.
+- [x] Add `getPlanRequestStatus(requestId)`.
+- [x] Add `getChatAttemptStatus(routeId, requestId)`.
+- [x] Add frontend fixtures for `running`, `succeeded`, retryable `failed`,
   non-retryable `failed`, and `unknown`.
-- [ ] Add decoder tests for valid and malformed payloads.
+- [x] Add decoder tests for valid and malformed payloads.
 
 ### SHENG-2 — Computed plan lifecycle
 
-- [ ] Generate one `Idempotency-Key` per intended computed planning action.
-- [ ] Retain that key until the outcome is known; do not create a replacement key
+- [x] Generate one `Idempotency-Key` per intended computed planning action.
+- [x] Retain that key until the outcome is known; do not create a replacement key
   after a timeout or page re-render.
-- [ ] Show plan states: idle, submitting/running, succeeded, failed, unknown.
-- [ ] Keep the last successful route visible after a later failure.
-- [ ] Show a manual retry control only for `retry_allowed: true`.
-- [ ] Include the backend-required retry attempt header/version when retrying.
-- [ ] Surface clear English error messages without replacing backend codes.
-- [ ] In Advanced mode, support up to 16 ordered required waypoints added by
+- [x] Show plan states: idle, submitting/running, succeeded, failed, unknown.
+- [x] Keep the last successful route visible after a later failure.
+- [x] Show a manual retry control only for `retry_allowed: true`.
+- [x] Include the backend-required retry attempt header/version when retrying.
+- [x] Surface clear English error messages without replacing backend codes.
+- [x] In Advanced mode, support up to 16 ordered required waypoints added by
   named coordinates or a dedicated `Pick Waypoint` map action; allow reorder
   and removal before submission.
-- [ ] Render `W1`, `W2`, … independently from Start and Goal without enabling
+- [x] Render `W1`, `W2`, … independently from Start and Goal without enabling
   computed geometry on the unverified NASA basemap.
 
 ### SHENG-3 — Chat lifecycle
 
-- [ ] Preserve the existing chat `request_id` for an unresolved message.
-- [ ] Display chat attempt state and a manual retry action where allowed.
-- [ ] Do not replace the displayed route unless the chat response contains a
+- [x] Preserve the existing chat `request_id` for an unresolved message.
+- [x] Display chat attempt state and a manual retry action where allowed.
+- [x] Do not replace the displayed route unless the chat response contains a
   validated revision result and matching metadata.
-- [ ] State clearly when an answer is informational and did not change the route.
+- [x] State clearly when an answer is informational and did not change the route.
 
 ### SHENG-4 — Runtime status and UI quality
 
-- [ ] Make routing status clear: `mock`, `computed / deterministic`, or
+- [x] Make routing status clear: `mock`, `computed / deterministic`, or
   `computed / agentic`.
-- [ ] Display DEM readiness, credential configuration, and returned usage/budget
+- [x] Display DEM readiness, credential configuration, and returned usage/budget
   only when the backend supplies them.
-- [ ] Distinguish NASA imagery errors from API errors.
-- [ ] Replace mojibake text such as `Â·`, `â€”`, and `â€¦` with valid UTF-8
+- [x] Distinguish NASA imagery errors from API errors.
+- [x] Replace mojibake text such as `Â·`, `â€”`, and `â€¦` with valid UTF-8
   punctuation or plain ASCII.
-- [ ] Keep all frontend text in English.
+- [x] Keep all frontend text in English.
 
 ### SHENG-5 — Acceptance tests
 
-- [ ] Same plan action reuses its idempotency key.
-- [ ] Stale responses cannot overwrite newer selections.
-- [ ] A failed request does not clear a prior successful route.
-- [ ] Retry appears only for a retryable failure and never runs automatically.
-- [ ] Unknown outcome remains blocked from automatic resubmission.
-- [ ] A route changes only after a valid chat revision response.
+- [x] Same plan action reuses its idempotency key.
+- [x] Stale responses cannot overwrite newer selections.
+- [x] A failed request does not clear a prior successful route.
+- [x] Retry appears only for a retryable failure and never runs automatically.
+- [x] Unknown outcome remains blocked from automatic resubmission.
+- [x] A route changes only after a valid chat revision response.
 
 ## Sam — implementation work
 

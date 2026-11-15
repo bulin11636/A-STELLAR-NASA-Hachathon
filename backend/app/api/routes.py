@@ -85,6 +85,18 @@ async def stored_route(route_id: str, request: Request):
     return await run_in_threadpool(request.app.state.planning.store.get, route_id)
 
 
+@router.get('/a0/capabilities', tags=['agents'])
+async def agent_capabilities(request: Request):
+    """Inspect local tools without making a provider request."""
+    from app.planning.service import ROLES
+    agent=request.app.state.route_agent
+    return dict(mission_mode='walking', max_model_calls_per_action=2 if agent.settings.enabled else 0,
+        capabilities=[dict(agent_id='A1',public_name=ROLES['A1'][0],configured=agent.planning.ready,
+            purpose='Mandatory DEM coverage, slope costs and native segment checks.',mandatory=True),
+            *[dict(**item,public_name=ROLES[item['agent_id']][0],mandatory=False) for item in agent.catalog()]],
+        merged_capabilities=[dict(agent_id='A5',merged_into='A1',purpose='Surface obstacle context; no independent worker.')])
+
+
 @router.get('/a0/status', tags=['agents'])
 async def agent_status(request: Request):
     agent=request.app.state.route_agent

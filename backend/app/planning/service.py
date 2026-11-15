@@ -138,7 +138,7 @@ class PlanningService:
                 raise ApiProblem(400,'ENDPOINT_NOT_TRAVERSABLE','A route stop is blocked or unknown.')
         return g
 
-    def plan(self, request, *, agent_context=None, parent_route_id=None, prepared_grid=None):
+    def plan(self, request, *, agent_context=None, parent_route_id=None, prepared_grid=None, assessment_builder=None):
         if self.grid is None:
             if isinstance(self.failure, ApiProblem):
                 raise self.failure
@@ -184,17 +184,24 @@ class PlanningService:
         stops = [request.start,*request.waypoints,request.goal]
         factor = g.inventory.get('resolution_factor',1)
         native_validation = validate_native_polyline(g,points) if factor > 1 else None
+        from app.planning.assessment import walking_assessment
+        context = dict(agent_context or {})
+        if assessment_builder is not None: context.update(assessment_builder(distance))
+        assessment = context.get('assessment') or walking_assessment(request,distance)
+        warnings = list(WARNINGS)
+        if assessment.required_unassessed: warnings.append('Required analyses remain unassessed: '+', '.join(assessment.required_unassessed)+'. This is a provisional terrain route.')
+        if assessment.required_failed: warnings.append('Required scenario checks failed: '+', '.join(assessment.required_failed)+'. The route does not meet those scenario requirements.')
         route_id = 'route-'+uuid4().hex
         result = PlanRouteResponse(route_id=route_id,mode=request.mode,source='computed',route=route,
-            metrics=RouteMetrics(distance_m=distance), warnings=WARNINGS)
+            metrics=RouteMetrics(distance_m=distance,estimated_time_min=assessment.time.total_min if assessment.time else None), warnings=warnings)
         def build(folder):
             np.savez_compressed(folder/'grid.npz', **arrays)
             write_json(folder/'validation.json',dict(cells=search.cells,touched_cells=touched,metric_polyline=points,
                 validated_wire_polyline=[p.model_dump() for p in route],source_hash=g.source_hash,grid_id=g.metadata.grid_id,
                 native_validation=native_validation))
             write_json(folder/'provenance.json',dict(source_path=str(g.source_path),inventory=g.inventory,
-                profile=g.profile.model_dump(),source_hash=g.source_hash,specialist_evidence=(agent_context or {}).get('evidence',[]),
-                specialist_results=(agent_context or {}).get('private_evidence',{})))
+                profile=g.profile.model_dump(),source_hash=g.source_hash,specialist_evidence=context.get('evidence',[]),
+                specialist_results=context.get('private_evidence',{})))
             artifacts = {role:dict(artifact_id=route_id+':'+role,sha256=digest(folder/name)) for role,name in
                 [('grid','grid.npz'),('validation','validation.json'),('provenance','provenance.json')]}
             gridmeta = g.metadata.model_copy(update={'mask_artifact_ids':{k:route_id+':grid#'+k for k in ['coverage','unknown','blocked']}})
@@ -203,7 +210,6 @@ class PlanningService:
                 dataset_ids=[g.profile.dataset_id] if k=='A1' else [],artifact_ids=[route_id+':grid'] if k=='A1' else [],
                 warnings=['Optical obstacles are unassessed.'] if k=='A1' else ['Not invoked; no validated constraint supplied.'],
                 unassessed_constraints=['optical obstacles'] if k=='A1' else [ROLES[k][0]]) for k in ['A1','A2','A3','A4','A6']]
-            context = agent_context or {}
             for observed in context.get('workers',[]):
                 for index, worker in enumerate(workers):
                     if worker['agent_id']==observed['agent_id'] and worker['agent_id']!='A1':
@@ -221,7 +227,9 @@ class PlanningService:
                     f'Independently checked {native_validation["touched_native_cells"]} touched native cells after planning.',
                     'Optimality applies to the aggregated search graph; narrow native corridors can be excluded.'])
             rationale = dict(summary='A* computed a terrain-only route using '+('projected distance' if request.mode=='shortest' else 'terrain-weighted distance')+' cost and the requested stop order.',
-                facts=facts,limitations=list(WARNINGS),model_commentary=context.get('commentary'),evidence_ids=context.get('evidence_ids',[]))
+                facts=facts,limitations=list(warnings),model_commentary=context.get('commentary'),evidence_ids=context.get('evidence_ids',[]))
+            traces=[t.model_copy(update={'artifact_id':route_id+(':grid' if t.agent_id=='A1' else ':provenance#'+t.agent_id)})
+                if t.agent_id=='A1' or t.agent_id in context.get('private_evidence',{}) else t for t in context.get('specialist_trace',[])]
             metadata = RouteMetadata(route_id=route_id,created_at=datetime.now(timezone.utc),request=request,
                 coordinator=dict(public_name=ROLES['A0'][0],responsibility=ROLES['A0'][1],implementation_version='python-a0-v1'),
                 scope=dict(roi_id=g.profile.roi_id,dataset_version=g.source_hash,bounds=g.bounds),
@@ -239,7 +247,8 @@ class PlanningService:
                     'all touched cells covered, known and allowed','no blocked diagonal corners','exact endpoints','emitted wire geometry revalidated']
                     + (['conservative native-cell aggregation','independent native source segment re-read'] if factor > 1 else []),
                     control_fixture_ids=['native-sphere-eqc-analytic-v1'],tolerances={'wire_metric_roundtrip_m':1e-5},map_alignment='unverified'),
-                workers=workers,artifacts=artifacts,warnings=WARNINGS,rationale=rationale,
+                workers=workers,artifacts=artifacts,warnings=warnings,rationale=rationale,
+                specialist_trace=traces,assessment=assessment,
                 usage=context.get('usage'),parent_route_id=parent_route_id)
             return StoredRouteResponse(result=result,metadata=metadata)
         return self.store.publish(route_id,build).result
