@@ -34,6 +34,27 @@ registration/
   jezero-controls.json
 ```
 
+## Local QGIS visual reference
+
+QGIS cannot use a saved `WMTSCapabilities.xml` as an image layer by dragging it
+onto the canvas. To make manual feature picking practical, create a bounded,
+georeferenced GeoTIFF preview of the NASA Jezero mosaic:
+
+```powershell
+.\backend\.venv\Scripts\python.exe scripts\download_jezero_wmts_preview.py `
+  --dem C:\Users\<you>\Downloads\M20_JezeroCrater_CTXDEM_20m.tif `
+  --output C:\Users\<you>\Downloads\registration\jezero-wmts-preview-z11.tif `
+  --capabilities-output C:\Users\<you>\Downloads\registration\jezero-wmts-capabilities.xml `
+  --zoom 11
+```
+
+Drag `jezero-wmts-preview-z11.tif` into QGIS beside the DEM. It uses the NASA
+WMTS planetographic `ESRI:104905` CRS and only covers the intersection of the
+advertised Jezero mosaic and the DEM. It is a visual reference for independent
+feature picking, **not** registration evidence or proof of alignment. The
+original downloaded capabilities XML is the evidence asset hashed by the
+controls file.
+
 `jezero-controls.json` must follow this schema shape. Hash every evidence file
 after capture; do not copy placeholder hashes into production.
 
