@@ -5,7 +5,7 @@ export const fixture = JSON.parse(readFileSync(new URL("../fixtures/computed-rou
 export function storedFor(request: PlanRouteRequest, digit = "1") {
   const stored = JSON.parse(JSON.stringify(fixture).replaceAll(fixture.result.route_id, "route-" + digit.repeat(32)));
   stored.result.mode = request.mode;
-  stored.metadata.request = { ...structuredClone(request), waypoints: request.waypoints ?? [], mission: request.mission ?? null };
+  stored.metadata.request = { ...structuredClone(request), waypoints: request.waypoints ?? [], mission: request.mission ?? null, mission_profile: request.mission_profile ?? "balanced" };
   return stored;
 }
 export function attempt(id: string, state = "failed", retry = true, version = 1, seconds = 0) {

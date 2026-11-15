@@ -80,6 +80,44 @@
       "title": "Coordinator",
       "type": "object"
     },
+    "EvidenceQuality": {
+      "additionalProperties": false,
+      "description": "Stable assessment-confidence components, each normalized to [0, 1].",
+      "properties": {
+        "availability": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Availability",
+          "type": "number"
+        },
+        "route_coverage": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Route Coverage",
+          "type": "number"
+        },
+        "temporal_applicability": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Temporal Applicability",
+          "type": "number"
+        },
+        "validation_provenance": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Validation Provenance",
+          "type": "number"
+        }
+      },
+      "required": [
+        "availability",
+        "route_coverage",
+        "temporal_applicability",
+        "validation_provenance"
+      ],
+      "title": "EvidenceQuality",
+      "type": "object"
+    },
     "GridMetadata": {
       "additionalProperties": false,
       "properties": {
@@ -279,6 +317,79 @@
       "title": "MarsCoordinate",
       "type": "object"
     },
+    "MissionProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1",
+          "default": "1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "profile_id": {
+          "enum": [
+            "safest",
+            "fastest",
+            "science_priority",
+            "balanced"
+          ],
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "version": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$",
+          "title": "Version",
+          "type": "string"
+        },
+        "risk_weights": {
+          "additionalProperties": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "propertyNames": {
+            "enum": [
+              "A1",
+              "A2",
+              "A3",
+              "A4",
+              "A5",
+              "A6"
+            ]
+          },
+          "title": "Risk Weights",
+          "type": "object"
+        },
+        "confidence_weights": {
+          "additionalProperties": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "propertyNames": {
+            "enum": [
+              "A1",
+              "A2",
+              "A3",
+              "A4",
+              "A5",
+              "A6"
+            ]
+          },
+          "title": "Confidence Weights",
+          "type": "object"
+        }
+      },
+      "required": [
+        "schema_version",
+        "profile_id",
+        "version",
+        "risk_weights",
+        "confidence_weights"
+      ],
+      "title": "MissionProfile",
+      "type": "object"
+    },
     "PlanRouteRequest": {
       "additionalProperties": false,
       "properties": {
@@ -324,6 +435,17 @@
             }
           ],
           "default": null
+        },
+        "mission_profile": {
+          "default": "balanced",
+          "enum": [
+            "safest",
+            "fastest",
+            "science_priority",
+            "balanced"
+          ],
+          "title": "Mission Profile",
+          "type": "string"
         }
       },
       "required": [
@@ -333,7 +455,8 @@
         "goal",
         "mode",
         "waypoints",
-        "mission"
+        "mission",
+        "mission_profile"
       ],
       "title": "PlanRouteRequest",
       "type": "object"
@@ -582,6 +705,85 @@
       "title": "Rationale",
       "type": "object"
     },
+    "RiskFactor": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "enum": [
+            "A1",
+            "A2",
+            "A3",
+            "A4",
+            "A5",
+            "A6"
+          ],
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "risk",
+            "context"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "assessed",
+            "contextual",
+            "unavailable",
+            "stale",
+            "incompatible",
+            "unassessed",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "risk_score": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Risk Score"
+        },
+        "evidence_quality": {
+          "$ref": "#/$defs/EvidenceQuality"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "message": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "agent_id",
+        "kind",
+        "status",
+        "risk_score",
+        "evidence_quality",
+        "evidence_ids",
+        "message"
+      ],
+      "title": "RiskFactor",
+      "type": "object"
+    },
     "RouteAssessment": {
       "additionalProperties": false,
       "properties": {
@@ -681,6 +883,62 @@
           "title": "Required Failed",
           "type": "array"
         },
+        "mission_profile": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MissionProfile"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "hard_gate_status": {
+          "default": "unassessed",
+          "enum": [
+            "pass",
+            "blocked",
+            "unassessed"
+          ],
+          "title": "Hard Gate Status",
+          "type": "string"
+        },
+        "risk_score": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Risk Score"
+        },
+        "assessment_confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assessment Confidence"
+        },
+        "risk_factors": {
+          "items": {
+            "$ref": "#/$defs/RiskFactor"
+          },
+          "title": "Risk Factors",
+          "type": "array"
+        },
         "limitations": {
           "items": {
             "type": "string"
@@ -698,6 +956,11 @@
         "radiation_constraint_status",
         "required_unassessed",
         "required_failed",
+        "mission_profile",
+        "hard_gate_status",
+        "risk_score",
+        "assessment_confidence",
+        "risk_factors",
         "limitations"
       ],
       "title": "RouteAssessment",

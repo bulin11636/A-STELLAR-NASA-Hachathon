@@ -375,7 +375,8 @@
       },
       "mode": "safest",
       "waypoints": [],
-      "mission": null
+      "mission": null,
+      "mission_profile": "balanced"
     },
     "coordinator": {
       "agent_id": "A0",
@@ -464,7 +465,7 @@
       "objective_cost": 2262.741699796954,
       "objective_units": "terrain-weighted metres",
       "expanded_nodes": 81,
-      "elapsed_ms": 0.41536100616212934,
+      "elapsed_ms": 0.0,
       "distance_convention": "Native projected planar polyline including endpoint connectors"
     },
     "validation": {
@@ -575,15 +576,15 @@
     "artifacts": {
       "grid": {
         "artifact_id": "route-11111111111111111111111111111111:grid",
-        "sha256": "60445b19bcea4ef25b721c58b2da985c671366f85ae25a8bdb4c9260b680f3ca"
+        "sha256": "669e2a77a5dd0cf4e2e2152924496d9d23188dac675ac254b970f18d95e5dc54"
       },
       "validation": {
         "artifact_id": "route-11111111111111111111111111111111:validation",
-        "sha256": "77159479d9bb042771ebf05055e120047be3ebea7b57ba74e2c629d13c75d5ae"
+        "sha256": "23cce19ae558b04f9c26e9e6db3bfb80b0c6f2e534ff6593a9c4f896470db96e"
       },
       "provenance": {
         "artifact_id": "route-11111111111111111111111111111111:provenance",
-        "sha256": "dd9953e2f0eee0eb85ea5fe5eff53a15f73cdd2e460216a6858b91002242882d"
+        "sha256": "8638f47a5773f3ef598d22d9f50497a539a962299ef73e12989f35ae641924fe"
       }
     },
     "warnings": [
@@ -733,8 +734,122 @@
       "radiation_constraint_status": "unknown",
       "required_unassessed": [],
       "required_failed": [],
+      "mission_profile": {
+        "schema_version": "1",
+        "profile_id": "balanced",
+        "version": "balanced-v1",
+        "risk_weights": {
+          "A1": 0.85,
+          "A2": 0.0,
+          "A3": 0.15,
+          "A4": 0.0,
+          "A5": 0.0,
+          "A6": 0.0
+        },
+        "confidence_weights": {
+          "A1": 0.45,
+          "A2": 0.1,
+          "A3": 0.2,
+          "A4": 0.15,
+          "A5": 0.0,
+          "A6": 0.1
+        }
+      },
+      "hard_gate_status": "pass",
+      "risk_score": null,
+      "assessment_confidence": 0.45,
+      "risk_factors": [
+        {
+          "agent_id": "A1",
+          "kind": "context",
+          "status": "contextual",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 1.0,
+            "route_coverage": 1.0,
+            "temporal_applicability": 1.0,
+            "validation_provenance": 1.0
+          },
+          "evidence_ids": [
+            "route-grid",
+            "route-validation"
+          ],
+          "message": "Terrain traversability gate passed; no calibrated normalized A1 risk model is configured."
+        },
+        {
+          "agent_id": "A2",
+          "kind": "context",
+          "status": "unassessed",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "No route-applicable A2 risk factor is available."
+        },
+        {
+          "agent_id": "A3",
+          "kind": "context",
+          "status": "unassessed",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "No route-applicable A3 risk factor is available."
+        },
+        {
+          "agent_id": "A4",
+          "kind": "context",
+          "status": "unassessed",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "No route-applicable A4 risk factor is available."
+        },
+        {
+          "agent_id": "A6",
+          "kind": "context",
+          "status": "unassessed",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "No route-applicable A6 risk factor is available."
+        },
+        {
+          "agent_id": "A5",
+          "kind": "context",
+          "status": "not_applicable",
+          "risk_score": null,
+          "evidence_quality": {
+            "availability": 0.0,
+            "route_coverage": 0.0,
+            "temporal_applicability": 0.0,
+            "validation_provenance": 0.0
+          },
+          "evidence_ids": [],
+          "message": "A5 is not available as an independent factor for this mission profile."
+        }
+      ],
       "limitations": [
-        "Combined thermal/radiation risk is not calibrated; risk_score remains unknown."
+        "Combined thermal/radiation risk is not calibrated; risk_score remains unknown.",
+        "Risk score is not assessed because no calibrated normalized route-risk factors are configured."
       ]
     }
   },

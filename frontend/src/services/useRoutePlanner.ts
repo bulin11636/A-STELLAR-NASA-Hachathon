@@ -25,8 +25,8 @@ function rememberRoute(id: string | null) {
   if (id) url.searchParams.set("route", id); else url.searchParams.delete("route");
   window.history.replaceState(null, "", url);
 }
-function routeKey(request: { region_id: string; coordinate_system: string; start: MarsCoordinate; goal: MarsCoordinate; mode: RouteMode; waypoints?: MarsCoordinate[]; mission?: WalkingMission | null }) {
-  return JSON.stringify([request.region_id, request.coordinate_system, [request.start.longitude, request.start.latitude], [request.goal.longitude, request.goal.latitude], request.mode, (request.waypoints ?? []).map(point => [point.longitude, point.latitude]), request.mission ? [request.mission.mode,request.mission.speed_m_s,request.mission.stop_minutes_per_waypoint,request.mission.exposure_duration_min,request.mission.radiation_budget_usv,request.mission.required_analyses] : null]);
+function routeKey(request: { region_id: string; coordinate_system: string; start: MarsCoordinate; goal: MarsCoordinate; mode: RouteMode; waypoints?: MarsCoordinate[]; mission?: WalkingMission | null; mission_profile?: string }) {
+  return JSON.stringify([request.region_id, request.coordinate_system, [request.start.longitude, request.start.latitude], [request.goal.longitude, request.goal.latitude], request.mode, (request.waypoints ?? []).map(point => [point.longitude, point.latitude]), request.mission ? [request.mission.mode,request.mission.speed_m_s,request.mission.stop_minutes_per_waypoint,request.mission.exposure_duration_min,request.mission.radiation_budget_usv,request.mission.required_analyses] : null, request.mission_profile ?? "balanced"]);
 }
 function savedWork(): Work | null {
   const value = readPending(SESSION_KEY) as Work | null;
@@ -161,7 +161,7 @@ export function useRoutePlanner() {
   }
   function currentRequest(): PlanRouteRequest {
     if (!start || !goal) throw new Error("Select both Start and Goal.");
-    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode,
+    return { region_id: "jezero", coordinate_system: COORDINATE_SYSTEM, start, goal, mode, mission_profile: "balanced",
       ...(interfaceMode === "advanced" && waypoints.length ? { waypoints } : {}), ...(missionSettings() ? { mission: missionSettings() } : {}) };
   }
   function sameDraft(work: Work | null) {

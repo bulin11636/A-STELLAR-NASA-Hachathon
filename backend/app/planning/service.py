@@ -230,6 +230,8 @@ class PlanningService:
                 facts=facts,limitations=list(warnings),model_commentary=context.get('commentary'),evidence_ids=context.get('evidence_ids',[]))
             traces=[t.model_copy(update={'artifact_id':route_id+(':grid' if t.agent_id=='A1' else ':provenance#'+t.agent_id)})
                 if t.agent_id=='A1' or t.agent_id in context.get('private_evidence',{}) else t for t in context.get('specialist_trace',[])]
+            from app.planning.risk_assessment import enrich_risk_assessment
+            enriched_assessment=enrich_risk_assessment(assessment,request.mission_profile,traces)
             metadata = RouteMetadata(route_id=route_id,created_at=datetime.now(timezone.utc),request=request,
                 coordinator=dict(public_name=ROLES['A0'][0],responsibility=ROLES['A0'][1],implementation_version='python-a0-v1'),
                 scope=dict(roi_id=g.profile.roi_id,dataset_version=g.source_hash,bounds=g.bounds),
@@ -248,7 +250,7 @@ class PlanningService:
                     + (['conservative native-cell aggregation','independent native source segment re-read'] if factor > 1 else []),
                     control_fixture_ids=['native-sphere-eqc-analytic-v1'],tolerances={'wire_metric_roundtrip_m':1e-5},map_alignment='unverified'),
                 workers=workers,artifacts=artifacts,warnings=warnings,rationale=rationale,
-                specialist_trace=traces,assessment=assessment,
+                specialist_trace=traces,assessment=enriched_assessment,
                 usage=context.get('usage'),parent_route_id=parent_route_id)
             return StoredRouteResponse(result=result,metadata=metadata)
         return self.store.publish(route_id,build).result

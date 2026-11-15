@@ -82,7 +82,8 @@
       },
       "mode": "shortest",
       "waypoints": [],
-      "mission": null
+      "mission": null,
+      "mission_profile": "balanced"
     },
     "coordinator": {
       "agent_id": "A0",

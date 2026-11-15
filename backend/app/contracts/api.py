@@ -30,6 +30,7 @@ class PlanRouteRequest(ContractModel):
     waypoints: Annotated[list[MarsCoordinate], Field(max_length=MAX_WAYPOINTS)] = Field(default_factory=list)
 
     mission: WalkingMission | None = None
+    mission_profile: Literal['safest','fastest','science_priority','balanced'] = 'balanced'
 
     @model_validator(mode="after")
     def distinct_stops(self):
