@@ -1,5 +1,7 @@
 # Backend demo acceptance checkpoint
 
+For the newer P0 backend work, see [Sam P0 delivery](P0_BACKEND_DELIVERY.md).
+
 Date: 2026-11-15 (UTC+08:00). Checkout: `A-STELLAR-NASA-Hachathon`.
 Branch: `sam/backend`. This record describes observed tests, not a commit or push.
 

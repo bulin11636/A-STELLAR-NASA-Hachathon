@@ -1,4 +1,4 @@
-"""Additional status endpoint; existing plan/chat payloads remain unchanged."""
+"""Stable durable request status shared by computed planning and chat."""
 from datetime import datetime
 from typing import Literal
 from pydantic import Field
