@@ -151,25 +151,6 @@ preserves the route, assessment, source context and unknown values for review.
 <img width="1800" height="960" alt="image" src="https://github.com/user-attachments/assets/cfdcfc56-accd-4348-af39-48e5b6d1969f" />
 
 
-```mermaid
-flowchart TD
-    Team["Astronaut or mission planner"] --> UI["Set objectives, endpoints,<br/>ordered stops and assumptions"]
-    UI --> API["Validate request<br/>and configured coverage"]
-    API --> Coordinator["Mission Planning Agent"]
-    Coordinator --> Terrain["Mandatory terrain analysis<br/>from the DEM"]
-    Coordinator --> Specialists["Select relevant,<br/>available specialists"]
-    Coordinator --> Host["Host-approved route inputs"]
-    Terrain --> Search["Deterministic Python A*<br/>over ordered route legs"]
-    Host --> Search
-    Search --> Checks["Check connectors and segments<br/>against native terrain"]
-    Checks --> Assessment["Walking time, applicable scenarios<br/>and evidence assessment"]
-    Specialists --> Assessment
-    Assessment --> Record["Persist route, rationale,<br/>provenance and specialist trace"]
-    Record --> Views["Map, Route, Evidence and Briefing"]
-    Views --> Feedback["Ask a question or<br/>request a supported revision"]
-    Feedback --> Coordinator
-```
-
 Scientific context is not automatically a spatial routing cost. The backend
 controls which evidence can affect a calculation, enforces required analyses,
 and keeps unavailable or incompatible evidence explicit.
