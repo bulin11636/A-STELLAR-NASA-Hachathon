@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiRequest } from "../services/apiClient.ts";
+import {readableText} from '../services/domainNames.ts';
 
 type Status = { mode: "agentic" | "deterministic"; model: string; reasoning_effort: string; configured: boolean;
   checks?: { planning: boolean; storage: boolean; model_credentials: boolean };
@@ -37,13 +38,13 @@ export default function A0Status({ revision, routingMode }: { revision?: string;
   }, [revision, refresh]);
   return <section className="a0-status" aria-label="Backend runtime status">
     {status ? <>
-      <p>Routing: <strong>{routingMode === "mock" ? "mock" : routingMode === "computed" ? `computed / ${status.mode}` : "loading"}</strong>. A0: {status.model} / {status.reasoning_effort}.</p>
+      <p>Routing: <strong>{routingMode === "mock" ? "mock" : routingMode === "computed" ? `computed / ${status.mode}` : "loading"}</strong>. Planning model: {status.model} / {status.reasoning_effort}.</p>
       {status.checks && <p>Dataset/profile: <strong>{status.checks.planning ? "ready" : "unavailable"}</strong>. Storage: <strong>{status.checks.storage ? "ready" : "unavailable"}</strong>.</p>}
-      <p>API credential: {status.configured ? "configured" : "not configured"}.{status.mode === "deterministic" ? " Live A0 is disabled; chat provides terrain explanations and ordered stops can be edited in Advanced." : " Configuration does not confirm current provider access."}</p>
-      {status.mode === "agentic" && !status.configured && <p role="alert">Configure the API credential in the backend runtime file to use A0.</p>}
+      <p>API credential: {status.configured ? "configured" : "not configured"}.{status.mode === "deterministic" ? " Live planning assistance is disabled; chat provides terrain explanations and ordered stops can be edited in Advanced." : " Configuration does not confirm current provider access."}</p>
+      {status.mode === "agentic" && !status.configured && <p role="alert">Configure the API credential in the backend runtime file to use the planning assistant.</p>}
       {status.provider && <p>Provider availability: {status.provider.availability.replaceAll("_", " ")}. Last request: {status.provider.last_request_outcome.replaceAll("_", " ")}{status.provider.last_http_status ? ` (HTTP ${status.provider.last_http_status})` : ""}.</p>}
       {status.budget && <p>Local API limits: {status.budget.attempts}/{status.budget.max_attempts} requests · ${status.budget.estimated_or_reserved_usd.toFixed(4)} / ${status.budget.budget_usd.toFixed(2)} estimated/reserved.
-        {status.budget.attempts>=status.budget.max_attempts && <span role="alert"> Request count limit reached. Update A_STELLAR_A0_MAX_REQUESTS and restart the backend before retrying.</span>}</p>}
-    </> : <p role="status">{error ?? "Loading backend configuration…"}</p>}
+        {status.budget.attempts>=status.budget.max_attempts && <span role="alert"> Request count limit reached. Update the backend request limit and restart the backend before retrying.</span>}</p>}
+    </> : <p role="status">{error ? readableText(error) : "Loading backend configuration…"}</p>}
   </section>;
 }

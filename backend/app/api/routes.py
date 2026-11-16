@@ -21,6 +21,13 @@ from app.contracts.api import (
 router = APIRouter(prefix="/api/v1")
 
 
+@router.get('/map/nasa/{layer_id}/{resource:path}',tags=['map'])
+async def nasa_imagery(layer_id: str,resource: str):
+    from app.api.nasa_tiles import fetch_resource
+    content,media_type=await run_in_threadpool(fetch_resource,layer_id,resource)
+    return Response(content,media_type=media_type,headers={'Cache-Control':'public, max-age=3600'})
+
+
 @router.get('/map/layers',tags=['map'])
 async def map_layers(request: Request):
     from app.planning.map_layers import catalog

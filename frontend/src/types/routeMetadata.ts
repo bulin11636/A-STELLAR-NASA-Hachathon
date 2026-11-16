@@ -202,6 +202,8 @@ export type RouteAssessment = {
   mission_profile: MissionProfile | null;
   hard_gate_status: "pass" | "blocked" | "unassessed";
   risk_score: number | null;
+  partial_risk_score?: number | null;
+  risk_evidence_coverage?: number | null;
   assessment_confidence: number | null;
   risk_factors: Array<RiskFactor>;
   limitations: Array<string>;

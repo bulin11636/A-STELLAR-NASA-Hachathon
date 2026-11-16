@@ -4,22 +4,22 @@ import { CATALOG_URL, JEZERO_LAYER_ID, NASA_CRS } from "./marsWmts.ts";
 const BASE_LAYERS: readonly EvidenceLayer[] = [
   {
     id: "mars_basemap",
-    label: "Global Mars terrain (MOLA)",
-    family: "Global terrain background",
+    label: "Global Mars imagery (Viking)",
+    family: "Global visible-light imagery",
     state: "observed",
     validationStatus: "validated_for_demo",
     renderable: true,
     provenance: {
-      sourceName: "NASA Mars Trek — MGS MOLA global color hillshade",
+      sourceName: "NASA Mars Trek — Viking VIS global color mosaic",
       sourceUrl: CATALOG_URL,
       origin: "official_source",
       observationDate: null,
       publicationDate: null,
       ingestionDate: null,
-      resolution: "463 m/pixel",
-      units: "Colorized topography; not natural-color imagery",
+      resolution: "232 m/pixel",
+      units: "Visible-light image mosaic; colors do not represent elevation",
       coordinateSystem: NASA_CRS,
-      limitations: ["Visual context only. NASA WMTS latitude convention has not been validated against the application wire convention or the local DEM."],
+      limitations: ["Same global basemap as Mars Trek's default equirectangular view. Global imagery is coarser than the local Jezero overlay and is not the DEM used for route analysis."],
     },
   },
   {
@@ -160,10 +160,10 @@ const ALL_LAYERS: readonly EvidenceLayer[] = [
 
 export const LAYER_GROUPS = [
   {label:'Basemaps',ids:['mars_basemap','jezero_imagery']},
-  {label:'A1 — Terrain & traversability (includes A5)',ids:['jezero_dem','dem_surface','planning_window']},
-  {label:'A2 — Thermal context',ids:['thermal','thermal_night']},
-  {label:'A4 — Geology & science',ids:['geology','science_pois']},
-  {label:'A6 — Rover observations',ids:['rover_history','rover_stops']},
+  {label:'Terrain & Traversability',ids:['jezero_dem','dem_surface','planning_window']},
+  {label:'Thermal Environment',ids:['thermal','thermal_night']},
+  {label:'Geology & Science',ids:['geology','science_pois']},
+  {label:'Rover Operations & Observations',ids:['rover_history','rover_stops']},
   {label:'Mission route & stops',ids:['route']},
 ] as const;
 

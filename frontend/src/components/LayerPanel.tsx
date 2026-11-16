@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { EVIDENCE_LAYERS, LAYER_GROUPS, canToggleLayer, stateLabel } from "../map/layerRegistry.ts";
+import { readableText } from '../services/domainNames.ts';
 
 export interface LayerDisplayState {
   visible: boolean;
@@ -22,7 +23,7 @@ export default function LayerPanel({ layers, onLayerChange, availability = {}, i
         <h2 id="layer-panel-title">Layers & evidence</h2>
         <span className="badge">F2</span>
       </div>
-      <p className="panel-intro">Show or hide available map layers. Global Mars terrain provides wide-area context; high-resolution Jezero imagery shows local surface detail.</p>
+      <p className="panel-intro">Show or hide available map layers. Viking global imagery provides wide-area context; high-resolution Jezero imagery shows local surface detail.</p>
       {groups.map(group=><section className="layer-group" key={group.label} aria-label={group.label}>
       <h3>{group.label}</h3>
       <ul className="layer-list">
@@ -40,7 +41,7 @@ export default function LayerPanel({ layers, onLayerChange, availability = {}, i
               </label>
             </div>
             <p>{layer.family} · {layer.validationStatus === "validated_for_demo" ? "validated for demo" : "not validated"}</p>
-            {issues[layer.id] && <p role="status" className="notice">{issues[layer.id]}</p>}
+            {issues[layer.id] && <p role="status" className="notice">{readableText(issues[layer.id])}</p>}
             {toggleable && <label className="opacity-control">Opacity
               <input aria-label={`${layer.label} opacity`} type="range" min="0" max="1" step="0.05" value={control.opacity}
                 onChange={(event) => onLayerChange(layer.id, { opacity: Number(event.target.value) })} />
@@ -56,7 +57,7 @@ export default function LayerPanel({ layers, onLayerChange, availability = {}, i
                 <dt>Units</dt><dd>{layer.provenance.units ?? "Unknown"}</dd>
                 <dt>Coordinates</dt><dd>{layer.provenance.coordinateSystem ?? "Unknown"}</dd>
               </dl>
-              <ul>{layer.provenance.limitations.map((item) => <li key={item}>{item}</li>)}</ul>
+              <ul>{layer.provenance.limitations.map((item) => <li key={item}>{readableText(item)}</li>)}</ul>
             </div>}
           </li>;
         })}

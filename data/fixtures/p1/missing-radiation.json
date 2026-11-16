@@ -767,6 +767,8 @@
       },
       "hard_gate_status": "unassessed",
       "risk_score": null,
+      "partial_risk_score": 0.1458931957320605,
+      "risk_evidence_coverage": 85.0,
       "assessment_confidence": 31.5,
       "risk_factors": [
         {

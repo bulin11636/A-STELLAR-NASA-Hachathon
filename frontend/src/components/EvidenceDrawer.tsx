@@ -1,4 +1,5 @@
 import type { LocationEvidence } from "../services/evidenceAtPoint.ts";
+import { readableText } from '../services/domainNames.ts';
 
 function coordinate(value: number) {
   return value.toFixed(6) + "°";
@@ -24,7 +25,7 @@ export default function EvidenceDrawer({ evidence }: { evidence: LocationEvidenc
         <dt>Geology polygon</dt><dd>Unavailable in the browser; the SIM 3464 polygon overlay is not published.</dd>
         <dt>Terrain / thermal</dt><dd>Unknown. No validated traversability or calibrated thermal constraint is available.</dd>
       </dl>
-      <ul className="point-warnings">{evidence.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
+      <ul className="point-warnings">{evidence.warnings.map((warning) => <li key={warning}>{readableText(warning)}</li>)}</ul>
     </div>}
   </section>;
 }

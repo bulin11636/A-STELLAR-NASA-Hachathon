@@ -40,6 +40,7 @@ try {
   const errors = []; page.on('pageerror',(e) => errors.push(e.message));
   let blockedExternal = 0;
   await page.route('**/*',(route) => {
+    if(new URL(route.request().url()).pathname.startsWith('/api/v1/map/nasa/')) { blockedExternal++; return route.abort(); }
     if (new URL(route.request().url()).hostname === '127.0.0.1') return route.continue();
     blockedExternal++; return route.abort();
   });
@@ -54,10 +55,10 @@ try {
     return body;
   }
   async function chat(message) {
-    await page.getByRole('tab',{name:'A0 Assistant',exact:true}).click();
+    await page.getByRole('tab',{name:'Mission Planner',exact:true}).click();
     const response = page.waitForResponse((r) => r.url().endsWith('/chat') && r.request().method()==='POST');
-    await page.getByLabel('Message A0',{exact:true}).fill(message);
-    await page.getByRole('button',{name:'Send to A0',exact:true}).click();
+    await page.getByLabel('Message planning assistant',{exact:true}).fill(message);
+    await page.getByRole('button',{name:'Send message',exact:true}).click();
     const body = await (await response).json(); assert(body.message_id,JSON.stringify(body));
     if (body.result) await page.waitForURL('**route='+body.result.route_id);
     await page.getByRole('tab',{name:'Plan',exact:true}).click();
@@ -77,7 +78,7 @@ try {
   await page.getByRole('heading',{name:'Changes from previous route',exact:true}).waitFor();
   const answer = await chat('Why was this order selected?'); assert.equal(answer.result,null);
   await page.reload();
-  await page.getByRole('tab',{name:'A0 Assistant',exact:true}).click();
+  await page.getByRole('tab',{name:'Mission Planner',exact:true}).click();
   await page.locator('.chat-transcript').getByText('Reverse all waypoint visits',{exact:false}).waitFor();
   await page.getByRole('tab',{name:'Plan',exact:true}).click();
   await page.locator('.route-preview polyline').waitFor();

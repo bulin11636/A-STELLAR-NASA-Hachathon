@@ -1,5 +1,6 @@
 """Local immutable run directories, published by atomic rename after fsync."""
 import json
+import logging
 import os
 from pathlib import Path
 import re
@@ -60,6 +61,7 @@ class RouteStore:
             sync_dir(self.root)
             return record
         except Exception as exc:
+            logging.getLogger(__name__).exception('Route publication failed')
             if stage.exists():
                 shutil.rmtree(stage)
             raise ApiProblem(500,'ROUTE_STORAGE_ERROR','The validated route could not be durably stored.') from exc
@@ -118,11 +120,16 @@ class RouteStore:
             raise ValueError('Grid affine/resolution disagree')
         provenance = json.loads((folder/'provenance.json').read_text())
         if record.metadata.planning_policy is not None:
+            from app.contracts.assessment import RouteAssessment
             public=dict(assessment=record.metadata.assessment.model_dump(mode='json'),
                 planning_policy=record.metadata.planning_policy.model_dump(mode='json'),
                 legs=[leg.model_dump(mode='json') for leg in record.metadata.legs],
                 registration=record.metadata.registration.model_dump(mode='json'))
-            if any(provenance.get(key)!=value for key,value in public.items()):
+            # Older immutable audits predate the optional, derived partial-risk
+            # fields. Validate and normalize both views without rewriting bytes
+            # or bypassing any existing hashes or substantive evidence checks.
+            audit={**provenance,'assessment':RouteAssessment.model_validate(provenance.get('assessment')).model_dump(mode='json')}
+            if any(audit.get(key)!=value for key,value in public.items()):
                 raise ValueError('Public assessment and private audit disagree')
             registration=record.metadata.registration
             if registration.map_alignment=='verified':

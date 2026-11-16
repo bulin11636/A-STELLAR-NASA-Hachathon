@@ -589,7 +589,7 @@
       },
       "provenance": {
         "artifact_id": "route-11111111111111111111111111111111:provenance",
-        "sha256": "daa56c54e4fb04731cacb1bef35291c222a4b305725e75ec5b95414e380c3620"
+        "sha256": "49936a7fc4234ed7ea9d900f923021643153549fcda41b3896cdf5066bf9a7ef"
       }
     },
     "warnings": [
@@ -778,6 +778,8 @@
       },
       "hard_gate_status": "unassessed",
       "risk_score": null,
+      "partial_risk_score": 0.0,
+      "risk_evidence_coverage": 75.0,
       "assessment_confidence": 38.5,
       "risk_factors": [
         {

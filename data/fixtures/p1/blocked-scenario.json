@@ -765,6 +765,8 @@
       },
       "hard_gate_status": "blocked",
       "risk_score": null,
+      "partial_risk_score": 15.12400921637225,
+      "risk_evidence_coverage": 100.0,
       "assessment_confidence": 49.5,
       "risk_factors": [
         {

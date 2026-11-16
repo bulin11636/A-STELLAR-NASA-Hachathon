@@ -7,7 +7,7 @@ import { EVIDENCE_LAYERS, LAYER_GROUPS, canToggleLayer, stateLabel } from "../sr
 
 test("layer registry preserves explicit evidence states and provenance", () => {
   assert.equal(new Set(EVIDENCE_LAYERS.map(layer=>layer.id)).size,EVIDENCE_LAYERS.length);
-  assert.deepEqual(LAYER_GROUPS.slice(1,5).map(group=>group.label.slice(0,2)),['A1','A2','A4','A6']);
+  assert.deepEqual(LAYER_GROUPS.slice(1,5).map(group=>group.label),['Terrain & Traversability','Thermal Environment','Geology & Science','Rover Operations & Observations']);
   assert.deepEqual(EVIDENCE_LAYERS.map(layer=>layer.id),LAYER_GROUPS.flatMap(group=>[...group.ids]));
   assert.equal(EVIDENCE_LAYERS.some(layer=>layer.id==='radiation'),false);
   for (const layer of EVIDENCE_LAYERS) {
@@ -22,8 +22,8 @@ test('unavailable layers and non-spatial scenarios do not appear as map controls
   const html=renderToStaticMarkup(createElement(LayerPanel,props));
   assert(!html.includes('Radiation'));
   assert(!html.includes('Show SIM 3464 geology'));
-  assert(!html.includes('A2 — Thermal context'));
-  assert(html.includes('Show Global Mars terrain (MOLA)'));
+  assert(!html.includes('Thermal Environment'));
+  assert(html.includes('Show Global Mars imagery (Viking)'));
   const available=renderToStaticMarkup(createElement(LayerPanel,{...props,availability:{geology:true,thermal:true}}));
   assert(available.includes('Show SIM 3464 geology'));
   assert(available.includes('Show THEMIS daytime visual context'));

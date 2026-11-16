@@ -31,6 +31,7 @@ def fuse(assessment,profile,factors):
     risk=sum(f.risk_contribution or 0 for f in enriched) if gate=='pass' else None
     result=assessment.model_copy(update=dict(schema_version='2',formula_version=FORMULA_VERSION,score_scale='0..100',
         mission_profile=profile,hard_gate_status=gate,gate_reasons=reasons,risk_score=risk,
+        partial_risk_score=None,risk_evidence_coverage=None,
         assessment_confidence=min(100.0,confidence),risk_factors=enriched))
     if confidence<70:
         missing_context=[f.agent_id for f in enriched if f.status not in ('assessed','contextual','not_applicable')]

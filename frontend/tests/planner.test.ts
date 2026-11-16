@@ -44,7 +44,7 @@ test("computed POST retrieves metadata and renders research labels, source, reso
   assert.equal(current().metadata?.route_id, fixture.result.route_id);
   assert.equal(current().metadataError, null);
   const html = renderToStaticMarkup(createElement(RoutePlannerPanel, { planner: current(), mapReady: true, onViewJezero() {} }));
-  for (const value of ["COMPUTED / RESEARCH TERRAIN ONLY", "synthetic-plane", "20 × 30", "Surface Traversability and Terrain Hazard Agent", "Not estimated", "Not assessed", "Computed geometry is displayed on NASA imagery"]) assert(html.includes(value), value);
+  for (const value of ["COMPUTED / RESEARCH TERRAIN ONLY", "synthetic-plane", "20 × 30", "Terrain &amp; Traversability", "Not estimated", "Not assessed", "Computed geometry is displayed on NASA imagery"]) assert(html.includes(value), value);
   assert(!html.includes("MOCK / NOT SAFETY-VALIDATED"));
 });
 

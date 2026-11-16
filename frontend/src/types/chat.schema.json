@@ -1429,6 +1429,34 @@
           "default": null,
           "title": "Risk Score"
         },
+        "partial_risk_score": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Partial Risk Score"
+        },
+        "risk_evidence_coverage": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Risk Evidence Coverage"
+        },
         "assessment_confidence": {
           "anyOf": [
             {

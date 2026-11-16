@@ -4,8 +4,9 @@ import { buildMissionBriefing, downloadMissionBriefing } from "../services/missi
 import type { MarsCoordinate, PlanRouteResponse } from "../types/api.ts";
 import type { RouteAssessment, RouteMetadata } from "../types/routeMetadata.ts";
 
-import { percentScore } from '../services/assessmentDisplay.ts';
+import { percentScore,riskDisplay } from '../services/assessmentDisplay.ts';
 import { displayWarning } from '../services/displayWarnings.ts';
+import {domainName,readableText} from '../services/domainNames.ts';
 
 export default function MissionBriefing({ objective, onObjectiveChange, start, goal, route, assessment, metadata, layers, evidence }: {
   objective: string;
@@ -21,7 +22,7 @@ export default function MissionBriefing({ objective, onObjectiveChange, start, g
   const activeLayerCount = Object.values(layers).filter((layer) => layer.visible).length;
   const knownConditions = assessment?.risk_factors.filter((factor) => factor.status === "assessed" || factor.status === "contextual") ?? [];
   const attentionAreas = assessment?.risk_factors.filter((factor) => !["assessed", "contextual", "not_applicable"].includes(factor.status)) ?? [];
-  const limitations = [...new Set([...(assessment?.limitations ?? []), ...(route?.warnings ?? [])].map(displayWarning))];
+  const limitations = [...new Set([...(assessment?.limitations ?? []), ...(route?.warnings ?? [])].map(displayWarning).map(readableText))];
   const exportBriefing = () => downloadMissionBriefing(buildMissionBriefing({
     generatedAt: new Date().toISOString(), objective, start, goal, route, assessment, activeLayers: layers, evidenceAtPoint: evidence,
   }));
@@ -38,17 +39,19 @@ export default function MissionBriefing({ objective, onObjectiveChange, start, g
       <dt>Distance</dt><dd>{route?.metrics.distance_m == null ? "Not assessed" : `${route.metrics.distance_m.toFixed(1)} m`}</dd>
       <dt>Estimated time</dt><dd>{route?.metrics.estimated_time_min == null ? "Not estimated" : `${route.metrics.estimated_time_min.toFixed(1)} min`}</dd>
       <dt>Mission gate</dt><dd>{assessment?.hard_gate_status ?? "Unassessed"}</dd>
-      <dt>Risk / confidence</dt><dd>{assessment ? `${percentScore(assessment.risk_score)} / ${percentScore(assessment.assessment_confidence)}` : "Not assessed"}</dd>
+      <dt>Risk score</dt><dd>{riskDisplay(assessment)}</dd>
+      {assessment?.risk_evidence_coverage!=null && <><dt>Risk evidence coverage</dt><dd>{percentScore(assessment.risk_evidence_coverage)} of profile risk weight</dd></>}
+      <dt>Assessment confidence</dt><dd>{percentScore(assessment?.assessment_confidence)}</dd>
       <dt>Visible layers</dt><dd>{activeLayerCount}</dd>
       <dt>Evidence point</dt><dd>{evidence ? "Selected; fixture-scoped context only" : "Not selected"}</dd>
     </dl>
     <section className="briefing-section" aria-labelledby="known-conditions-title"><h3 id="known-conditions-title">Known conditions</h3>
-      {knownConditions.length ? <ul>{knownConditions.map((factor) => <li key={factor.agent_id}><strong>{factor.public_name || factor.agent_id}</strong>: {factor.message}</li>)}</ul>
+      {knownConditions.length ? <ul>{knownConditions.map((factor) => <li key={factor.agent_id}><strong>{domainName(factor.agent_id,factor.public_name)}</strong>: {readableText(factor.message)}</li>)}</ul>
         : <p>No route conditions have been assessed or supplied as contextual evidence.</p>}
     </section>
     <section className="briefing-section" aria-labelledby="attention-areas-title"><h3 id="attention-areas-title">Attention areas</h3>
-      {assessment?.hard_gate_status && assessment.hard_gate_status !== "pass" && <p className="notice">Mission gate: {assessment.hard_gate_status}. Normal risk comparison is not available.</p>}
-      {attentionAreas.length ? <ul>{attentionAreas.map((factor) => <li key={factor.agent_id}><strong>{factor.public_name || factor.agent_id}</strong>: {factor.message} ({factor.status})</li>)}</ul>
+      {assessment?.hard_gate_status && assessment.hard_gate_status !== "pass" && <p className="notice">Mission gate: {assessment.hard_gate_status}. {assessment.partial_risk_score!=null ? 'The partial score covers known factors only; inspect the missing or failed analyses below.' : 'Risk is unavailable because applicable factors have not been assessed.'}</p>}
+      {attentionAreas.length ? <ul>{attentionAreas.map((factor) => <li key={factor.agent_id}><strong>{domainName(factor.agent_id,factor.public_name)}</strong>: {readableText(factor.message)} ({factor.status})</li>)}</ul>
         : <p>No additional unassessed or incompatible route factors were reported.</p>}
     </section>
     <section className="briefing-section" aria-labelledby="limitations-title"><h3 id="limitations-title">Limitations</h3>
@@ -56,7 +59,7 @@ export default function MissionBriefing({ objective, onObjectiveChange, start, g
         : <p>No additional limitations were supplied by the route record.</p>}
     </section>
     <details className="briefing-technical"><summary>Technical details</summary>
-      {assessment?.time && <><h3>Walking time assumptions</h3><ul>{assessment.time.assumptions.map((text,i)=><li key={i}>{text}</li>)}</ul></>}
+      {assessment?.time && <><h3>Walking time assumptions</h3><ul>{assessment.time.assumptions.map((text,i)=><li key={i}>{readableText(text)}</li>)}</ul></>}
       {metadata && <dl className="briefing-summary">
         <dt>Mission profile</dt><dd>{metadata.planning_policy ? `${metadata.planning_policy.mission_profile_id} (${metadata.planning_policy.mission_profile_version})` : "Legacy / not selected"}</dd>
         <dt>Actual cell size</dt><dd>{metadata.planning_policy?.actual_cell_size_m.join(" × ") ?? metadata.grid.planning_resolution_m.join(" × ")} m</dd>

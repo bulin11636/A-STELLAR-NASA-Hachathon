@@ -5,6 +5,7 @@ import { GLOBAL_LAYER_ID, JEZERO_LAYER_ID, LAYER_ID } from "../src/map/marsWmts.
 
 test("the global map and Jezero imagery demo-overlay copy stay explicit", () => {
   assert.equal(LAYER_ID, GLOBAL_LAYER_ID);
+  assert.equal(GLOBAL_LAYER_ID,'Mars_Viking_MDIM21_ClrMosaic_global_232m');
   assert.equal(JEZERO_LAYER_ID, "NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018");
   const map = readFileSync(new URL("../src/components/MarsMap.tsx", import.meta.url), "utf8");
   assert.match(map, /loadMarsWmts\(controller\.signal, JEZERO_LAYER_ID\)/);

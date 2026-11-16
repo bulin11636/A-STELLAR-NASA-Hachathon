@@ -13,6 +13,7 @@ import {Style,Fill,Stroke,Text} from 'ol/style.js';
 import type BaseLayer from 'ol/layer/Base.js';
 import { createCoverageLayer, planningBounds } from '../map/planningCoverage.ts';
 import { getMapLayers } from '../services/mapLayers.ts';
+import { riskDisplay,percentScore } from '../services/assessmentDisplay.ts';
 import TileState from "ol/TileState.js";
 import { containsCoordinate, intersects } from "ol/extent.js";
 import { CAPABILITIES_URL, CATALOG_URL, JEZERO_LAYER_ID, LAYER_ID, loadMarsWmts } from "../map/marsWmts";
@@ -387,7 +388,7 @@ export default function MarsMap() {
         {planningRegion?.planning && <p className="coverage-legend">Cyan outline: supported DEM boundary. Dashed amber outline: initial example window. Regional stops may lie outside the example window.</p>}
         <div className="workspace-tabs" role="tablist" aria-label="Mission workspace">
           {(["plan", "route", "briefing", "evidence", "a0"] as const).map((tab) => <button type="button" key={tab} id={`${tab}-tab`} role="tab"
-            aria-selected={sidebarTab === tab} aria-controls={`${tab}-panel`} onClick={() => setSidebarTab(tab)}>{tab === "a0" ? "A0 Assistant" : tab[0].toUpperCase() + tab.slice(1)}</button>)}
+            aria-selected={sidebarTab === tab} aria-controls={`${tab}-panel`} onClick={() => setSidebarTab(tab)}>{tab === "a0" ? "Mission Planner" : tab[0].toUpperCase() + tab.slice(1)}</button>)}
         </div>
         {sidebarTab === "plan" && <section id="plan-panel" role="tabpanel" aria-labelledby="plan-tab">
         <RoutePlannerPanel planner={planner} mapReady={ready} planningRegion={planningRegion} planningError={planningError} showAssistant={false} onViewJezero={() => {
@@ -400,6 +401,8 @@ export default function MarsMap() {
             <dl className="route-metrics">
               <dt>Distance</dt><dd>{planner.result.metrics.distance_m?.toFixed(1) ?? "Not assessed"} m</dd>
               <dt>Estimated time</dt><dd>{planner.result.metrics.estimated_time_min?.toFixed(1) ?? "Not estimated"} min</dd>
+              <dt>Risk score</dt><dd>{riskDisplay(planner.metadata?.assessment)}</dd>
+              <dt>Assessment confidence</dt><dd>{percentScore(planner.metadata?.assessment?.assessment_confidence)}</dd>
               <dt>Map display</dt><dd>NASA imagery demo overlay</dd>
               <dt>Terrain resolution</dt><dd>{planner.metadata?.grid.planning_resolution_m.join(" × ") ?? "Not available"} m</dd>
             </dl>
@@ -445,7 +448,7 @@ export default function MarsMap() {
           <dt>Coordinate system</dt><dd>Mars 2000 · NASA service label <code>urn:ogc:def:crs:EPSG::104905</code> (ESRI:104905 definition)</dd>
           <dt>Native units and axes</dt><dd>Degrees · X longitude, east positive (−180° to +180°); Y native latitude (−90° to +90°).</dd>
           <dt>Latitude convention</dt><dd>WMTS planetographic latitude is converted to/from the API's Mars 2000 planetocentric latitude for the M20 DEM route display.</dd>
-          <dt>Basemap</dt><dd>NASA MGS MOLA global color hillshade <code>{LAYER_ID}</code></dd>
+          <dt>Basemap</dt><dd>NASA Viking VIS global visible-light mosaic <code>{LAYER_ID}</code></dd>
           <dt>High-resolution overlay</dt><dd>NASA Jezero HiRISE / CTX / HRSC mosaic <code>{JEZERO_LAYER_ID}</code></dd>
           <dt>Route overlay</dt><dd>Enabled for the demo using the documented M20 DEM-to-WMTS coordinate conversion. It is visual mission context, not an official navigation product.</dd>
         </dl>
@@ -457,7 +460,7 @@ export default function MarsMap() {
         </div>
         <button type="button" onClick={() => setAttempt((value) => value + 1)}>Reload NASA map</button>
         <p className="sources"><a href={CAPABILITIES_URL} target="_blank" rel="noreferrer">WMTS metadata ↗</a><a href={CATALOG_URL} target="_blank" rel="noreferrer">NASA source catalog ↗</a></p>
-        <p className="credit">NASA / JPL-Caltech · Mars Global Surveyor / MOLA. Colorized topography, not natural-color photography.</p>
+        <p className="credit">NASA / USGS · Viking VIS global imagery. Local Jezero overlay: NASA / JPL-Caltech / ESA · HiRISE / CTX / HRSC.</p>
         </>}
       </aside>
     </section>

@@ -54,6 +54,8 @@ export function buildMissionBriefing(input: MissionBriefingInput) {
       formula_version: input.assessment.formula_version, gate_reasons: input.assessment.gate_reasons, time: input.assessment.time,
       hard_gate_status: input.assessment.hard_gate_status,
       risk_score: input.assessment.risk_score,
+      partial_risk_score: input.assessment.partial_risk_score ?? null,
+      risk_evidence_coverage: input.assessment.risk_evidence_coverage ?? null,
       assessment_confidence: input.assessment.assessment_confidence,
       mission_profile: input.assessment.mission_profile,
       factors: input.assessment.risk_factors.map((factor) => ({

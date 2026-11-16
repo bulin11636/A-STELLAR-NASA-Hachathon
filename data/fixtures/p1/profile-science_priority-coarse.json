@@ -620,6 +620,8 @@
       },
       "hard_gate_status": "pass",
       "risk_score": 0.2895297079206773,
+      "partial_risk_score": 0.2895297079206773,
+      "risk_evidence_coverage": 100.0,
       "assessment_confidence": 33.5,
       "risk_factors": [
         {

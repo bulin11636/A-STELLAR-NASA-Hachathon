@@ -172,6 +172,8 @@ class RouteAssessment(ContractModel):
     mission_profile: MissionProfile | None = None
     hard_gate_status: Literal['pass','blocked','unassessed'] = 'unassessed'
     risk_score: PercentScore | None = None
+    partial_risk_score: PercentScore | None = None
+    risk_evidence_coverage: PercentScore | None = None
     assessment_confidence: PercentScore | None = None
     risk_factors: list[RiskFactor] = Field(default_factory=list)
     limitations: list[str] = Field(default_factory=list)
@@ -213,4 +215,16 @@ class RouteAssessment(ContractModel):
             if self.assessment_confidence is None or not math.isclose(self.assessment_confidence,expected_confidence,abs_tol=1e-8): raise ValueError('Invalid confidence formula')
             if (expected_risk is None)!=(self.risk_score is None) or expected_risk is not None and not math.isclose(self.risk_score,expected_risk,abs_tol=1e-8):
                 raise ValueError('Invalid risk formula')
+            # Available-factor score is separate from the complete, gated risk.
+            # Missing factors are omitted from numerator AND denominator, never
+            # treated as zero risk. Derive it for older stored routes as well.
+            weight=sum(p.risk_weights[f.agent_id] for f in self.risk_factors if f.status=='assessed' and f.risk_score is not None)
+            partial=min(100.0,max(0.0,sum(f.risk_contribution or 0 for f in self.risk_factors)/weight)) if weight else None
+            coverage=min(100.0,100*weight)
+            if self.risk_evidence_coverage is not None and not math.isclose(self.risk_evidence_coverage,coverage,abs_tol=1e-8):
+                raise ValueError('Invalid available risk coverage')
+            if self.partial_risk_score is not None and (partial is None or not math.isclose(self.partial_risk_score,partial,abs_tol=1e-8)):
+                raise ValueError('Invalid available-factor risk formula')
+            object.__setattr__(self,'partial_risk_score',partial)
+            object.__setattr__(self,'risk_evidence_coverage',coverage)
         return self

@@ -5,7 +5,8 @@ import WMTS, { optionsFromCapabilities } from "ol/source/WMTS.js";
 import WMTSTileGrid from "ol/tilegrid/WMTS.js";
 import type { Extent } from "ol/extent.js";
 
-export const GLOBAL_LAYER_ID = "Mars_MGS_MOLA_ClrShade_merge_global_463m";
+// Mars Trek's equirectangular default in jpl/config/basemapList.json.
+export const GLOBAL_LAYER_ID = "Mars_Viking_MDIM21_ClrMosaic_global_232m";
 // This layer is visual context and the target for the independent registration
 // workflow. Selecting it is not evidence that it aligns to the local DEM.
 export const JEZERO_LAYER_ID = "NES_JEZ_MID_Visible_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018";
@@ -38,7 +39,7 @@ export function capabilitiesUrl(layerId: string): string {
 }
 
 export async function loadMarsWmts(signal: AbortSignal, layerId = LAYER_ID) {
-  const response = await fetch(capabilitiesUrl(layerId), {
+  const response = await fetch(`/api/v1/map/nasa/${layerId}/WMTSCapabilities.xml`, {
     signal: AbortSignal.any([signal, AbortSignal.timeout(20_000)]),
   });
   if (!response.ok) throw new Error(`NASA metadata request failed (HTTP ${response.status}).`);
@@ -129,8 +130,16 @@ export function createMarsWmts(xml: string, layerId = LAYER_ID) {
     tileSizes: matrices.map((matrix) => matrix.tileSize),
   });
   const source = new WMTS({
-    ...options, projection, tileGrid, wrapX: false, crossOrigin: "anonymous",
-    attributions: 'NASA / JPL-Caltech · Mars Global Surveyor / MOLA · <a href="https://trek.nasa.gov/tiles/apidoc/trekAPI.html?body=mars" target="_blank" rel="noreferrer">Mars Trek</a>',
+    ...options, urls:options.urls.map(url=>{
+      const prefix=`https://trek.nasa.gov/tiles/Mars/EQ/${layerId}/1.0.0/`;
+      if(!url.startsWith(prefix)) throw new Error('Unexpected NASA imagery endpoint.');
+      return `/api/v1/map/nasa/${layerId}/${url.slice(prefix.length).replace(/^\/+/, '')}`;
+    }),projection, tileGrid, wrapX: false, crossOrigin: "anonymous",
+    attributions: (layerId===GLOBAL_LAYER_ID ? 'NASA / USGS · Viking VIS global imagery' : 'NASA / JPL-Caltech / ESA · Jezero HiRISE / CTX / HRSC imagery')+' · <a href="https://trek.nasa.gov/tiles/apidoc/trekAPI.html?body=mars" target="_blank" rel="noreferrer">Mars Trek</a>',
   });
-  return { source, projection, extent, matrixSetId, resolutions: tileGrid.getResolutions() };
+  // Keep the view zoomable at walking scale while the lower-resolution global
+  // tiles overzoom and the separate Jezero mosaic supplies local image detail.
+  const resolutions=[...tileGrid.getResolutions()];
+  while (resolutions.length<19) resolutions.push(resolutions[resolutions.length-1]/2);
+  return { source, projection, extent, matrixSetId, resolutions };
 }
