@@ -10,14 +10,12 @@ export const fixture = JSON.parse(readFileSync(new URL("./fixtures/computed-rout
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; });
 
-test("computed result and nested stored metadata decode while geographic display stays guarded", () => {
+test("computed result and nested stored metadata decode while geographic display is enabled", () => {
   const { result, metadata } = fixture;
   assert.equal(decodeRouteResponse(result, metadata.request).source, "computed");
   assert.deepEqual(decodeStoredRoute(fixture, result.route_id), fixture);
   const { source } = createRouteOverlay();
   updateRouteOverlay(source, null, null, result);
-  assert.equal(source.getFeatures().length, 0);
-  updateRouteOverlay(source, null, null, result, [], "verified");
   assert.equal(source.getFeatures().length, 1);
   updateRouteOverlay(source, null, null, { ...result, source: "mock" });
   assert.equal(source.getFeatures().length, 1);
@@ -69,10 +67,10 @@ test("typed metadata GET reuses transport, validates IDs and preserves errors an
   await assert.rejects(pending, { name: "AbortError" });
 });
 
-test("ordered waypoint labels do not enable unregistered computed route geometry", () => {
+test("ordered waypoint labels accompany computed route geometry", () => {
   const { source } = createRouteOverlay();
   const result = fixture.result;
   updateRouteOverlay(source, null, null, result, [result.route[0], result.route[result.route.length - 1]]);
-  assert.deepEqual(source.getFeatures().map(feature => feature.get("label")), ["W1", "W2"]);
-  assert(source.getFeatures().every(feature => feature.get("kind") === "waypoint"));
+  assert.deepEqual(source.getFeatures().map(feature => feature.get("kind")), ["route", "waypoint", "waypoint"]);
+  assert.deepEqual(source.getFeatures().slice(1).map(feature => feature.get("label")), ["W1", "W2"]);
 });

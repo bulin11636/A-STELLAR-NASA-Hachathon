@@ -64,6 +64,6 @@ export default function RoutePreview({ result, metadata }: { result: PlanRouteRe
       title={`${p.longitude.toFixed(7)}, ${p.latitude.toFixed(7)}`}
       onClick={() => { const [x,y] = xy(p); const span = nativeSpacing * 8; setView({ x: x-span/2, y: y-span/2, width: span, height: span }); setFocused(i); }}>
       Focus {stopLabel(i)}</button>)}</div>
-    <p>Computed route geometry on DEM axes. Terrain costs are not drawn. NASA basemap registration remains unverified.</p>
+    <p>Computed route geometry on DEM axes. Terrain costs are not drawn; use the NASA map for visual mission context.</p>
   </figure>;
 }

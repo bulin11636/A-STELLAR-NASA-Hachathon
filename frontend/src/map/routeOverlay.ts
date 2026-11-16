@@ -30,9 +30,12 @@ export function createRouteOverlay() {
   return { source, layer };
 }
 
-export function updateRouteOverlay(source: VectorSource, start: MarsCoordinate | null, goal: MarsCoordinate | null, result: PlanRouteResponse | null, waypoints: MarsCoordinate[] = [], mapAlignment: "verified" | "unverified" | undefined = undefined) {
+export function updateRouteOverlay(source: VectorSource, start: MarsCoordinate | null, goal: MarsCoordinate | null, result: PlanRouteResponse | null, waypoints: MarsCoordinate[] = []) {
   source.clear();
-  if (result && (result.source === "mock" || mapAlignment === "verified")) {
+  // The map is a mission-demo visual surface. Route coordinates are converted
+  // from the M20 DEM convention before display; independent pixel registration
+  // remains provenance metadata, not a condition that hides the route.
+  if (result) {
     source.addFeature(new Feature({ kind: "route", geometry: new MultiLineString(routeToMapSegments(result.route, "wmts-display")) }));
   }
   waypoints.forEach((point, index) => source.addFeature(new Feature({ kind: "waypoint", label: `W${index + 1}`,

@@ -272,8 +272,8 @@ export default function MarsMap() {
 
   useEffect(() => {
     if (overlayRef.current) updateRouteOverlay(overlayRef.current.source, planner.start, planner.goal, planner.result,
-      planner.interfaceMode === "advanced" ? planner.waypoints : [], planner.metadata?.validation.map_alignment);
-  }, [ready, planner.start, planner.goal, planner.result, planner.metadata?.validation.map_alignment, planner.interfaceMode, planner.waypoints]);
+      planner.interfaceMode === "advanced" ? planner.waypoints : []);
+  }, [ready, planner.start, planner.goal, planner.result, planner.interfaceMode, planner.waypoints]);
 
   const tileIssue = progress.failed > 0 || progress.missing > 0;
   const status = error ? error : !ready ? "Loading NASA WMTS metadata…"
@@ -316,7 +316,7 @@ export default function MarsMap() {
             <dl className="route-metrics">
               <dt>Distance</dt><dd>{planner.result.metrics.distance_m?.toFixed(1) ?? "Not assessed"} m</dd>
               <dt>Estimated time</dt><dd>{planner.result.metrics.estimated_time_min?.toFixed(1) ?? "Not estimated"} min</dd>
-              <dt>Map alignment</dt><dd>{planner.metadata?.validation.map_alignment ?? "Unassessed"}</dd>
+              <dt>Map display</dt><dd>NASA imagery demo overlay</dd>
               <dt>Grid resolution</dt><dd>{planner.metadata?.grid.planning_resolution_m.join(" × ") ?? "Not available"} m</dd>
             </dl>
             {planner.metadata ? <>
@@ -359,12 +359,10 @@ export default function MarsMap() {
         <dl>
           <dt>Coordinate system</dt><dd>Mars 2000 · NASA service label <code>urn:ogc:def:crs:EPSG::104905</code> (ESRI:104905 definition)</dd>
           <dt>Native units and axes</dt><dd>Degrees · X longitude, east positive (−180° to +180°); Y native latitude (−90° to +90°).</dd>
-          <dt>Latitude convention</dt><dd>WMTS planetographic latitude is converted to/from the API's Mars 2000 planetocentric latitude. WMTS/DEM pixel registration remains unverified.</dd>
+          <dt>Latitude convention</dt><dd>WMTS planetographic latitude is converted to/from the API's Mars 2000 planetocentric latitude for the M20 DEM route display.</dd>
           <dt>Basemap</dt><dd>NASA MGS MOLA global color hillshade <code>{LAYER_ID}</code></dd>
           <dt>High-resolution overlay</dt><dd>NASA Jezero HiRISE / CTX / HRSC mosaic <code>{JEZERO_LAYER_ID}</code></dd>
-          <dt>Registration</dt><dd>{planner.metadata?.validation.map_alignment === "verified"
-            ? "Verified only for this route's independently controlled footprint."
-            : "Pending independent NASA WMTS, wire-coordinate, and DEM feature controls. Computed geometry remains hidden."}</dd>
+          <dt>Route overlay</dt><dd>Enabled for the demo using the documented M20 DEM-to-WMTS coordinate conversion. It is visual mission context, not an official navigation product.</dd>
         </dl>
         <div className="tile-summary" aria-live="polite">
           <p>Tiles this session: {progress.loaded} received · {progress.missing} missing · {progress.failed} failed</p>

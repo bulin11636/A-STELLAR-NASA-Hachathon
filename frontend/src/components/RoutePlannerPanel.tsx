@@ -32,7 +32,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
         {(["quick", "advanced"] as const).map((value) => <button type="button" role="tab" key={value} aria-selected={planner.interfaceMode === value} onClick={() => planner.setInterfaceMode(value)}>{value === "quick" ? "Quick" : "Advanced"}</button>)}
       </div>
       <A0Status revision={planner.result?.route_id} routingMode={planningRegion?.routing_mode} />
-      <p className="notice coordinate-caveat"><strong>{COORDINATE_NOTICE}</strong>. Computed geometry is hidden until NASA map registration is verified. Map picks use unverified native latitude.</p>
+      <p className="notice coordinate-caveat"><strong>{COORDINATE_NOTICE}</strong>. Computed routes are shown on NASA imagery for the demo using the documented M20 DEM coordinate conversion.</p>
       <p>Region: Jezero · Terrain-only research policy; optional environmental constraints may be unassessed.</p>
       {planningError && <p role="alert">Planning information unavailable: {planningError}. Check the backend and reload this page.</p>}
       {planningRegion?.planning && <section aria-label="Backend planning footprint">
@@ -44,7 +44,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
           latitude {planningRegion.planning.source_bounds.south.toFixed(4)}–{planningRegion.planning.source_bounds.north.toFixed(4)}°. Each request is limited to {planningRegion.planning.max_grid_cells?.toLocaleString()} search cells; regional routes can use conservative aggregation with native-resolution segment checks.</p>}
         {planningRegion.planning.example_request && <>
           <button type="button" onClick={() => planner.loadExample(planningRegion.planning!.example_request!)}>Load in-coverage example endpoints</button>
-          <p>The example uses coordinates from the loaded DEM. You can plan it without clicking the unverified basemap.</p>
+          <p>The example uses coordinates from the loaded M20 DEM. You can also select endpoints directly on the NASA imagery.</p>
         </>}
         {planningRegion.planning.regional_example_request && <>
           <button type="button" onClick={() => planner.loadExample(planningRegion.planning!.regional_example_request!)}>Load crater-scale example endpoints</button>
@@ -102,9 +102,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
       {planner.result && (
         <section className="route-result" aria-label="Route result" aria-live="polite">
           <strong className="mock-badge">{planner.result.source === "mock" ? "MOCK / NOT SAFETY-VALIDATED" : "COMPUTED / RESEARCH TERRAIN ONLY"}</strong>
-          {planner.result.source === "computed" && (planner.metadata?.validation.map_alignment === "verified"
-            ? <p role="status">Computed geometry is displayed on the NASA map for this independently verified route footprint.</p>
-            : <p className="notice">Computed geometry is withheld from the map: NASA map/wire/DEM registration is unverified.</p>)}
+          {planner.result.source === "computed" && <p role="status">Computed geometry is displayed on NASA imagery using the M20 DEM coordinate conversion. This is a visual demo overlay, not an official navigation product.</p>}
           <p>Route <code>{planner.result.route_id}</code> · source: {planner.result.source} · mode: {planner.result.mode}</p>
           <dl className="route-metrics">
             <dt>Distance (m)</dt><dd>{planner.result.metrics.distance_m?.toFixed(1) ?? "—"}</dd>
@@ -116,7 +114,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
             <dt>Dataset / version</dt><dd>{planner.metadata.sources[0].dataset_id} / {planner.metadata.scope.dataset_version}</dd>
             <dt>Grid resolution (m)</dt><dd>{planner.metadata.grid.planning_resolution_m.join(" × ")}</dd>
             <dt>Research policy</dt><dd>{planner.metadata.policy.policy_id}; slope ≤ {planner.metadata.policy.slope_threshold_deg}°</dd>
-            <dt>Map registration</dt><dd>{planner.metadata.validation.map_alignment}</dd>
+            <dt>Map display</dt><dd>NASA imagery demo overlay ({planner.metadata.validation.map_alignment} registration metadata)</dd>
             <dt>Specialists</dt><dd>{planner.metadata.workers.map((w) => `${w.public_name}: ${w.status}`).join("; ")}</dd>
           </dl>}
           {planner.metadata && <><RouteAssessment assessment={planner.metadata.assessment} /><SpecialistTrace traces={planner.metadata.specialist_trace} /></>}

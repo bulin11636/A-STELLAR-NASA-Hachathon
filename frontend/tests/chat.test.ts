@@ -89,10 +89,10 @@ test("late chat revision after changing route is cancelled and never applied", a
   assert.equal(revisions, 0);
 });
 
-test("DEM preview shows computed geometry independently of NASA registration", () => {
+test("DEM preview explains its relationship to the NASA map", () => {
   const html = renderToStaticMarkup(createElement(RoutePreview, { result: stored.result, metadata: stored.metadata }));
   assert(html.includes("<polyline"));
-  assert(html.includes("NASA basemap registration remains unverified"));
+  assert(html.includes("use the NASA map for visual mission context"));
 });
 
 test("route response must preserve required waypoint order", () => {

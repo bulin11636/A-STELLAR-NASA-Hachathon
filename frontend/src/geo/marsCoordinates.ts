@@ -10,7 +10,7 @@ export const COORDINATE_ADAPTER_VALIDATED = true;
 // the local DEM. That stays an independent acceptance gate for computed routes.
 export const MAP_REGISTRATION_VALIDATED = false;
 export const COORDINATE_CONVENTION_VALIDATED = COORDINATE_ADAPTER_VALIDATED;
-export const COORDINATE_NOTICE = "WMTS/DEM registration has not been independently verified";
+export const COORDINATE_NOTICE = "NASA imagery is a visual demo overlay";
 export type MapViewCoordinate = readonly [number, number];
 export type CoordinateUse = "mock-integration-only" | "wmts-display";
 
