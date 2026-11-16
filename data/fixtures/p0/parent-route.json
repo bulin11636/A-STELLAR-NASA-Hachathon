@@ -349,7 +349,7 @@
       "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
       "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
       "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
-      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "NASA imagery displays the M20 DEM route as a visual demo overlay.",
       "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified.",
       "Comparable risk requires applicable factors: A3."
     ]
@@ -462,7 +462,7 @@
       "objective_cost": 2262.741699796954,
       "objective_units": "m",
       "expanded_nodes": 81,
-      "elapsed_ms": 0.674999988405034,
+      "elapsed_ms": 0.0,
       "distance_convention": "Native projected planar polyline including endpoint connectors"
     },
     "validation": {
@@ -573,22 +573,22 @@
     "artifacts": {
       "grid": {
         "artifact_id": "route-00000000000000000000000000000000:grid",
-        "sha256": "60445b19bcea4ef25b721c58b2da985c671366f85ae25a8bdb4c9260b680f3ca"
+        "sha256": "669e2a77a5dd0cf4e2e2152924496d9d23188dac675ac254b970f18d95e5dc54"
       },
       "validation": {
         "artifact_id": "route-00000000000000000000000000000000:validation",
-        "sha256": "c8a4f3777423e813d0d1868e9959231d063a627787879cbb102c47cb3692e5e8"
+        "sha256": "c848d4df599f074ae982cee72d2a76ea306f7074908c722dddf5ed09f7e32381"
       },
       "provenance": {
         "artifact_id": "route-00000000000000000000000000000000:provenance",
-        "sha256": "503445869cdf2f82d8c0a430b3204263f095ef80bbffcbc87a9d95a6bbdb95bb"
+        "sha256": "fe72eb8f2e17581b2f49374fa47bd11aa4b8dc3d4dd03e6d8602284411bacce5"
       }
     },
     "warnings": [
       "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
       "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
       "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
-      "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+      "NASA imagery displays the M20 DEM route as a visual demo overlay.",
       "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified.",
       "Comparable risk requires applicable factors: A3."
     ],
@@ -604,7 +604,7 @@
         "Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.",
         "Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.",
         "Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.",
-        "NASA WMTS/map registration is unverified; computed map display must remain disabled.",
+        "NASA imagery displays the M20 DEM route as a visual demo overlay.",
         "Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified.",
         "Comparable risk requires applicable factors: A3."
       ],
@@ -850,8 +850,8 @@
       "controls_sha256": null,
       "capabilities_sha256": null,
       "measurement_sha256": null,
-      "wmts_layer": null,
-      "wmts_crs": null,
+      "wmts_layer": "Mars_MGS_MOLA_ClrShade_merge_global_463m",
+      "wmts_crs": "urn:ogc:def:crs:EPSG::104905",
       "synthetic": false,
       "scope": [],
       "residuals": [],

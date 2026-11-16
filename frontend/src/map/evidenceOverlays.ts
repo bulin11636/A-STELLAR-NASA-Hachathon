@@ -23,6 +23,8 @@ const traverseStyle = new Style({ stroke: new Stroke({ color: "#dcb0ff", width: 
 export function createEvidenceOverlays() {
   const scienceSource = new VectorSource({ wrapX: false });
   const traverseSource = new VectorSource({ wrapX: false });
+  const stopSource = new VectorSource({ wrapX: false });
+  const stopLayer = new VectorLayer({ source: stopSource, style: stopStyle, zIndex: 7 });
   const scienceLayer = new VectorLayer({ source: scienceSource, style: (feature) => feature.get("kind") === "science" ? scienceStyle : stopStyle });
   const traverseLayer = new VectorLayer({ source: traverseSource, style: traverseStyle });
   scienceLayer.setZIndex(7);
@@ -32,7 +34,7 @@ export function createEvidenceOverlays() {
     scienceSource.addFeature(new Feature({ kind: "science", evidence: item, geometry: new Point(apiCoordinateToMapView(item, "wmts-display")) }));
   }
   for (const item of JEZERO_EVIDENCE_DEMO.roverStops) {
-    scienceSource.addFeature(new Feature({ kind: "rover_stop", evidence: item, geometry: new Point(apiCoordinateToMapView(item, "wmts-display")) }));
+    stopSource.addFeature(new Feature({ kind: "rover_stop", evidence: item, geometry: new Point(apiCoordinateToMapView(item, "wmts-display")) }));
   }
   for (const item of JEZERO_EVIDENCE_DEMO.traverse) {
     traverseSource.addFeature(new Feature({
@@ -40,5 +42,5 @@ export function createEvidenceOverlays() {
       geometry: new LineString(item.points.map((point) => apiCoordinateToMapView(point, "wmts-display"))),
     }));
   }
-  return { scienceLayer, traverseLayer };
+  return { scienceLayer, traverseLayer, stopLayer };
 }

@@ -275,8 +275,12 @@ def grid_for_request(profile_path, base, request, dataset_root=None, regional_re
     tr = Affine(*base.inventory['source_transform'])
     height, width = base.inventory['source_shape']
     cells = [transform_point(~tr,base.xy(point)) for point in points]
-    if any(not (math.isfinite(c) and math.isfinite(r) and 1 <= c < width-1 and 1 <= r < height-1) for c,r in cells):
-        raise ApiProblem(400, 'OUTSIDE_PLANNING_COVERAGE', 'A route stop is outside the supported DEM source footprint.')
+    for index,(c,r) in enumerate(cells):
+        if not (math.isfinite(c) and math.isfinite(r) and 1 <= c < width-1 and 1 <= r < height-1):
+            label='Start' if index==0 else 'Goal' if index==len(cells)-1 else f'Waypoint {index}'
+            raise ApiProblem(400, 'OUTSIDE_PLANNING_COVERAGE', f'{label} is outside the supported DEM source footprint. The full DEM boundary applies, not the initial example window.',
+                details=[{'hard_gate_status':'blocked','risk_score':'null','reason':'OUTSIDE_PLANNING_COVERAGE',
+                    'stop':label,'longitude':str(points[index].longitude),'latitude':str(points[index].latitude)}])
     margin = base.profile.window_margin_cells
     left = max(1, math.floor(min(c for c,r in cells))-margin)
     top = max(1, math.floor(min(r for c,r in cells))-margin)

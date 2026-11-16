@@ -130,3 +130,19 @@ def test_citation_schema_prevents_unavailable_evidence_choices(tmp_path,availabl
     result,_=provider.decide({'evidence':[dict(id='A1',status='ready' if available else 'unavailable',kind='observed'),
         dict(id='A6',status='failed',kind='observed')]},'Explain')
     assert result.citations==(['A1'] if available else [])
+
+
+def test_local_request_limit_is_distinct_from_cost_and_recovers_without_clearing_history(tmp_path):
+    settings=AgentSettings(enabled=True,api_key='test',max_calls=1,budget_usd=2)
+    provider=MeteredProvider(settings,tmp_path)
+    provider._reserve()
+    with pytest.raises(ApiProblem) as error: provider._reserve()
+    assert error.value.code=='A0_BUDGET_EXHAUSTED'
+    assert 'request limit' in error.value.message and '1/1' in error.value.message
+    assert error.value.retry_safe
+    settings.max_calls=200
+    provider._reserve()
+    assert provider.totals()['attempts']==2
+    settings.budget_usd=.01
+    with pytest.raises(ApiProblem) as error: provider._reserve()
+    assert 'cost budget' in error.value.message

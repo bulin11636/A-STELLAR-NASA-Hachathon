@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { COORDINATE_SYSTEM, type MarsCoordinate, type PlanRouteRequest, type PlanRouteResponse, type RouteMode, type WalkingMission } from "../types/api.ts";
+import { COORDINATE_SYSTEM, type MarsCoordinate, type PlanRouteRequest, type PlanRouteResponse, type RouteMode, type WalkingMission, type PlanningRegion } from "../types/api.ts";
+import { coverageError } from '../map/planningCoverage.ts';
 import type { RequestAttemptStatus } from "../types/attempts.ts";
 import { ApiError } from "./apiClient.ts";
 import { validateApiCoordinate } from "../geo/marsCoordinates.ts";
@@ -49,7 +50,7 @@ function savedWork(): Work | null {
   } catch { return null; }
 }
 
-export function useRoutePlanner() {
+export function useRoutePlanner(region: PlanningRegion | null = null) {
   const [start, setStart] = useState<MarsCoordinate | null>(null);
   const [goal, setGoal] = useState<MarsCoordinate | null>(null);
   const [pickMode, setPickMode] = useState<PickMode>("inspect");
@@ -179,7 +180,7 @@ export function useRoutePlanner() {
   }
   const blockedByPending = sameDraft(pending);
   let inputError: string | null = null;
-  if (start && goal) { try { validateRouteRequest(currentRequest()); } catch (reason) { inputError = reason instanceof Error ? reason.message : "Invalid inputs."; } }
+  if (start && goal) { try { validateRouteRequest(currentRequest()); inputError=coverageError(region,currentRequest()); } catch (reason) { inputError = reason instanceof Error ? reason.message : "Invalid inputs."; } }
   const canSubmit = !inputError && Boolean(start && goal) && status !== "loading" && !blockedByPending &&
     (interfaceMode === "quick" || (analysisFocus.length > 0 && additionalRequirements.trim().length > 0 && additionalRequirements.trim().length <= 1600));
 
@@ -257,6 +258,8 @@ export function useRoutePlanner() {
     if (active.current || sameDraft(pendingRef.current)) return;
     try {
       const request = currentRequest(); validateRouteRequest(request);
+      const outside=coverageError(region,request);
+      if (outside) throw new Error(outside);
       let advanced: AdvancedInput | undefined;
       if (interfaceMode === "advanced") {
         if (!computed) throw new Error("Advanced planning requires an available computed backend.");

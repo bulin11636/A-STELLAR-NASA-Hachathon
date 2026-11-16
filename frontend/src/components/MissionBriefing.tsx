@@ -5,6 +5,7 @@ import type { MarsCoordinate, PlanRouteResponse } from "../types/api.ts";
 import type { RouteAssessment, RouteMetadata } from "../types/routeMetadata.ts";
 
 import { percentScore } from '../services/assessmentDisplay.ts';
+import { displayWarning } from '../services/displayWarnings.ts';
 
 export default function MissionBriefing({ objective, onObjectiveChange, start, goal, route, assessment, metadata, layers, evidence }: {
   objective: string;
@@ -20,7 +21,7 @@ export default function MissionBriefing({ objective, onObjectiveChange, start, g
   const activeLayerCount = Object.values(layers).filter((layer) => layer.visible).length;
   const knownConditions = assessment?.risk_factors.filter((factor) => factor.status === "assessed" || factor.status === "contextual") ?? [];
   const attentionAreas = assessment?.risk_factors.filter((factor) => !["assessed", "contextual", "not_applicable"].includes(factor.status)) ?? [];
-  const limitations = [...(assessment?.limitations ?? []), ...(route?.warnings ?? [])];
+  const limitations = [...new Set([...(assessment?.limitations ?? []), ...(route?.warnings ?? [])].map(displayWarning))];
   const exportBriefing = () => downloadMissionBriefing(buildMissionBriefing({
     generatedAt: new Date().toISOString(), objective, start, goal, route, assessment, activeLayers: layers, evidenceAtPoint: evidence,
   }));
@@ -32,7 +33,7 @@ export default function MissionBriefing({ objective, onObjectiveChange, start, g
         aria-label="Mission objective" />
     </label>
     <dl className="briefing-summary">
-      <dt>Start / goal</dt><dd>{start && goal ? "Selected on map" : "Incomplete"}</dd>
+      <dt>Start / goal</dt><dd>{start && goal ? `${start.longitude.toFixed(6)}, ${start.latitude.toFixed(6)} → ${goal.longitude.toFixed(6)}, ${goal.latitude.toFixed(6)}` : "Incomplete"}</dd>
       <dt>Route</dt><dd>{route ? route.source + " · " + route.route_id : "Not requested"}</dd>
       <dt>Distance</dt><dd>{route?.metrics.distance_m == null ? "Not assessed" : `${route.metrics.distance_m.toFixed(1)} m`}</dd>
       <dt>Estimated time</dt><dd>{route?.metrics.estimated_time_min == null ? "Not estimated" : `${route.metrics.estimated_time_min.toFixed(1)} min`}</dd>

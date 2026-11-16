@@ -9,7 +9,8 @@
     "build": "npm run typecheck && vite build",
     "preview": "vite preview",
     "test": "tsx --test tests/*.test.ts",
-    "test:browser": "node tests/browser-workflow.mjs"
+    "test:browser": "node tests/browser-workflow.mjs",
+    "test:browser:ui": "node tests/browser-ui-regressions.mjs"
   },
   "dependencies": {
     "ol": "^10.11.0",

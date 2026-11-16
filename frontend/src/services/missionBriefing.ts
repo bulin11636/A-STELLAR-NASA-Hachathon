@@ -3,6 +3,7 @@ import type { LayerDisplayState } from "../components/LayerPanel.tsx";
 import type { LocationEvidence } from "./evidenceAtPoint.ts";
 import type { MarsCoordinate, PlanRouteResponse } from "../types/api.ts";
 import type { RouteAssessment } from "../types/routeMetadata.ts";
+import { displayWarning } from './displayWarnings.ts';
 
 export interface MissionBriefingInput {
   generatedAt: string;
@@ -28,7 +29,8 @@ export function buildMissionBriefing(input: MissionBriefingInput) {
   return {
     format_version: "1",
     generated_at: input.generatedAt,
-    status: input.route?.source === "mock" ? "demonstration_not_safety_validated" : "incomplete",
+    status: input.route?.source === "mock" ? "demonstration_not_safety_validated" : input.route ? 'computed_route_available' : "incomplete",
+    assessment_status: input.assessment?.hard_gate_status ?? 'unassessed',
     coordinate_system: "MARS_2000_PLANETOCENTRIC_EAST_360_V1",
     objective: input.objective.trim() || null,
     selections: { start: input.start, goal: input.goal },
@@ -38,7 +40,7 @@ export function buildMissionBriefing(input: MissionBriefingInput) {
       mode: input.route.mode,
       vertices: input.route.route,
       metrics: input.route.metrics,
-      warnings: input.route.warnings,
+      warnings: input.route.warnings.map(displayWarning),
     } : {
       route_id: null,
       source: null,
@@ -81,7 +83,7 @@ export function buildMissionBriefing(input: MissionBriefingInput) {
       warnings: input.evidenceAtPoint.warnings,
     } : null,
     limitations: [
-      "Demonstration interface only. No terrain, thermal, or astronaut-safety validation is represented.",
+      input.route?.source==='computed' ? 'Computed terrain route; additional environmental assessment may be incomplete.' : "Demonstration interface only. No terrain, thermal, or astronaut-safety validation is represented.",
       "WMTS, wire-coordinate, and DEM alignment remain unvalidated.",
       "Enabled fixture layers are small selected subsets, not complete mission coverage.",
     ],

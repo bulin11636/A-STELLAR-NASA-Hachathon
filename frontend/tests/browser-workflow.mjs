@@ -10,7 +10,7 @@ import { parseArgs } from 'node:util';
 import assert from 'node:assert/strict';
 
 const { values } = parseArgs({ options: { 'dataset-dir': { type: 'string' }, python: { type: 'string', default: 'python' },
-  'output-root': { type: 'string' } } });
+  'output-root': { type: 'string' }, channel: { type:'string' } } });
 if (!values['dataset-dir']) throw new Error('Pass --dataset-dir with the real local CTX dataset root.');
 const root = fileURLToPath(new URL('../../',import.meta.url));
 const run = resolve(values['output-root'] ?? root+'/data/processed/ui-verification','run-'+new Date().toISOString().replaceAll(/[:.]/g,'-'));
@@ -34,7 +34,7 @@ try {
     await new Promise((done) => setTimeout(done,100));
   }
   assert(ready,'Test backend did not start; inspect server.log.');
-  browser = await chromium.launch({headless:true,args:['--no-sandbox']});
+  browser = await chromium.launch({headless:true,args:['--no-sandbox'],...(values.channel ? {channel:values.channel} : {})});
   page = await browser.newPage({viewport:{width:1440,height:1000}});
   page.setDefaultTimeout(90_000);
   const errors = []; page.on('pageerror',(e) => errors.push(e.message));
@@ -46,6 +46,7 @@ try {
   await page.goto(base);
   await page.getByRole('button',{name:'Load in-coverage example endpoints',exact:true}).click();
   async function plan() {
+    await page.getByRole('tab',{name:'Plan',exact:true}).click();
     const response = page.waitForResponse((r) => r.url().endsWith('/api/v1/routes/plan') && r.request().method()==='POST');
     await page.getByRole('button',{name:'Plan Route',exact:true}).click();
     const body = await (await response).json(); assert(body.route_id,JSON.stringify(body));
@@ -53,11 +54,13 @@ try {
     return body;
   }
   async function chat(message) {
+    await page.getByRole('tab',{name:'A0 Assistant',exact:true}).click();
     const response = page.waitForResponse((r) => r.url().endsWith('/chat') && r.request().method()==='POST');
     await page.getByLabel('Message A0',{exact:true}).fill(message);
     await page.getByRole('button',{name:'Send to A0',exact:true}).click();
     const body = await (await response).json(); assert(body.message_id,JSON.stringify(body));
     if (body.result) await page.waitForURL('**route='+body.result.route_id);
+    await page.getByRole('tab',{name:'Plan',exact:true}).click();
     return body;
   }
   const initial = await plan();
@@ -74,7 +77,9 @@ try {
   await page.getByRole('heading',{name:'Changes from previous route',exact:true}).waitFor();
   const answer = await chat('Why was this order selected?'); assert.equal(answer.result,null);
   await page.reload();
+  await page.getByRole('tab',{name:'A0 Assistant',exact:true}).click();
   await page.locator('.chat-transcript').getByText('Reverse all waypoint visits',{exact:false}).waitFor();
+  await page.getByRole('tab',{name:'Plan',exact:true}).click();
   await page.locator('.route-preview polyline').waitFor();
   const svg = page.locator('.route-preview svg');
   const before = (await svg.getAttribute('viewBox')).split(' ').map(Number);
@@ -88,7 +93,7 @@ try {
   await page.mouse.move(box.x+box.width/2,box.y+box.height/2); await page.mouse.down();
   await page.mouse.move(box.x+box.width/2+35,box.y+box.height/2+20); await page.mouse.up();
   assert.notEqual((await svg.getAttribute('viewBox')).split(' ')[0],String(zoomed[0]));
-  await page.getByRole('button',{name:'Fit route',exact:true}).click();
+  await page.locator('.route-preview').getByRole('button',{name:'Fit route',exact:true}).click();
   summary.stage = 'expand_preview';
   await page.getByRole('button',{name:'Expand preview',exact:true}).click();
   await page.waitForFunction(() => document.fullscreenElement?.classList.contains('route-preview'),null,{timeout:5000});

@@ -67,6 +67,10 @@ def main():
     @app.get('/__test/provider',include_in_schema=False)
     def provider_state():
         with control_lock: return dict(control)
+    @app.post('/__test/budget',include_in_schema=False)
+    def set_budget(body: dict[str,int]):
+        settings.max_calls=body['max_calls']
+        return provider.totals()
     @app.post('/__test/provider',include_in_schema=False)
     def configure_provider(body: dict[str,str]):
         behavior, target = body.get('next','normal'), body.get('target','any')

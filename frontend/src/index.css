@@ -22,13 +22,13 @@ h2 { font-size: 1.1rem; margin: 0; }
 .map-workspace-controls button { padding: .45rem .6rem; background: #19252feb; font-size: .78rem; }
 .map-status { position: absolute; bottom: 2.4rem; left: 1rem; right: 1rem; width: fit-content; max-width: calc(100% - 2rem); pointer-events: none; background: #19252feb; border: 1px solid #50636d; border-radius: 4px; padding: .6rem .85rem; font-size: .85rem; }
 .map-status.warning { border-color: #dcac70; color: #ffe0b7; }
-.map-info { padding: 1.4rem; border-left: 1px solid #35414a; font-size: .85rem; line-height: 1.6; overflow-wrap: anywhere; max-height: calc(100dvh - 92px); overflow-y: auto; }
+.map-info { min-width: 0; padding: 1.4rem; border-left: 1px solid #35414a; font-size: .85rem; line-height: 1.6; overflow-wrap: break-word; max-height: calc(100dvh - 92px); overflow-y: auto; }
 .map-info > p { color: #b9c5cc; }
 .info-heading { display: flex; align-items: center; justify-content: space-between; gap: .7rem; }
 .badge { border: 1px solid #687e8d; border-radius: 3px; color: #b9c5cc; padding: .05rem .4rem; font-size: .7rem; }
 .coordinates { padding: .85rem; background: #24323c; border: 1px solid #536573; border-radius: 4px; font-variant-numeric: tabular-nums; }
-.workspace-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .35rem; margin-top: 1rem; padding-bottom: .85rem; border-bottom: 1px solid #536573; }
-.workspace-tabs button { padding: .45rem .3rem; font-size: .72rem; }
+.workspace-tabs { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: 1rem; padding-bottom: .85rem; border-bottom: 1px solid #536573; }
+.workspace-tabs button { flex: 1 0 85px; padding: .45rem .6rem; font-size: .72rem; overflow-wrap: normal; word-break: normal; }
 .workspace-tabs button[aria-selected="true"] { border-color: #f5c27b; background: #3b454a; color: #ffe0b7; }
 .route-workspace { margin-top: 1rem; }
 .route-workspace > p { color: #b9c5cc; }
@@ -41,6 +41,10 @@ dd code { display: block; color: #b9c5cc; }
 .sources { display: flex; flex-direction: column; gap: .4rem; }
 .map-info .credit { font-size: .72rem; color: #9cabb5; }
 .ol-control button { background: #24323c; color: white; }
+.map .ol-zoom { top: auto; left: auto; right: .8rem; bottom: 3rem; }
+.map .ol-zoom button { width: 2rem; height: 2rem; font-size: 1.2rem; }
+.map .ol-rotate { top: 4.5rem; right: .8rem; }
+.map-status { max-width: calc(100% - 5rem); }
 .ol-attribution { max-width: calc(100% - 1rem); font-size: .65rem; }
 .route-planner { margin-top: 1.2rem; padding-block: 1rem; border-block: 1px solid #536573; }
 .route-planner fieldset { border: 0; padding: 0; margin: 1rem 0 .3rem; }
@@ -67,7 +71,8 @@ select { width: 100%; padding: .55rem; font: inherit; background: #24323c; color
 .preview-stops button[aria-pressed="true"] { outline: 2px solid #77edc2; }
 .route-preview p { color: #b9c5cc; font-size: .75rem; }
 .route-result ul { padding-left: 1.2rem; color: #ffe0b7; }
-.route-metrics { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .3rem 1rem; }
+.route-metrics { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: baseline; gap: .3rem 1rem; }
+.route-metrics dd { min-width: 0; overflow-wrap: anywhere; }
 .route-metrics dt { margin: 0; }
 .route-details { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid #44515d; }
 .route-details h3 { margin: 0; font-size: .9rem; }
@@ -105,8 +110,11 @@ select { width: 100%; padding: .55rem; font: inherit; background: #24323c; color
 .mission-briefing .mock-badge { margin-top: .65rem; }
 .objective-label { display: grid; gap: .35rem; margin-top: .8rem; font-weight: 600; }
 textarea { width: 100%; resize: vertical; padding: .55rem; font: inherit; color: #fff; background: #24323c; border: 1px solid #536573; border-radius: 4px; }
-.briefing-summary { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: .3rem .8rem; }
-.briefing-summary dt { margin: 0; }
+.briefing-summary { display: block; min-width: 0; }
+.briefing-summary dt { margin: .7rem 0 .15rem; }
+.briefing-summary dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.mission-briefing { min-width: 0; word-break: normal; }
+.mission-briefing p, .mission-briefing li { overflow-wrap: break-word; }
 .mission-briefing > p { color: #b9c5cc; }
 .briefing-section { margin-top: 1rem; padding-top: .75rem; border-top: 1px solid #44515d; }
 .briefing-section h3, .briefing-technical h3 { margin: 0; font-size: .9rem; }

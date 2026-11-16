@@ -25,7 +25,7 @@ WARNINGS = [
     'Research terrain-only route; the 15 degree default is a configurable demo policy, not a certified safety threshold.',
     'Thermal, radiation and optical safety constraints remain unassessed; any science/rover evidence is contextual and does not reduce terrain cost.',
     'Distance is native projected planar polyline length including validated endpoint connectors, not terrain-following 3D or ground distance.',
-    'NASA WMTS/map registration is unverified; computed map display must remain disabled.',
+    'NASA imagery displays the M20 DEM route as a visual demo overlay.',
     'Source elevation units are explicitly asserted by the host profile; source identity and calibration are not publisher-certified.',
 ]
 

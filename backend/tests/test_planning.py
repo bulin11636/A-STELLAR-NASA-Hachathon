@@ -108,7 +108,7 @@ def test_astar_matches_independent_dijkstra(seed):
             assert result.cells==astar(allowed,penalty,(0,0),(5,6),20,30).cells
 
 
-def test_corner_detour_policy_and_limits():
+def test_corner_detour_policy_and_limits(monkeypatch):
     allowed=np.ones((5,7),bool); allowed[2,3]=False
     penalty=np.ones(allowed.shape); penalty[1:4,2:5]=20
     short=astar(allowed,np.ones_like(penalty),(2,0),(2,6),1,1)
@@ -116,7 +116,10 @@ def test_corner_detour_policy_and_limits():
     assert short.cells != safe.cells
     assert all(allowed[x] for x in safe.cells)
     with pytest.raises(ApiProblem,match='limit'): astar(allowed,penalty,(2,0),(2,6),1,1,max_nodes=1)
-    with pytest.raises(ApiProblem,match='limit'): astar(allowed,penalty,(2,0),(2,6),1,1,max_seconds=1e-12)
+    with monkeypatch.context() as clock:
+        times=iter([0.0,1.0,1.0])
+        clock.setattr('app.planning.search.time.monotonic',lambda:next(times))
+        with pytest.raises(ApiProblem,match='limit'): astar(allowed,penalty,(2,0),(2,6),1,1,max_seconds=.5)
     corner=np.array([[1,0],[0,1]],bool)
     with pytest.raises(ApiProblem,match='No connected'): astar(corner,np.ones((2,2)),(0,0),(1,1),1,1)
     with pytest.raises(ValueError): astar(allowed,-penalty,(2,0),(2,6),1,1)

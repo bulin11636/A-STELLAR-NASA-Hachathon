@@ -1,7 +1,7 @@
 import type { EvidenceLayer, EvidenceState } from "../types/evidence.ts";
 import { CATALOG_URL, JEZERO_LAYER_ID, NASA_CRS } from "./marsWmts.ts";
 
-export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
+const BASE_LAYERS: readonly EvidenceLayer[] = [
   {
     id: "mars_basemap",
     label: "Mars Trek basemap",
@@ -39,7 +39,7 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
       resolution: "NASA WMTS Jezero mosaic",
       units: "Visual context; not a verified route-registration surface",
       coordinateSystem: NASA_CRS,
-      limitations: [`${JEZERO_LAYER_ID} covers Jezero only. Independent WMTS/wire/DEM controls are still required before computed routes can appear on NASA imagery.`],
+      limitations: [`${JEZERO_LAYER_ID} covers Jezero only. Routes use the M20 DEM coordinate conversion for a visual demo overlay.`],
     },
   },
   {
@@ -48,7 +48,7 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
     family: "Topographic",
     state: "prototype",
     validationStatus: "not_validated",
-    renderable: false,
+    renderable: true,
     provenance: {
       sourceName: "USGS Mars 2020 Science Investigation CTX DEM Mosaic",
       sourceUrl: "https://astrogeology.usgs.gov/search/map/mars_2020_science_investigation_ctx_dem_mosaic",
@@ -59,12 +59,12 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
       resolution: "20 m/pixel",
       units: "Provider metadata describes vertical coordinates in metres; embedded GeoTIFF band unit is absent",
       coordinateSystem: "Mars-2000 sphere Equirectangular; local raster/wire alignment not validated",
-      limitations: ["The source input is available locally, but no browser map layer or validated slope/traversability artifact is published."],
+      limitations: ["Cyan outline shows the supported DEM footprint, not individual NoData cells or safe terrain. The small example window does not limit regional routing."],
     },
   },
   {
     id: "geology",
-    label: "SIM 3464 geology & science POIs",
+    label: "SIM 3464 geology",
     family: "Geology / science",
     state: "observed",
     validationStatus: "not_validated",
@@ -79,7 +79,7 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
       resolution: "Regional geologic map, 1:75,000",
       units: "Projected geometry axes in metres after archive CRS validation",
       coordinateSystem: "Mars-sphere Transverse Mercator; raster/wire alignment not validated",
-      limitations: ["Regional geology is science context, not terrain safety or target ranking. No browser-ready geology polygon overlay is published."],
+      limitations: ["Regional SIM 3464 polygons are loaded from the local archive when available, simplified to 20 m for display. Source reports approximate 100–200 m offsets. Science POIs have a separate toggle."],
     },
   },
   {
@@ -104,7 +104,7 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
   },
   {
     id: "rover_history",
-    label: "Perseverance traverse & Navcam references",
+    label: "Perseverance traverse",
     family: "Historical rover observations",
     state: "observed",
     validationStatus: "not_validated",
@@ -144,25 +144,39 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
   },
   {
     id: "thermal",
-    label: "Thermal",
+    label: "THEMIS daytime visual context",
     family: "Thermal",
-    state: "unavailable",
+    state: "prototype",
     validationStatus: "not_validated",
     renderable: false,
     provenance: {
-      sourceName: "No calibrated browser-ready thermal product",
+      sourceName: "Local THEMIS visual mosaic preview",
       sourceUrl: "https://astrogeology.usgs.gov/search/map/mars_odyssey_themis_ir_day_global_mosaic_100m_v12",
       origin: "official_source",
       observationDate: null,
       publicationDate: null,
       ingestionDate: null,
-      resolution: "100 m/pixel candidate, not downloaded",
+      resolution: "100 m/pixel source, downsampled preview",
       units: "Candidate daytime mosaic values are qualitative visual values, not calibrated temperatures",
       coordinateSystem: "Candidate product: Simple Cylindrical, planetocentric, east-positive",
-      limitations: ["No heatmap is rendered. Thermal constraints remain unavailable until calibrated inputs and validation are supplied."],
+      limitations: ["Preview availability is checked against the backend dataset directory. Contrast-stretched visual values are not calibrated temperatures or thermal risk."],
     },
   },
 ] as const;
+
+const visualLayer=(id:string,label:string,source:EvidenceLayer,limitations:readonly string[]):EvidenceLayer=>({
+  ...source,id,label,renderable:true,provenance:{...source.provenance,limitations},
+});
+export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
+  ...BASE_LAYERS,
+  visualLayer('rover_stops','Perseverance stops & Navcam references',BASE_LAYERS.find(l=>l.id==='rover_history')!,['Selected historical rover stops and image references. Independently toggled from science POIs and traverse lines.']),
+  visualLayer('route','Route & mission stops',BASE_LAYERS.find(l=>l.id==='jezero_dem')!,['Computed or mock route and selected mission stops. Visual demo overlay.']),
+  visualLayer('planning_window','Initial DEM example window',BASE_LAYERS.find(l=>l.id==='jezero_dem')!,['Dashed amber outline is the initial example window. Dynamic regional routes may extend beyond it within the supported DEM footprint.']),
+  visualLayer('dem_surface','M20 DEM elevation preview',BASE_LAYERS.find(l=>l.id==='jezero_dem')!,['Local DEM downsampled and contrast-stretched for display. Does not replace native-resolution route checks.']),
+  {...visualLayer('thermal_night','THEMIS nighttime visual context',BASE_LAYERS.find(l=>l.id==='thermal')!,['Local nighttime raster cropped to the DEM footprint. Visual values are not calibrated temperature or risk.']),
+    provenance:{...BASE_LAYERS.find(l=>l.id==='thermal')!.provenance,sourceName:'Local THEMIS nighttime visual mosaic',sourceUrl:CATALOG_URL,
+      limitations:['Local nighttime raster identity is not provider-verified. Visual context only; no calibrated temperature or risk.']}},
+];
 
 export function stateLabel(state: EvidenceState): string {
   return state[0].toUpperCase() + state.slice(1);

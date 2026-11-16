@@ -4,6 +4,15 @@ import View from "ol/View.js";
 import ScaleLine from "ol/control/ScaleLine.js";
 import { defaults as defaultControls } from "ol/control/defaults.js";
 import TileLayer from "ol/layer/Tile.js";
+import ImageLayer from 'ol/layer/Image.js';
+import ImageStatic from 'ol/source/ImageStatic.js';
+import GeoJSON from 'ol/format/GeoJSON.js';
+import VectorSource from 'ol/source/Vector.js';
+import VectorLayer from 'ol/layer/Vector.js';
+import {Style,Fill,Stroke,Text} from 'ol/style.js';
+import type BaseLayer from 'ol/layer/Base.js';
+import { createCoverageLayer, planningBounds } from '../map/planningCoverage.ts';
+import { getMapLayers } from '../services/mapLayers.ts';
 import TileState from "ol/TileState.js";
 import { containsCoordinate, intersects } from "ol/extent.js";
 import { CAPABILITIES_URL, CATALOG_URL, JEZERO_LAYER_ID, LAYER_ID, loadMarsWmts } from "../map/marsWmts";
@@ -35,8 +44,11 @@ export default function MarsMap() {
   const basemapRef = useRef<TileLayer | null>(null);
   const jezeroImageryRef = useRef<TileLayer | null>(null);
   const evidenceOverlayRef = useRef<ReturnType<typeof createEvidenceOverlays> | null>(null);
-  const planner = useRoutePlanner();
   const [planningRegion, setPlanningRegion] = useState<PlanningRegion | null>(null);
+  const planner = useRoutePlanner(planningRegion);
+  const extraLayers = useRef<Record<string,BaseLayer>>({});
+  const [layerAvailability,setLayerAvailability]=useState<Record<string,boolean>>({dem_surface:false,thermal:false,thermal_night:false,jezero_dem:false,planning_window:false,geology:false});
+  const [layerIssues,setLayerIssues]=useState<Record<string,string>>({});
   const [planningError, setPlanningError] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
@@ -60,6 +72,14 @@ export default function MarsMap() {
     jezero_imagery: { visible: true, opacity: 1 },
     science_pois: { visible: false, opacity: 1 },
     rover_history: { visible: false, opacity: 1 },
+    rover_stops: { visible: false, opacity: 1 },
+    route: { visible: true, opacity: 1 },
+    jezero_dem: { visible: true, opacity: 1 },
+    planning_window: { visible: false, opacity: 1 },
+    dem_surface: { visible: false, opacity: .65 },
+    thermal: { visible: false, opacity: .6 },
+    thermal_night: { visible: false, opacity: .6 },
+    geology: { visible: false, opacity: .55 },
   });
   const layerDisplayRef = useRef(layerDisplay);
   useEffect(() => { layerDisplayRef.current = layerDisplay; }, [layerDisplay]);
@@ -174,7 +194,7 @@ export default function MarsMap() {
       basemapRef.current = basemap;
       map = new Map({
         target: target.current,
-        layers: [basemap, evidence.traverseLayer, evidence.scienceLayer, overlay.layer],
+        layers: [basemap, evidence.traverseLayer, evidence.scienceLayer, evidence.stopLayer, overlay.layer],
         controls: defaultControls().extend([new ScaleLine({ units: "metric", bar: true, steps: 4, text: true, minWidth: 110 })]),
         view: new View({
           projection, center: [0, 0], resolutions, extent: projection.getExtent(),
@@ -182,6 +202,41 @@ export default function MarsMap() {
         }),
       });
       mapRef.current = map;
+      void fetch('/api/v1/map/geology',{signal:controller.signal}).then(async response=>{
+        if (!response.ok) throw new Error('Geology unavailable');
+        const body=await response.json();
+        if (controller.signal.aborted || !map) return;
+        const display=layerDisplayRef.current.geology;
+        const layer=new VectorLayer({source:new VectorSource({features:new GeoJSON().readFeatures(body)}),zIndex:3,
+          visible:display.visible,opacity:display.opacity,style:feature=>{
+            const code=String(feature.get('unit_code') ?? '');
+            const hue=[...code].reduce((n,char)=>n+char.charCodeAt(0)*37,0)%360;
+            return new Style({fill:new Fill({color:`hsla(${hue},60%,55%,0.65)`}),stroke:new Stroke({color:`hsl(${hue},70%,75%)`,width:1}),
+              text:new Text({text:code,font:'12px sans-serif',fill:new Fill({color:'#fff'}),stroke:new Stroke({color:'#18252b',width:3})})});
+          }});
+        extraLayers.current.geology=layer;map.addLayer(layer);
+        setLayerAvailability(current=>({...current,geology:true}));
+      }).catch(()=>{
+        if (!controller.signal.aborted) setLayerIssues(current=>({...current,geology:'Local geology polygons are unavailable. Check the SIM 3464 archive and backend.'}));
+      });
+      void getMapLayers(controller.signal).then(layers=>{
+        if (controller.signal.aborted || !map) return;
+        for (const item of layers) {
+          setLayerAvailability(current=>({...current,[item.id]:item.available}));
+          if (!item.available || !item.extent || !item.image_url) {
+            setLayerIssues(current=>({...current,[item.id]:'Local raster is missing. Configure the backend dataset directory.'})); continue;
+          }
+          const imageSource=new ImageStatic({url:item.image_url,imageExtent:item.extent,projection});
+          imageSource.on('imageloaderror',()=>{
+            setLayerIssues(current=>({...current,[item.id]:'Raster preview failed to load. Check the backend and retry this layer.'}));
+          });
+          const display=layerDisplayRef.current[item.id];
+          const layer=new ImageLayer({source:imageSource,visible:display?.visible ?? false,opacity:display?.opacity ?? .6,zIndex:2});
+          extraLayers.current[item.id]=layer; map.addLayer(layer);
+        }
+      }).catch(()=>{
+        if (!controller.signal.aborted) setLayerIssues(current=>({...current,dem_surface:'Raster catalog unavailable. Restart the updated backend.'}));
+      });
       map.getView().fit([77.0, 17.95, 78.1, 18.95], { padding: [32, 32, 32, 32] });
       void loadMarsWmts(controller.signal, JEZERO_LAYER_ID).then(({ source: jezeroSource, extent: jezeroExtent }) => {
         if (controller.signal.aborted || !map) return;
@@ -192,6 +247,7 @@ export default function MarsMap() {
         jezeroImageryRef.current = jezeroImagery;
       }).catch(() => {
         // The global NASA map remains usable if the optional Jezero mosaic is unavailable.
+        if (!controller.signal.aborted) setLayerIssues(current=>({...current,jezero_imagery:'NASA Jezero imagery could not be loaded. Use Reload NASA map to retry.'}));
       });
       map.on("singleclick", (event) => {
         const evidence = map?.forEachFeatureAtPixel(event.pixel, (feature) => {
@@ -200,7 +256,7 @@ export default function MarsMap() {
           return (kind === "science" || kind === "rover_stop") && item ? { kind, item } as SelectedEvidence : undefined;
         }, {
           hitTolerance: 6,
-          layerFilter: (layer) => layer === evidenceOverlayRef.current?.scienceLayer,
+          layerFilter: (layer) => layer === evidenceOverlayRef.current?.scienceLayer || layer === evidenceOverlayRef.current?.stopLayer,
         });
         setEvidenceSelection(evidence ?? null);
         setInspectedPoint(null);
@@ -238,13 +294,38 @@ export default function MarsMap() {
       basemapRef.current = null;
       jezeroImageryRef.current = null;
       evidenceOverlayRef.current = null;
+      extraLayers.current={};
       map?.setTarget(undefined);
       map?.dispose();
       objectUrls.forEach((url) => URL.revokeObjectURL(url));
     };
   }, [attempt]);
 
+  useEffect(()=>{
+    const map=mapRef.current;
+    if (!ready || !map) return;
+    for (const id of ['jezero_dem','planning_window']) {
+      if (extraLayers.current[id]) { map.removeLayer(extraLayers.current[id]); delete extraLayers.current[id]; }
+    }
+    const bounds=planningBounds(planningRegion);
+    const example=planningRegion?.planning?.bounds;
+    for (const [id,b,small] of [['jezero_dem',bounds,false],['planning_window',example,true]] as const) {
+      setLayerAvailability(current=>({...current,[id]:Boolean(b)}));
+      if (!b) continue;
+      const layer=createCoverageLayer(b,small);
+      const display=layerDisplayRef.current[id];
+      layer.setVisible(display?.visible ?? false); layer.setOpacity(display?.opacity ?? 1);
+      extraLayers.current[id]=layer; map.addLayer(layer);
+    }
+  },[ready,planningRegion]);
+
   useEffect(() => {
+    for (const [id,layer] of Object.entries(extraLayers.current)) {
+      const display=layerDisplay[id];
+      if (display) { layer.setVisible(display.visible); layer.setOpacity(display.opacity); }
+    }
+    const routeDisplay=layerDisplay.route;
+    if (overlayRef.current && routeDisplay) { overlayRef.current.layer.setVisible(routeDisplay.visible); overlayRef.current.layer.setOpacity(routeDisplay.opacity); }
     const display = layerDisplay.mars_basemap;
     if (basemapRef.current && display) {
       basemapRef.current.setVisible(display.visible);
@@ -267,6 +348,8 @@ export default function MarsMap() {
         evidence.traverseLayer.setVisible(rover.visible);
         evidence.traverseLayer.setOpacity(rover.opacity);
       }
+      const stops=layerDisplay.rover_stops;
+      if (stops) { evidence.stopLayer.setVisible(stops.visible); evidence.stopLayer.setOpacity(stops.opacity); }
     }
   }, [layerDisplay, ready]);
 
@@ -301,6 +384,7 @@ export default function MarsMap() {
         <div className="info-heading"><h2>Explore the surface</h2><span className="badge">F1.5</span></div>
         <p>Drag to pan. Scroll, pinch, or use + / − to zoom. Focus the map to use arrow keys. Click to inspect a location.</p>
         <div className="coordinates" aria-live="polite">{coordinates ?? "Click the map to inspect coordinates."}</div>
+        {planningRegion?.planning && <p className="coverage-legend">Cyan outline: supported DEM boundary. Dashed amber outline: initial example window. Regional stops may lie outside the example window.</p>}
         <div className="workspace-tabs" role="tablist" aria-label="Mission workspace">
           {(["plan", "route", "briefing", "evidence", "a0"] as const).map((tab) => <button type="button" key={tab} id={`${tab}-tab`} role="tab"
             aria-selected={sidebarTab === tab} aria-controls={`${tab}-panel`} onClick={() => setSidebarTab(tab)}>{tab === "a0" ? "A0 Assistant" : tab[0].toUpperCase() + tab.slice(1)}</button>)}
@@ -343,7 +427,7 @@ export default function MarsMap() {
           </>}
         </section>}
         {sidebarTab === "evidence" && <section id="evidence-panel" role="tabpanel" aria-labelledby="evidence-tab">
-        <LayerPanel layers={layerDisplay} onLayerChange={(id, change) => {
+        <LayerPanel layers={layerDisplay} availability={layerAvailability} issues={layerIssues} onLayerChange={(id, change) => {
           setLayerDisplay((current) => ({ ...current, [id]: { ...(current[id] ?? { visible: false, opacity: 1 }), ...change } }));
         }} />
         <EvidenceSelection selection={evidenceSelection} />

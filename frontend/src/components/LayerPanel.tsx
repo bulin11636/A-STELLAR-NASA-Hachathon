@@ -6,8 +6,10 @@ export interface LayerDisplayState {
   opacity: number;
 }
 
-export default function LayerPanel({ layers, onLayerChange }: {
+export default function LayerPanel({ layers, onLayerChange, availability = {}, issues = {} }: {
   layers: Readonly<Record<string, LayerDisplayState>>;
+  availability?: Readonly<Record<string, boolean>>;
+  issues?: Readonly<Record<string, string>>;
   onLayerChange: (id: string, change: Partial<LayerDisplayState>) => void;
 }) {
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -21,7 +23,7 @@ export default function LayerPanel({ layers, onLayerChange }: {
       <ul className="layer-list">
         {EVIDENCE_LAYERS.map((layer) => {
           const control = layers[layer.id] ?? { visible: false, opacity: 1 };
-          const toggleable = canToggleLayer(layer);
+          const toggleable = availability[layer.id] ?? canToggleLayer(layer);
           const open = expanded === layer.id;
           return <li key={layer.id} className="layer-card">
             <div className="layer-title-row">
@@ -33,6 +35,7 @@ export default function LayerPanel({ layers, onLayerChange }: {
               </label>
             </div>
             <p>{layer.family} · {layer.validationStatus === "validated_for_demo" ? "validated for demo" : "not validated"}</p>
+            {issues[layer.id] && <p role="status" className="notice">{issues[layer.id]}</p>}
             {toggleable && <label className="opacity-control">Opacity
               <input aria-label={`${layer.label} opacity`} type="range" min="0" max="1" step="0.05" value={control.opacity}
                 onChange={(event) => onLayerChange(layer.id, { opacity: Number(event.target.value) })} />

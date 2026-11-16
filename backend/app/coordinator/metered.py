@@ -93,8 +93,12 @@ class MeteredProvider:
         with self._connect() as db:
             db.execute('BEGIN IMMEDIATE')
             count,cost=db.execute('SELECT COUNT(*), COALESCE(SUM(COALESCE(actual,reserved)),0) FROM calls').fetchone()
-            if count>=self.settings.max_calls or cost+maximum>self.settings.budget_usd:
-                raise ApiProblem(429,'A0_BUDGET_EXHAUSTED','The configured A0 request or cost budget is exhausted.',retry_safe=True)
+            if count>=self.settings.max_calls:
+                raise ApiProblem(429,'A0_BUDGET_EXHAUSTED',
+                    f'The local A0 request limit is reached ({count}/{self.settings.max_calls}). Increase A_STELLAR_A0_MAX_REQUESTS in the backend .env and restart the backend before retrying. This is not an OpenAI credit error.',retry_safe=True)
+            if cost+maximum>self.settings.budget_usd:
+                raise ApiProblem(429,'A0_BUDGET_EXHAUSTED',
+                    f'The local A0 cost budget cannot reserve another request (${cost:.4f} used/reserved; ${self.settings.budget_usd:.2f} limit). Review A_STELLAR_A0_BUDGET_USD and restart the backend before retrying.',retry_safe=True)
             db.execute('INSERT INTO calls VALUES (?,?,?,?,?)',(identifier,'reserved',maximum,None,None))
         return identifier
 

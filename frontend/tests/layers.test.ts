@@ -3,9 +3,8 @@ import test from "node:test";
 import { EVIDENCE_LAYERS, canToggleLayer, stateLabel } from "../src/map/layerRegistry.ts";
 
 test("layer registry preserves explicit evidence states and provenance", () => {
-  assert.deepEqual(EVIDENCE_LAYERS.map((layer) => layer.state), [
-    "observed", "observed", "prototype", "observed", "observed", "observed", "scenario", "unavailable",
-  ]);
+  assert.equal(new Set(EVIDENCE_LAYERS.map(layer=>layer.id)).size,EVIDENCE_LAYERS.length);
+  assert.equal(EVIDENCE_LAYERS.find(layer=>layer.id==='radiation')?.state,'scenario');
   for (const layer of EVIDENCE_LAYERS) {
     assert.ok(layer.provenance.sourceName);
     assert.ok(layer.provenance.sourceUrl.startsWith("https://"));

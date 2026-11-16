@@ -8,6 +8,7 @@ from starlette.staticfiles import StaticFiles
 
 class FrontendFiles(StaticFiles):
     async def get_response(self, path, scope):
+        path=path.replace('\\','/')  # StaticFiles may supply Windows separators.
         # Unknown API paths must retain the JSON API error contract.
         if path == "api" or path.startswith("api/"):
             raise HTTPException(status_code=404)

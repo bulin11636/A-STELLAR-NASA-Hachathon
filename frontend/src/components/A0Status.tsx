@@ -42,7 +42,8 @@ export default function A0Status({ revision, routingMode }: { revision?: string;
       <p>API credential: {status.configured ? "configured" : "not configured"}.{status.mode === "deterministic" ? " Live A0 is disabled; chat provides terrain explanations and ordered stops can be edited in Advanced." : " Configuration does not confirm current provider access."}</p>
       {status.mode === "agentic" && !status.configured && <p role="alert">Configure the API credential in the backend runtime file to use A0.</p>}
       {status.provider && <p>Provider availability: {status.provider.availability.replaceAll("_", " ")}. Last request: {status.provider.last_request_outcome.replaceAll("_", " ")}{status.provider.last_http_status ? ` (HTTP ${status.provider.last_http_status})` : ""}.</p>}
-      {status.budget && <details><summary>Configured API budget</summary><p>Requests: {status.budget.attempts}/{status.budget.max_attempts}. Estimated/reserved: ${status.budget.estimated_or_reserved_usd.toFixed(4)} / ${status.budget.budget_usd.toFixed(2)}.</p></details>}
+      {status.budget && <p>Local API limits: {status.budget.attempts}/{status.budget.max_attempts} requests · ${status.budget.estimated_or_reserved_usd.toFixed(4)} / ${status.budget.budget_usd.toFixed(2)} estimated/reserved.
+        {status.budget.attempts>=status.budget.max_attempts && <span role="alert"> Request count limit reached. Update A_STELLAR_A0_MAX_REQUESTS and restart the backend before retrying.</span>}</p>}
     </> : <p role="status">{error ?? "Loading backend configuration…"}</p>}
   </section>;
 }

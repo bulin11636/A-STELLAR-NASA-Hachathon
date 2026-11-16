@@ -16,6 +16,7 @@ export default function RequestRecovery({ status, busy, label, onRefresh, onRetr
     {status.state === "unknown" && <p>The outcome is uncertain. No automatic resubmission will be made. Your last successful route remains available.</p>}
     {status.state === "running" && <p>The backend may still be working. Checking status does not start another model request.</p>}
     {status.error && <p>{status.error.code}: {status.error.message}</p>}
+    {status.error?.code==='A0_BUDGET_EXHAUSTED' && <p className="notice">The backend's local request or cost limit has been reached. Review the configured API budget, update the backend limit and restart it. Retry only after the limit is available; checking status alone does not replenish it.</p>}
     <p>Recovery uses the original request settings. Status checks do not generate model responses.</p>
     {status.retry_after_seconds > 0 && <p>Wait at least {status.retry_after_seconds} seconds. Status is checked before enabling a manual retry.</p>}
     <button type="button" disabled={busy} onClick={onRefresh}>Check {label.toLowerCase()} request status</button>

@@ -21,6 +21,25 @@ from app.contracts.api import (
 router = APIRouter(prefix="/api/v1")
 
 
+@router.get('/map/layers',tags=['map'])
+async def map_layers(request: Request):
+    from app.planning.map_layers import catalog
+    return await run_in_threadpool(catalog,request.app.state.planning)
+
+
+@router.get('/map/geology',tags=['map'])
+async def map_geology():
+    from app.planning.map_layers import geology
+    return await run_in_threadpool(geology)
+
+
+@router.get('/map/layers/{layer_id}.png',tags=['map'])
+async def map_layer_image(layer_id: str,request: Request):
+    from app.planning.map_layers import image
+    content=await run_in_threadpool(image,request.app.state.planning,layer_id)
+    return Response(content,media_type='image/png',headers={'Cache-Control':'no-cache'})
+
+
 @router.get("/health", response_model=HealthResponse, tags=["health"])
 async def health():
     return HealthResponse()

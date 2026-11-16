@@ -66,6 +66,7 @@ def test_dynamic_crop_budget_and_source_coverage(tmp_path):
     assert err.value.code=='PLANNING_LIMIT_EXCEEDED'
     with pytest.raises(ApiProblem) as err: planning.plan(request.model_copy(update={'goal':request.goal.model_copy(update={'longitude':0.0})}))
     assert err.value.code=='OUTSIDE_PLANNING_COVERAGE'
+    assert err.value.details[0]['stop']=='Goal'
 
 
 @pytest.mark.parametrize('corruption',['width','negative_resolution','affine'])

@@ -12,6 +12,7 @@ import RouteComparison from "./RouteComparison.tsx";
 import RequestRecovery from "./RequestRecovery.tsx";
 import WaypointEditor from "./WaypointEditor.tsx";
 import { buildAdvancedContext } from "../services/advancedContext.ts";
+import { displayWarning } from '../services/displayWarnings.ts';
 
 function label(point: MarsCoordinate | null) {
   return point ? `${point.longitude.toFixed(6)}° E · ${point.latitude.toFixed(6)}° (API coordinates)` : "Not selected";
@@ -129,7 +130,7 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
           {planner.metadata?.usage && <p>A0: {planner.metadata.usage.model} / {planner.metadata.usage.reasoning_effort} ·
             {planner.metadata.usage.input_tokens} input / {planner.metadata.usage.output_tokens} output tokens (including reasoning) · estimated ${planner.metadata.usage.estimated_cost_usd.toFixed(4)}</p>}
           {showAssistant && planner.result.source === "computed" && <RouteChat routeId={planner.result.route_id} onRevision={planner.acceptRevision} refreshKey={planner.chatRefresh} disabled={planner.status === "loading" || !planner.metadata} selectionVersion={planner.draftVersion} advancedContext={planner.interfaceMode === "advanced" && planner.metadata && planner.analysisFocus.length ? buildAdvancedContext(planner.metadata.request.mode, planner.metadata.request.waypoints, planner.analysisFocus, planner.allowSupportedRevision) : undefined} />}
-          <ul>{planner.result.warnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul>
+          <ul>{planner.result.warnings.map((warning, index) => <li key={index}>{displayWarning(warning)}</li>)}</ul>
         </section>
       )}
     </section>
