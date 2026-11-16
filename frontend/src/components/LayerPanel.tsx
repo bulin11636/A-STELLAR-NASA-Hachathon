@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EVIDENCE_LAYERS, canToggleLayer, stateLabel } from "../map/layerRegistry.ts";
+import { EVIDENCE_LAYERS, LAYER_GROUPS, canToggleLayer, stateLabel } from "../map/layerRegistry.ts";
 
 export interface LayerDisplayState {
   visible: boolean;
@@ -20,8 +20,10 @@ export default function LayerPanel({ layers, onLayerChange, availability = {}, i
         <span className="badge">F2</span>
       </div>
       <p className="panel-intro">Layer availability is explicit. Disabled controls have no browser-ready artifact to display.</p>
+      {LAYER_GROUPS.map(group=><section className="layer-group" key={group.label} aria-label={group.label}>
+      <h3>{group.label}</h3>
       <ul className="layer-list">
-        {EVIDENCE_LAYERS.map((layer) => {
+        {EVIDENCE_LAYERS.filter(layer=>(group.ids as readonly string[]).includes(layer.id)).map((layer) => {
           const control = layers[layer.id] ?? { visible: false, opacity: 1 };
           const toggleable = availability[layer.id] ?? canToggleLayer(layer);
           const open = expanded === layer.id;
@@ -56,6 +58,7 @@ export default function LayerPanel({ layers, onLayerChange, availability = {}, i
           </li>;
         })}
       </ul>
+      </section>)}
     </section>
   );
 }

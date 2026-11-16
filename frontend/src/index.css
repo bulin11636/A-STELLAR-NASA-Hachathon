@@ -83,6 +83,8 @@ select { width: 100%; padding: .55rem; font: inherit; background: #24323c; color
 .layer-panel { margin-top: 1.2rem; padding-block: 1rem; border-block: 1px solid #536573; }
 .panel-intro { margin: .65rem 0; color: #b9c5cc; font-size: .78rem; }
 .layer-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .55rem; }
+.layer-group { margin-top: 1.1rem; }
+.layer-group > h3 { margin: 0 0 .55rem; font-size: .85rem; color: #adcfe5; }
 .layer-card { padding: .65rem; border: 1px solid #465864; background: #1a252d; border-radius: 5px; }
 .layer-card p { margin: .35rem 0 .55rem; color: #b9c5cc; font-size: .75rem; }
 .layer-title-row { display: flex; align-items: start; justify-content: space-between; gap: .5rem; }

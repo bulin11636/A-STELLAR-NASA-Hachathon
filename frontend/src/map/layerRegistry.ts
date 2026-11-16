@@ -167,7 +167,7 @@ const BASE_LAYERS: readonly EvidenceLayer[] = [
 const visualLayer=(id:string,label:string,source:EvidenceLayer,limitations:readonly string[]):EvidenceLayer=>({
   ...source,id,label,renderable:true,provenance:{...source.provenance,limitations},
 });
-export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
+const ALL_LAYERS: readonly EvidenceLayer[] = [
   ...BASE_LAYERS,
   visualLayer('rover_stops','Perseverance stops & Navcam references',BASE_LAYERS.find(l=>l.id==='rover_history')!,['Selected historical rover stops and image references. Independently toggled from science POIs and traverse lines.']),
   visualLayer('route','Route & mission stops',BASE_LAYERS.find(l=>l.id==='jezero_dem')!,['Computed or mock route and selected mission stops. Visual demo overlay.']),
@@ -177,6 +177,18 @@ export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = [
     provenance:{...BASE_LAYERS.find(l=>l.id==='thermal')!.provenance,sourceName:'Local THEMIS nighttime visual mosaic',sourceUrl:CATALOG_URL,
       limitations:['Local nighttime raster identity is not provider-verified. Visual context only; no calibrated temperature or risk.']}},
 ];
+
+export const LAYER_GROUPS = [
+  {label:'Basemaps',ids:['mars_basemap','jezero_imagery']},
+  {label:'A1 — Terrain & traversability (includes A5)',ids:['jezero_dem','dem_surface','planning_window']},
+  {label:'A2 — Thermal context',ids:['thermal','thermal_night']},
+  {label:'A3 — Radiation scenario',ids:['radiation']},
+  {label:'A4 — Geology & science',ids:['geology','science_pois']},
+  {label:'A6 — Rover observations',ids:['rover_history','rover_stops']},
+  {label:'Mission route & stops',ids:['route']},
+] as const;
+
+export const EVIDENCE_LAYERS: readonly EvidenceLayer[] = LAYER_GROUPS.flatMap(group=>group.ids.map(id=>ALL_LAYERS.find(layer=>layer.id===id)!));
 
 export function stateLabel(state: EvidenceState): string {
   return state[0].toUpperCase() + state.slice(1);
