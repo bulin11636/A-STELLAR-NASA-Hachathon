@@ -81,3 +81,52 @@ def test_diagnostic_command_never_generates_or_changes_the_ledger(tmp_path):
     assert 'synthetic-private-key' not in json.dumps(report)
     assert not (tmp_path/'a0-usage.sqlite3').exists()
     assert module.diagnose(settings)['last_provider_error'] is None
+
+
+@pytest.mark.parametrize('failure,stage',[
+    ('incomplete','output_limit'),('refusal','tool_call'),
+    ('bad_arguments','arguments'),('bad_citation','evidence_citations'),('missing_usage','usage'),
+])
+def test_proposal_diagnostics_identify_failure_without_retaining_private_output(tmp_path,failure,stage):
+    proposal=dict(action='answer',message='private-response-text',mode=None,waypoints=None,citations=['A1'])
+    body=dict(status='completed',output=[dict(type='function_call',name='propose_route_action',arguments=json.dumps(proposal))],
+        usage=dict(input_tokens=500,output_tokens=100))
+    if failure=='incomplete':
+        body.update(status='incomplete',incomplete_details={'reason':'max_output_tokens'})
+    elif failure=='refusal': body['output']=[]
+    elif failure=='bad_arguments': body['output'][0]['arguments']='{"private-secret":"bad"}'
+    elif failure=='bad_citation':
+        proposal['citations']=['private-secret']
+        body['output'][0]['arguments']=json.dumps(proposal)
+    elif failure=='missing_usage': del body['usage']
+    requests=[]
+    def handler(request):
+        requests.append(1)
+        return httpx.Response(200,json=body)
+    settings=AgentSettings(enabled=True,api_key='private-api-key')
+    provider=MeteredProvider(settings,tmp_path,httpx.MockTransport(handler))
+    with pytest.raises(ApiProblem) as error:
+        provider.decide({'evidence':[dict(id='A1',status='ready',kind='observed')]},'private-user-text')
+    assert error.value.details==[{'stage':stage,'operation':'propose_route_action'}]
+    assert error.value.outcome_unknown==(failure=='missing_usage')
+    diagnostic=MeteredProvider(settings,tmp_path).last_failure()
+    assert diagnostic['error_code']==stage
+    assert 'private-' not in json.dumps(diagnostic)+error.value.message
+    assert len(requests)==1 and provider.totals()['attempts']==1
+
+
+@pytest.mark.parametrize('available',[True,False])
+def test_citation_schema_prevents_unavailable_evidence_choices(tmp_path,available):
+    def handler(request):
+        payload=json.loads(request.content)
+        citations=payload['tools'][0]['parameters']['properties']['citations']
+        if available: assert citations['items']['enum']==['A1']
+        else: assert citations['maxItems']==0
+        proposal=dict(action='answer',message='Terrain context.',mode=None,waypoints=None,citations=['A1'] if available else [])
+        return httpx.Response(200,json=dict(status='completed',
+            output=[dict(type='function_call',name='propose_route_action',arguments=json.dumps(proposal))],
+            usage=dict(input_tokens=500,output_tokens=100)))
+    provider=MeteredProvider(AgentSettings(enabled=True,api_key='test'),tmp_path,httpx.MockTransport(handler))
+    result,_=provider.decide({'evidence':[dict(id='A1',status='ready' if available else 'unavailable',kind='observed'),
+        dict(id='A6',status='failed',kind='observed')]},'Explain')
+    assert result.citations==(['A1'] if available else [])

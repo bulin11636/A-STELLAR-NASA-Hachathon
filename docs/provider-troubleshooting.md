@@ -20,6 +20,19 @@ available. No credential or response body is retained in these diagnostics.
 Older records containing only `http_429` cannot recover the missing cause.
 There are no automatic generation retries.
 
+For HTTP 200 responses whose proposal fails local validation, the backend also
+records a fixed failure stage in `last_provider_error.error_code` and returns it
+in the error details. `output_limit` means the model exhausted its output budget;
+`completion` means another non-completed response; `tool_call` means a missing or
+unexpected proposal call; `arguments` means the proposal schema failed;
+`evidence_citations` means a citation was unavailable; `usage` means accounting
+was absent or invalid; and `response_json`/`transport` identify response parsing
+or receipt failures. These records contain no proposal text, credentials or user
+messages. Older generic proposal failures cannot be diagnosed retroactively.
+Route proposals now constrain citations to available evidence IDs in the tool
+schema as well as in host validation. A failed proposal still preserves the
+existing route, accounts for known usage, and never retries automatically.
+
 Known failed chat requests repeat their recorded error on ordinary replay.
 After resolving the cause, an explicit versioned retry can be requested when
 the status endpoint permits it. Timeouts and abandoned requests remain blocked
