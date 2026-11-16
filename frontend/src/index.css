@@ -76,6 +76,7 @@ select { width: 100%; padding: .55rem; font: inherit; background: #24323c; color
 .route-metrics dt { margin: 0; }
 .route-details { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid #44515d; }
 .route-details h3 { margin: 0; font-size: .9rem; }
+.route-details summary { cursor: pointer; font-weight: 600; }
 .route-leg-list { margin: .65rem 0 0; padding-left: 1.25rem; display: grid; gap: .45rem; }
 .route-leg-list li { display: grid; gap: .05rem; color: #c9d5db; }
 .route-leg-list span { font-variant-numeric: tabular-nums; }

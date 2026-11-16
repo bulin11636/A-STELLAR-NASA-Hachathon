@@ -79,6 +79,13 @@ try {
   await page.getByRole('button',{name:'Load in-coverage example endpoints',exact:true}).click();
   await page.getByRole('button',{name:'Plan Route',exact:true}).click();
   await page.locator('.route-preview polyline').waitFor();
+  await page.getByRole('tab',{name:'Route',exact:true}).click();
+  const technical=page.locator('#route-panel details').first();
+  assert.equal(await technical.getAttribute('open'),null);
+  assert.equal(await page.locator('#route-panel').getByText('Grid cells',{exact:true}).isVisible(),false);
+  assert.equal(await page.locator('#route-panel').getByText('Terrain resolution',{exact:true}).isVisible(),true);
+  await technical.locator('summary').click();
+  assert.equal(await page.locator('#route-panel').getByText('Grid cells',{exact:true}).isVisible(),true);
   await page.getByRole('tab',{name:'Briefing',exact:true}).click();
   summary.stage='briefing';
   for (const width of [1440,850,600]) {

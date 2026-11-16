@@ -37,12 +37,14 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
       <p>Region: Jezero · Terrain-only research policy; optional environmental constraints may be unassessed.</p>
       {planningError && <p role="alert">Planning information unavailable: {planningError}. Check the backend and reload this page.</p>}
       {planningRegion?.planning && <section aria-label="Backend planning footprint">
+        <details><summary>Planning coverage details</summary>
         <p>{planningRegion.planning.dynamic_windowing ? "Initial DEM example window (regional routes can use the full supported source):" : "Only this DEM window supports computed routing:"}</p>
         <p>Longitude {planningRegion.planning.bounds.west.toFixed(6)}–{planningRegion.planning.bounds.east.toFixed(6)}° E<br />
           Planetocentric latitude {planningRegion.planning.bounds.south.toFixed(6)}–{planningRegion.planning.bounds.north.toFixed(6)}°</p>
         <p>Grid: {planningRegion.planning.resolution_m.join(" × ")} m. Map coverage is larger than the planning window.</p>
         {planningRegion.planning.source_bounds && <p>Supported DEM source: longitude {planningRegion.planning.source_bounds.west.toFixed(4)}–{planningRegion.planning.source_bounds.east.toFixed(4)}° E;
           latitude {planningRegion.planning.source_bounds.south.toFixed(4)}–{planningRegion.planning.source_bounds.north.toFixed(4)}°. Each request is limited to {planningRegion.planning.max_grid_cells?.toLocaleString()} search cells; regional routes can use conservative aggregation with native-resolution segment checks.</p>}
+        </details>
         {planningRegion.planning.example_request && <>
           <button type="button" onClick={() => planner.loadExample(planningRegion.planning!.example_request!)}>Load in-coverage example endpoints</button>
           <p>The example uses coordinates from the loaded M20 DEM. You can also select endpoints directly on the NASA imagery.</p>
@@ -111,13 +113,13 @@ export default function RoutePlannerPanel({ planner, mapReady, onViewJezero, pla
             <dt>Risk score</dt><dd>{planner.result.metrics.risk_score ?? "Not assessed"}</dd>
           </dl>
           {planner.metadataError && <p role="alert">Metadata unavailable: {planner.metadataError}</p>}
-          {planner.metadata && <dl>
+          {planner.metadata && <details><summary>Technical details</summary><dl>
             <dt>Dataset / version</dt><dd>{planner.metadata.sources[0].dataset_id} / {planner.metadata.scope.dataset_version}</dd>
             <dt>Grid resolution (m)</dt><dd>{planner.metadata.grid.planning_resolution_m.join(" × ")}</dd>
             <dt>Research policy</dt><dd>{planner.metadata.policy.policy_id}; slope ≤ {planner.metadata.policy.slope_threshold_deg}°</dd>
             <dt>Map display</dt><dd>NASA imagery demo overlay ({planner.metadata.validation.map_alignment} registration metadata)</dd>
             <dt>Specialists</dt><dd>{planner.metadata.workers.map((w) => `${w.public_name}: ${w.status}`).join("; ")}</dd>
-          </dl>}
+          </dl></details>}
           {planner.metadata && <><RouteAssessment assessment={planner.metadata.assessment} /><SpecialistTrace traces={planner.metadata.specialist_trace} /></>}
           {planner.metadata?.rationale && <section aria-label="Planning rationale"><h3>Planning rationale</h3>
             <p>{planner.metadata.rationale.summary}</p>

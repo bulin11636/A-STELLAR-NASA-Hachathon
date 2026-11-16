@@ -401,7 +401,7 @@ export default function MarsMap() {
               <dt>Distance</dt><dd>{planner.result.metrics.distance_m?.toFixed(1) ?? "Not assessed"} m</dd>
               <dt>Estimated time</dt><dd>{planner.result.metrics.estimated_time_min?.toFixed(1) ?? "Not estimated"} min</dd>
               <dt>Map display</dt><dd>NASA imagery demo overlay</dd>
-              <dt>Grid resolution</dt><dd>{planner.metadata?.grid.planning_resolution_m.join(" × ") ?? "Not available"} m</dd>
+              <dt>Terrain resolution</dt><dd>{planner.metadata?.grid.planning_resolution_m.join(" × ") ?? "Not available"} m</dd>
             </dl>
             {planner.metadata ? <>
               <section className="route-details" aria-labelledby="route-legs-title">
@@ -412,16 +412,17 @@ export default function MarsMap() {
                   <span>Dwell: {leg.stop_time_min.toFixed(1)} min</span>
                 </li>)}</ol> : <p>Per-leg timing is unavailable because this route has no walking-mission estimate.</p>}
               </section>
-              <section className="route-details" aria-labelledby="route-grid-title">
-                <h3 id="route-grid-title">Planning grid & limits</h3>
+              <p>Terrain resolution describes the size of the cells used for route analysis.</p>
+              <details className="route-details">
+                <summary>Technical details</summary>
                 <dl className="route-metrics">
                   <dt>Actual cell size</dt><dd>{planner.metadata.planning_policy?.actual_cell_size_m.join(" × ") ?? planner.metadata.grid.planning_resolution_m.join(" × ")} m</dd>
                   <dt>Grid cells</dt><dd>{(planner.metadata.grid.width * planner.metadata.grid.height).toLocaleString()}</dd>
                   <dt>Resolution profile</dt><dd>{planner.metadata.planning_policy ? `${planner.metadata.planning_policy.resolution_profile} (${planner.metadata.planning_policy.resolution_version})` : "Legacy / not selected"}</dd>
                   <dt>Search limit</dt><dd>{(planner.metadata.planning_policy?.limits.max_expanded_nodes ?? planner.metadata.policy.limits.max_expanded_nodes).toLocaleString()} expanded nodes</dd>
-                  <dt>Time limit</dt><dd>{planner.metadata.planning_policy?.limits.max_elapsed_seconds ?? planner.metadata.policy.limits.max_elapsed_seconds} s</dd>
+                  <dt>Search time limit</dt><dd>{planner.metadata.planning_policy?.limits.max_elapsed_seconds ?? planner.metadata.policy.limits.max_elapsed_seconds} s</dd>
                 </dl>
-              </section>
+              </details>
               <RouteAssessment assessment={planner.metadata.assessment} /><SpecialistTrace traces={planner.metadata.specialist_trace} />
             </> : <p>Route metadata is not available yet.</p>}
           </>}
