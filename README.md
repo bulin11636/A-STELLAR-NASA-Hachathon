@@ -15,6 +15,8 @@
 - **Challenge:** Pending; add the official English challenge title and link.
 
 ## High-Level Project Summary
+<img width="1902" height="791" alt="image" src="https://github.com/user-attachments/assets/afbc3330-7eaa-45e7-9dc4-165f3d1aa412" />
+
 
 A-STELLAR is a web workspace that brings Mars imagery, terrain-based route
 planning, scientific context and a conversational planning agent together.
