@@ -1,114 +1,148 @@
-# Architecture and A0 integration
+# Architecture
 
-Latest implementation: computed routing passes through a metered
-`RouteAgent` when enabled, with native crops, conservative adaptive regional
-grids, up to 16 ordered waypoints, persistent chat revisions and grounded
-rationale. See [regional verification](regional-verification.md), the
-[agent/chat guide](a0-agent-chat.md) and [Docker runtime](docker.md).
-The first real API attempt returned HTTP 429; the integrated flow has been
-verified with mocked models and a real browser/DEM, not a successful live model.
+A-STELLAR is a React/OpenLayers workspace backed by FastAPI, explicitly registered
+scientific workers and a deterministic terrain planner. The public computed
+route path uses ordinary Python orchestration. A separate optional LangGraph
+experiment exists under `app.coordinator`; it is not required to start the web
+application or compute its A* routes.
 
-The [current TODO](TODO.md) records pending scientific, provider, deployment and
-display acceptance work. Docker packaging serves production UI/API together,
-accepts an external runtime env-file mount, and separates read-only inputs from
-persistent application state. Actual engine build/restart acceptance is pending.
+## Runtime components
 
-`planning/grid.py` reads native derivatives and conservatively aggregates bounded
-tiles. `planning/solver.py` solves ordered legs under shared budgets.
-`PlanningService` can retry a disconnected crop against the full source without
-another model call. `planning/validation.py` independently checks emitted segments
-and re-reads native cells for aggregated routes. The store validates artifact
-integrity and source/grid geometry on retrieval.
-
-The browser renders NASA Mars Trek imagery and sends relative `/api/v1` requests to FastAPI. Validation follows the [API protocol](A_STELLAR_FRONTEND_BACKEND_PROTOCOL_PLAN.md) and [A0 addendum](a0-api-contract.md). Explicit computed mode uses `PlanningService` for DEM ingestion, bounded A*, independent segment validation and durable storage. Default mock mode retains `MissionCoordinator` and null metrics.
-
-`WorkerRegistry` allowlists A1/A2/A3/A4/A6. `AgentDispatcher` invokes async workers with typed outputs, isolated failures and cooperative timeouts. Arrays and scientific products stay in `data/`; responses carry references and provenance. Blocking scientific processing should run outside the request event loop: async timeouts cannot forcibly stop blocking code.
-
-| Component | Current state |
+| Component | Responsibility |
 | --- | --- |
-| A0 | Mission Orchestration and Route Planning Coordinator: ordinary Python terrain pipeline and persisted results; separate optional LangGraph experiment |
-| A1/A2 | Opt-in shared async adapters around Sam's standalone scripts; outputs stay prototype scenarios pending scientific validation |
-| A3 | Documented dose-equivalent scenarios and separate raw RAD inspection |
-| A4 | Sampling POIs and ambiguity-aware geology associations; priorities remain unranked |
-| A6 | Rover history, metric proximity and bounded verified Navcam references |
-| Public API | Default mock mode; configured computed POST and persisted GET; no automatic downloads or optional-worker activation |
+| `frontend/src/components/` | Planning, route inspection, evidence controls, Mission Planner conversation and briefing |
+| `frontend/src/services/` | Typed relative API requests, cancellation, response validation and recovery |
+| `backend/app/api/` | HTTP validation, readiness, route/chat endpoints and bounded map resources |
+| `backend/app/coordinator/route_agent.py` | Public route coordinator: specialist selection, bounded proposals and host execution |
+| `backend/app/coordinator/specialists.py` | Advertised capabilities, required analyses and auditable specialist execution |
+| `backend/app/agents/` | Explicit async worker registry and typed scientific adapters |
+| `backend/app/planning/` | Source grids, conservative regional aggregation, A*, native checks and assessment |
+| `backend/app/planning/store.py` | Complete route records, immutable artifacts and integrity checks |
 
-## Data and coordinates
+In Docker, FastAPI serves the production frontend and API on one origin. During
+development, Vite proxies `/api` to port 8000. Scientific data and the runtime
+configuration are mounted separately; persistent application state has its own
+volume. See [Docker](docker.md).
 
-Repository-managed artifacts belong under [data/](datasets.md), and documentation under `docs/`. The approved A0 milestone reads the user's large raw inputs from an explicitly configured external dataset directory. Existing caches remain in place because provenance may contain absolute paths. Current A1/A2 defaults resolve from the repository location rather than the working directory.
+## Route lifecycle
 
-The wire convention is `MARS_2000_PLANETOCENTRIC_EAST_360_V1`: finite east longitude `[0,360)` and planetocentric latitude `[-90,90]`. NASA's WMTS label `EPSG:104905` is preserved as a native angular Mars projection, not Earth EPSG:4326. Its angular tile grid derives from advertised dimensions, not Earth scale denominators. Source-evidence checks do not validate WMTS ↔ wire ↔ DEM alignment; computed map display remains disabled.
+1. Validate coordinates, ordered visits, mission inputs and supported policy choices.
+2. Prepare a grid from the configured DEM. The initial example window is not
+   the full supported regional footprint.
+3. Run mandatory terrain checks and select applicable optional specialists.
+   In agentic mode, allowlisted model proposals guide selection and explanation.
+4. Reject proposals that change explicit inputs or introduce unknown coordinates,
+   unsupported actions, invalid fields or unavailable citations.
+5. Solve each required route leg in order using deterministic A*. Check its
+   connectors and segments against native terrain cells.
+6. Derive walking time from explicit assumptions. Evaluate an applicable
+   radiation scenario after duration becomes available, then assess evidence.
+7. Publish a complete stored result with metadata, rationale, trace and artifacts.
+   Return a route ID that the frontend can retrieve independently.
 
-## Implementation stages
+The model cannot execute code, choose arbitrary files/URLs, change host policy,
+or supply authoritative geometry. Deterministic mode skips model generation;
+its conversation functionality is narrower. The [agent guide](agents.md)
+describes specialist selection and interpretation.
 
-| Stage | Status and gate |
-| --- | --- |
-| 1. Foundation | API/worker contracts, deterministic A0 and honest mocks implemented. Sam's shared-schema review and coordinate agreement remain required. |
-| 2. Evidence | A4/A6 source-backed pipelines implemented; coverage remains partial. |
-| 3. Planning | Native metric DEM grid, masks, mode-specific costs, bounded A* and independent validation implemented; real CTX/API/restart checks pass. Map registration remains pending. |
-| 4. Constraints | A3 scenarios implemented. A2 integration, mission-approved policy and science itinerary remain pending. |
-| 5. A0/release | Agentic evidence loop and deterministic routing tested separately. Live models are deferred; computed browser display remains pending. |
+## Terrain and regional planning
 
-## Deterministic terrain pipeline
+The host-approved profile defines source identity, units, an initial window,
+slope threshold, terrain penalty, resolution policy and search budgets. Unknown
+or NoData cells are impassable. Eight-connected A* uses projected metric edge
+lengths and rejects blocked diagonal corners. A terrain-penalized objective adds
+a documented nonnegative slope cost; it is not a calibrated EVA safety model.
 
-The host configures `A_STELLAR_ROUTING_MODE`, `A_STELLAR_PLANNING_PROFILE`,
-`A_STELLAR_DATASET_DIR` and optionally `A_STELLAR_ROUTE_STORE`. Ingestion reads
-a bounded native spherical Mars equirectangular DEM window with a derivative
-halo. Separate coverage, unknown and blocked masks prevent NoData traversal.
-Unknown cells are impassable. Eight-connected A* uses physical projected edge
-lengths and disallows blocked diagonal corners. `safest` adds the documented
-nonnegative slope penalty; neither mode certifies safety.
+Regional requests can use dynamic crops and conservative aggregation across the
+supported source. Request size, node count and elapsed search time remain bounded.
+Aggregation never substitutes a visually enlarged map image for scientific data.
+Emitted segments are checked against the native raster, including endpoint
+connectors. Source/profile changes require rebuilding the grid consistently.
 
-Raster/planning/persistence work runs outside the HTTP event loop. Search has
-explicit node/time limits; grid allocation and segment validation are bounded.
-Cancelling an HTTP request does not forcibly terminate a worker thread. Each
-run has isolated immutable artifacts. The validator checks closed cell-box
-intersections for every segment, exact endpoint connectors, source version and
-emitted wire geometry. An atomic directory rename publishes a complete run;
-retrieval verifies schemas, identity, completion and artifact hashes.
+A failed connection can trigger a bounded broader source crop without another
+model call. Search/profile limits and actual cell size are persisted; the client
+must not infer them from a requested resolution label.
 
-The frontend reuses its existing transport, selection/cancellation hook and
-overlay. Computed distance/metadata are inspectable; computed map geometry is
-withheld by the coordinate guard. Read the [verification report](a0-verification-report.md)
-for the distinction between projected-coordinate controls and map registration.
+## Assessment semantics
 
-## Agentic A0
+The backend owns versioned mission-profile weights, gates, risk factors and
+confidence. Factors retain explicit assessed, contextual, unavailable, stale,
+incompatible, unassessed and not-applicable states.
 
-```mermaid
-flowchart LR
-  I[Inspect capabilities] --> P[LLM plan]
-  P --> G[Python policy gate]
-  G --> T[Parallel approved tools]
-  T --> E[LLM evaluate]
-  E --> G
-  G --> R[Grounded report or explicit blocker]
-```
+- Complete comparable risk is withheld when required weighted factors are missing
+  or a mission gate is blocked/unassessed.
+- `partial_risk_score` summarizes only assessed factors with applicable risk
+  weights. Its `risk_evidence_coverage` is the known profile weight, not a
+  geographic coverage fraction or accident probability.
+- Assessment confidence is a separate evidence-quality score. Its components are
+  availability, route coverage, temporal applicability and validation/provenance.
+- A blocked gate remains blocked even if a partial score is available.
+- Geological and rover context do not automatically become calibrated risk costs.
+  Surface-obstacle context is merged into terrain analysis.
 
-`app.coordinator.agent.MissionAgent` runs this graph separately from the deterministic public terrain pipeline and preserved mock `MissionCoordinator`. Plans are strict `Proposal` objects, not generated code. The host fixes mission scope, numeric parameters, dataset bindings and filesystem paths. The model selects only advertised tool names and cites known evidence IDs; it cannot alter inputs, waive constraints or supply executable arguments.
+Walking time uses supplied speed and per-intermediate-visit dwell. It excludes
+slope-dependent pace, rest, physiology, suit/load and life-support models.
+Radiation scenario pass/fail/unknown is limited to the configured scenario.
 
-The planner and evaluator use the same logical model with different phases. Independent workers run through the existing dispatcher. Policy rejects invented tools, extra fields, duplicate calls, unknown citations, premature completion and validation without a route candidate. It substitutes a deterministic plan on model/schema/policy failure. Defaults: eight total tool calls including capability inspection, two replans, 30-second model timeout, 10-second worker timeout and 120-second graph deadline. Profile loading occurs before that deadline. Recursion and decision counts are bounded separately.
+## Map presentation
 
-The runtime [SKILL.md](../backend/app/coordinator/skills/mission-coordinator/SKILL.md) supplies the agent's instructions and is included in package data. Its normalized text hash is recorded with provider/model, limits, source-input hashes, dataset version, proposals and execution events. Model context contains scalar fact summaries and evidence IDs, not rasters, full POI lists, raw worker prose, artifact paths or credentials. Raw worker results are local referenced artifacts; LangSmith tracing is disabled for these runs.
+The frontend presents Viking global imagery, a separate Jezero mosaic and
+available local scientific previews. Radiation scenarios are non-spatial.
+Map visibility and opacity do not change route costs. Some POI/traverse layers
+are selected fixture subsets; local raster previews are display products rather
+than native analysis grids.
 
-Only Python builds final findings from typed tool facts. Unknown values stay null; source-less/mock outputs cannot become measurements. Scenario budget passes retain scenario scope. `plan_route` currently reports unmet prerequisites; `validate_route` stays disabled. No route, scientific value or safety claim is invented to satisfy a mission.
+Computed polylines are currently demo overlays after coordinate conversion.
+Scientific pixel registration is a separate metadata/verification result.
+See [map registration](map-registration.md) for coordinate conventions and the
+independent measurement procedure.
 
-The live provider uses an explicitly selected model and the [OpenAI Responses function-call interface](https://developers.openai.com/api/reference/resources/responses/methods/create), with a forced strict proposal function and local revalidation. Graph nodes/conditional edges follow the [LangGraph Graph API](https://docs.langchain.com/oss/python/langgraph/graph-api). Scripted mode exercises the same execution graph without an LLM or network call; it is not advertised as a live model test.
+NASA imagery is fetched through a same-origin endpoint restricted to the
+allowlisted layers and validated resource paths. The service bounds responses
+and caches resources; it is not an arbitrary URL proxy. Local raster rendering
+also uses allowlisted files rather than client-supplied paths.
 
-## Historical next-step list and remaining gates
+## Persistence and request recovery
 
-The user-approved next milestone is defined in the
-[deterministic A0 plan](a0-implementation-plan.md),
-[API addendum](a0-api-contract.md) and [verification guide](a0-verification.md).
-It prioritizes real A*, persistent route metadata and frontend retrieval using
-ordinary Python orchestration. The existing LangGraph graph stays optional;
-live-model smoke testing is deferred beyond this milestone. The historical
-next-step list below describes the earlier integration gates, not a requirement
-to add a live LLM before deterministic routing.
+Each successful route retains its request, geometry, measured metrics, grid,
+policy, sources, validation, worker trace, rationale and applicable model usage.
+A revision stores a parent route ID. Retrieval checks schema, identity and
+artifact consistency; partial publication must not appear as a complete route.
 
-1. Configure and validate A1/A2 prototype sources. Their adapters now implement the shared worker interface with provenance/context checks, lazy raster imports and offloaded blocking work.
-2. Agree with Sam on the canonical metric grid, masks and source/wire/raster points. Prototype artifacts do not yet provide this validated planning handoff; A1's shared grid/mask fields stay null and A2 constraints stay unknown.
-3. Connect fusion, deterministic planning and route validation. Keep the public endpoint mocked until these gates pass.
-4. Register explicitly configured A3/A4/A6 as optional context. Observations and scenario budget passes never automatically reduce terrain risk.
-5. Smoke-test the live provider with an explicitly configured model, then activate planner tools only after deterministic route validation. Agentic evidence analysis is available now; no public API extension is introduced.
+Keyed requests retain running, succeeded, failed or unknown states. A repeated
+successful request can recover its saved response without generation. An eligible
+failed request requires an explicit versioned retry; an unknown outcome does not
+grant permission for automatic execution. HTTP cancellation stops client waiting,
+not necessarily backend work. See [API recovery](api.md#request-recovery).
 
-Full ownership and acceptance criteria remain in the [team master plan](A_STELLAR_JEZERO_TEAM_BACKEND_MASTER_PLAN.md).
+Raw rasters and private runtime files stay outside tracked source. Arrays and
+large scientific products remain local artifacts; only bounded facts, evidence
+IDs and approved context reach the model. The packaged
+[`SKILL.md`](../backend/app/coordinator/skills/mission-coordinator/SKILL.md) belongs
+to the optional coordinator experiment and remains an application asset.
+
+## Extending the system
+
+A new specialist needs an explicit typed contract, scope/provenance checks,
+registration in the authored-worker allowlist, bounded execution, and tests for
+missing as well as successful inputs. Adding a new internal ID requires changing
+the relevant schemas/allowlists; dropping a Python file into the repository does
+not automatically enable it.
+
+A spatial layer also needs a validated display extent and a browser-consumable
+artifact. A new routing cost or hard constraint requires separate numerical and
+scientific validation. This separation supports new sensors, analyses and regions
+without treating every new visual layer as an established safety signal.
+
+Future regional support could focus the same layer and specialist structure on
+other Mars craters or landing sites. It requires region-specific terrain,
+imagery, evidence, coordinate transforms and registration, together with changes
+to the current Jezero-specific API contracts and configuration.
+
+Future live-data support could ingest time-stamped sensor or mission updates,
+refresh specialist evidence, and trigger A* replanning when validated routing
+costs or constraints change. Updated routes and assignments would retain their
+source timestamps, reasons and revision history. Real-time route allocation
+would require feed adapters, freshness policies, update triggers and suitable
+communications and processing latency. The current implementation uses
+configured inputs and request-driven planning.

@@ -1,8 +1,8 @@
-# P0 frontend integration fixtures
+# Request recovery fixtures
 
 These files are backend-owned, synthetic API examples. They contain no mission
-measurements or live model output. Sheng can import them into frontend tests
-without changing their wire shape.
+measurements or live model output. Frontend tests can import them without
+changing their wire shape.
 
 | File | Meaning |
 | --- | --- |
@@ -41,5 +41,4 @@ python scripts/export_p0_fixtures.py
 The exporter uses a synthetic Mars DEM, the real API and a mocked provider. It
 never reads a credential for provider execution and never makes a live model
 request. Backend tests validate schemas, parent/context relationships, status
-semantics and regeneration. The seven status fixtures also pass Sheng's existing
-TypeScript decoder.
+semantics and regeneration. The status fixtures also exercise the shared TypeScript decoder.

@@ -1,5 +1,30 @@
 # A0 provider diagnostics
 
+Application HTTP status and provider HTTP status are different layers. A backend
+HTTP 503 can wrap provider HTTP 400/429, or report an invalid proposal from an
+otherwise successful provider response. Inspect the application code, structured
+details and recorded diagnostic before choosing a remedy.
+
+## Application configuration and local limits
+
+`A0_UNAVAILABLE` indicates missing required local model configuration.
+`A0_BUDGET_EXHAUSTED` is the application's persistent request/count or reservation
+ceiling, separate from provider credit. The operator can review
+`A_STELLAR_A0_MAX_REQUESTS` and `A_STELLAR_A0_BUDGET_USD` in the selected private
+runtime file. Restart after changing configuration, refresh request status and
+use an eligible explicit retry. Do not delete accounting/history to bypass a cap.
+
+`A0_CONTEXT_LIMIT` rejects an oversized serialized model input. Shorten the
+message or narrow the evidence; an earlier selection step in the same action
+may already have run. `A0_TIMEOUT` or a lost connection can leave an uncertain
+outcome. Check status/recover saved work rather than automatically executing again.
+
+The configured provider/model must also be supported by this implementation.
+Check local status without printing credential values. A configured key does not
+prove access, credit or current generation eligibility.
+
+## Provider HTTP 429
+
 HTTP 429 alone does not establish the cause. The provider can use it for request
 or token rate limits, unavailable credits, and enforced usage or spend limits.
 Use the specific `error.code` before the broader `error.type`.
@@ -20,6 +45,8 @@ available. No credential or response body is retained in these diagnostics.
 Older records containing only `http_429` cannot recover the missing cause.
 There are no automatic generation retries.
 
+## Proposal validation failures
+
 For HTTP 200 responses whose proposal fails local validation, the backend also
 records a fixed failure stage in `last_provider_error.error_code` and returns it
 in the error details. `output_limit` means the model exhausted its output budget;
@@ -36,8 +63,9 @@ existing route, accounts for known usage, and never retries automatically.
 Known failed chat requests repeat their recorded error on ordinary replay.
 After resolving the cause, an explicit versioned retry can be requested when
 the status endpoint permits it. Timeouts and abandoned requests remain blocked
-under the original key. See the [backend handoff](backend-handoff.md) before
-wiring retry controls; do not clear claims or silently create a new request ID.
+under the original key. See [API request recovery](api.md#request-recovery) for retry semantics; do not clear claims or silently create a new request ID.
+
+## Safe diagnostics
 
 From the repository root, inspect configuration and recorded errors locally:
 

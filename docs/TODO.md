@@ -1,48 +1,33 @@
-# TODO
+# Remaining work
 
-## P1 joint acceptance
+## Scientific validation
 
-- [ ] Finish the Journey Briefing/tab hierarchy and source/layer-bound verified NASA overlay acceptance after real controls pass.
-- [ ] Rebase `sam/ui-workspace-ux` onto current `main`; selectively integrate its
-  preserved workspace state, actionable A0 recovery, and browser coverage only
-  after contract and regression review.
+- [ ] Collect independent NASA imagery/wire/DEM feature controls and verify route-wide applicability at justified tolerances.
+- [ ] Resolve remaining source-radius and service latitude-semantics questions with source evidence.
+- [ ] Replace qualitative thermal-image heuristics with calibrated observations before supporting thermal constraints.
+- [ ] Validate site/time-specific radiation models beyond the historical constant-rate scenarios.
+- [ ] Independently verify geology associations, science-priority criteria and rover localization/clock joins.
+- [ ] Complete missing source receipts, acquisition times and unit/provenance metadata.
 
-## Deferred: deployment operations
+## Mission capabilities
 
-- [ ] Document and exercise backup/restore and upgrades for persistent application state.
-
-## Deferred: route revisions and chat
-
-- [ ] Support explicit avoidance areas with typed geometry, bounded masks and independent validation.
+- [ ] Add typed avoidance areas with bounded geometry and independent route validation.
 - [ ] Define optional visits, soft preferences and unspecified visit order without weakening required constraints.
-- [ ] Add cooperative cancellation for specialist/model/planning work and expose progress without applying stale results.
-- [ ] Support longer conversations with bounded, source-grounded summaries and retained typed preferences.
+- [ ] Validate communications, illumination, energy or consumables models before integrating them as mission constraints.
+- [ ] Verify additional terrain regions and DEMs before extending computed coverage.
+- [ ] Refine narrow passages and endpoint neighborhoods excluded by conservative regional aggregation.
 
-## Deferred: planning coverage
+## Interaction and reliability
 
-- [ ] Refine narrow passages or endpoint neighborhoods excluded by conservative regional aggregation while retaining bounded native validation.
-- [ ] Discover generic example endpoints for supported profiles beyond the explicit CTX/Jezero demonstrations.
-- [ ] Verify other DEMs' source identity, units, datum, masks and registration before integration.
+- [ ] Preserve unsent coordinate and conversation drafts across workspace tab changes.
+- [ ] Add a reviewable proposal comparison before applying a revision if the product adopts an explicit approval step.
+- [ ] Complete screen-reader, keyboard, contrast, touch and cross-browser accessibility acceptance.
+- [ ] Add cooperative cancellation and progress reporting without applying stale results.
+- [ ] Support bounded, source-grounded summaries for longer conversations.
+- [ ] Improve multilingual model-context accounting while retaining request and cost safeguards.
 
-## Deferred: NASA map registration
+## Distribution and operations
 
-- [ ] Obtain independent NASA WMTS/wire/DEM feature measurements and source assets that satisfy the implemented residual, coverage and resolution tolerances.
-- [ ] Resolve the source-radius discrepancy and NASA latitude semantics.
-- [ ] Verify computed NASA route alignment and tile behavior in a real browser after registration is established.
-
-## Deferred: specialist evidence
-
-- [ ] Add evidence-age policies and finer stale/incompatible reason codes beyond configured/selected/executed/unavailable traces.
-- [ ] Define and independently verify spatial environmental costs beyond the existing terrain costs, contextual waypoint proposals and mission-level radiation scenarios.
-- [ ] Replace A2 visual-raster heuristics with calibrated observations before supporting thermal constraints.
-- [ ] Validate a Jezero exposure model beyond the explicitly configured historical constant-rate scenario; keep rejected RAD products excluded.
-- [ ] Revalidate A4 geology associations and define a reproducible science-priority rubric.
-- [ ] Verify A6 localization/clock joins and observation links for the selected release.
-- [ ] Complete provenance for local inputs with missing receipts or embedded unit metadata.
-
-## Deferred: provider integration and quality
-
-- [ ] Evaluate live-model interpretation of removals and ambiguous places beyond the explicit additions and reordering required for the demo.
-- [ ] Support explicitly configured model adapters and validate their capabilities before use.
-- [ ] Replace the conservative serialized-input guard with tested tokenizer-based context accounting.
-- [ ] Migrate deprecated React renderer tests to a maintained DOM testing approach.
+- [ ] Automate versioned container-package and release publication after final acceptance.
+- [ ] Document and exercise persistent-state backup, restore and upgrades.
+- [ ] Define portable container packaging for optional geology assets and dependencies.

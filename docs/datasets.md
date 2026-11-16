@@ -1,96 +1,139 @@
-# Data locations and sources
+# Datasets and source provenance
 
-Repository-managed scientific artifacts and test fixtures belong under `data/`.
-For the approved [A0 milestone](a0-implementation-plan.md#local-input-policy),
-the user's large raw rasters remain at `~/nasa/project/dataset` and are read
-through explicit local configuration. Do not copy or move them merely to match
-the repository defaults. Generated grids, receipts and route records stay in
-ignored `data/` output folders. Existing worker defaults below remain unchanged
-until the milestone's configuration support is implemented.
+Scientific inputs are runtime data, not application source. Raw rasters,
+download caches, local outputs and credentials are excluded from Git and the
+Docker build context. Small tracked manifests, scientific records and synthetic
+test fixtures remain under `data/`.
 
-```text
-data/
-  raw/
-    dem/        A1 GeoTIFF inputs (ignored)
-    thermal/    A2 GeoTIFF inputs (ignored)
-  cache/        Downloaded NASA/PDS/USGS products and source receipts (ignored)
-  processed/    Generated grids and scientific reports (ignored)
-  fixtures/     Small shared coordinate and API test fixtures (tracked)
-  samples/      Small provenance records and explicit scenario configs (tracked)
+## Required terrain input
+
+The sample planning profile uses the USGS Mars 2020 Science Investigation CTX
+DEM Mosaic, `M20_JezeroCrater_CTXDEM_20m.tif`. The default profile selects a native
+20 m grid and an initial 128 by 128 cell example window; dynamic regional
+requests can use other supported parts of the same source. Bounds describe
+coverage, not guaranteed traversability or connection between arbitrary stops.
+
+Acquire the allowlisted product from the repository root:
+
+```bash
+python scripts/acquire_verified_products.py a1-ctx-jezero-dem-20m
 ```
 
-The existing caches and generated reports are preserved at their original paths. No large products were moved or redownloaded. `.gitkeep` files establish empty raw-input folders; do not commit scientific GeoTIFFs. Synthetic fixtures are not observations.
+This downloads to `data/raw/dem/` and writes source receipts. To use that location:
 
-## A1/A2 GeoTIFF inputs
+```bash
+python scripts/run_docker.py --env-file .env --dataset-dir data/raw/dem --mode deterministic
+```
 
-| Destination under `data/raw/` | Filename |
-| --- | --- |
-| `dem/` | `M20_JezeroCrater_CTXDEM_20m.tif` |
-| `dem/` | `NES_JEZ_MID_DEM_Mosaic_HiRISE_CTX_HRSC_GCS_MARS_07-10-2018.tif` |
-| `dem/` | `JEZ_hirise_soc_006_DTM_MOLAtopography_DeltaGeoid_1m_Eqc_latTs0_lon0_blend40.tif` |
-| `thermal/` | `Mars_MO_THEMIS-IR-Day_mosaic_global_100m_v12.tif` |
-| `thermal/` | `THEMIS_NightIR_ControlledMosaics_100m_v2_oct2018.tif` |
+An existing external directory is also supported. Pass its path to the launcher;
+do not copy large inputs into tracked source. The sample profile resolves its
+relative `dem` filename inside the supplied dataset root.
 
-These filenames come from Sam's standalone-agent handoff; availability, calibration, CRS, pixel resolution and claimed leveling improvements require product-level verification. Names alone do not establish production readiness. A1 defaults to the CTX DEM and writes grids to `data/processed/a1/`; A2 defaults to the two thermal mosaics. Default paths are independent of the launch directory. Explicit CLI input paths remain supported.
+## Source catalog
 
-## A3/A4/A6 sources
-
-| Source | Local storage / purpose | Verification and limits |
+| Source | Purpose | Important limit |
 | --- | --- | --- |
-| [NASA M20 map configuration](https://mars.nasa.gov/maps/location/api/configure/get?mission=M20) and linked vector exports | `cache/evidence/`; sampling sites, rover stops and traverse | SHA-256 snapshots; accepted angular/projected fields checked against PDS controls. These are mission-map exports, not direct Mars Trek geology layers. |
-| [PDS PLACES](https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/) | `cache/evidence/` and `cache/a6-observations/`; localization, exposures and clock ranges | Release identity, labeled fields/units/counts and receipts checked. Does not establish WMTS/DEM registration. |
-| [USGS SIM 3464](https://doi.org/10.3133/sim3464) | `cache/a4-geology/sim3464/`; regional geology | Archive CRC/SHA-256, native CRS and vector checks; approximate 100–200 m basemap offsets remain relevant. |
-| [PDS Atlas Navcam](https://pds-imaging.jpl.nasa.gov/beta/archive-explorer?mission=mars_2020&bundle=mars2020_navcam_ops_raw) | `cache/a6-observations/`; labels and browse images | Eight bounded products verified; complete mission image coverage and Mastcam-Z reconciliation are not established. |
-| [MSL RAD RDR](https://pds-ppi.igpp.ucla.edu/data/MSL-M-RAD-3-RDR-V1.0/) | `cache/a3-radiation/msl-rad-rdr/`; absorbed-dose inspection | Historical Gale Crater detector rates, not Jezero dose equivalent. Saved sample has a labeled record-count discrepancy and is excluded from baseline use. |
-| [RAD team publication](https://elib.dlr.de/106090/1/ME-SBA-2016-Reitz_MSL-RAD_ICES_2016.pdf) | `samples/msl-rad-literature-scenario.json` | Explicit historical dose-equivalent replay; no calibrated future Jezero prediction. |
+| [USGS CTX DEM](https://astrogeology.usgs.gov/search/map/mars_2020_science_investigation_ctx_dem_mosaic) | Terrain grid, slope policy and native route checks | Projected distance and host-defined terrain thresholds do not certify EVA safety |
+| [NASA Mars Trek](https://trek.nasa.gov/) Viking global and Jezero mosaics | Global and regional visible-light context | Image resolution/coverage differs from the DEM; demo overlays do not establish pixel registration |
+| [THEMIS daytime mosaic](https://astrogeology.usgs.gov/search/map/mars_odyssey_themis_ir_day_global_mosaic_100m_v12) | Qualitative thermal-context preview | Stretched/blended visual values are not calibrated temperatures |
+| [USGS SIM 3464](https://doi.org/10.3133/sim3464) | Regional geology and science context | Regional map at 1:75,000 with documented approximate 100–200 m offsets |
+| [NASA M20 map exports](https://mars.nasa.gov/maps/location/api/configure/get?mission=M20) | Science locations, rover stops and traverse snapshots | Selected historical evidence does not establish complete coverage or future accessibility |
+| [PDS Rover Places](https://pds-geosciences.wustl.edu/m2020/urn-nasa-pds-mars2020_rover_places/) | Localization and observation/clock context | Source and release identity must match the evidence profile |
+| [PDS Navcam archive](https://pds-imaging.jpl.nasa.gov/beta/archive-explorer?mission=mars_2020&bundle=mars2020_navcam_ops_raw) | Bounded observation labels and browse references | A sample is not complete mission imagery |
+| [Historical RAD publication](https://elib.dlr.de/106090/1/ME-SBA-2016-Reitz_MSL-RAD_ICES_2016.pdf) | Explicit dose-equivalent sensitivity scenario | Historical scenario, not a future Jezero radiation forecast |
 
-## Provenance and fixtures
+The [acquisition manifest](../data/samples/download-manifest.json) records the
+current allowlist, destinations, provider metadata and unresolved product URLs.
+Some named HiRISE/CTX DEMs and the exact global nighttime THEMIS product still
+have unverified download URLs. The script refuses unresolved entries rather than
+substituting a similarly named raster or rendered tile. There is no supported
+one-command download of every specialist's complete inputs.
 
-Downloads retain original URLs, local SHA-256/size receipts and retrieval times. Checksums identify local content/version integrity, not provider-signed authenticity. Processed artifacts retain source IDs, coordinate/coverage assumptions, processing versions and exclusions. Unknown values remain unknown.
+## Optional acquisition
 
-## Verified acquisition manifest
+Geology archive:
 
-`data/samples/download-manifest.json` is the tracked allowlist for raster acquisition. `scripts/acquire_verified_products.py` streams each eligible product to its ignored `data/raw/` destination and writes an ignored source receipt under `data/cache/source-receipts/` with the original/resolved URL, UTC retrieval time, byte count and SHA-256. It refuses products whose URLs have not been verified and requires `--allow-large` for a manifest entry marked large.
+```bash
+python scripts/acquire_verified_products.py a4-usgs-sim3464-geology
+```
 
-The currently verified A1 input is the 87 MB USGS **Mars 2020 Science Investigation CTX DEM Mosaic**, `a1-ctx-jezero-dem-20m`. The verified A2 candidate is the 21 GB USGS **Mars Odyssey THEMIS-IR Day Global Mosaic 100m v12**, `a2-themis-day-global-100m-v12`. Its provider documents 8-bit stretch/blend visual values, not calibrated temperature units, so it remains a **prototype-only** A2 input. Obtain approval before invoking the latter:
+The archive is stored under `data/cache/a4-geology/sim3464/`. Native browser
+geology rendering additionally needs the optional geology dependencies. The
+standard Docker image does not automatically include this ignored cache or every
+optional geology dependency; deployment needs explicit support for those assets.
 
-```powershell
-python scripts/acquire_verified_products.py a1-ctx-jezero-dem-20m
-# only after explicit approval for the 21 GB product:
+The daytime THEMIS visual product is approximately 21 GB. Download it only when
+needed and after confirming storage/network capacity:
+
+```bash
 python scripts/acquire_verified_products.py a2-themis-day-global-100m-v12 --allow-large
 ```
 
-The two HiRISE/CTX/HRSC DEM filenames and the named global THEMIS-night file remain **unverified URL gaps** in the manifest. A USGS regional night mosaic or a map tile is not a silent replacement.
+Its manifest destination is `data/raw/thermal/`. The current browser raster
+service looks for the expected thermal filenames beside the selected DEM; an
+external dataset layout can provide that arrangement. A host-only symlink does
+not make its target available inside a container; Docker needs the actual target
+inside its visible mounted tree. Retain adjacent receipts when arranging data. A visual thermal preview does not by
+itself configure a thermal analysis worker or establish calibrated constraints.
 
-`data/samples/` contains the vector, geology, A6 and RAD verification records plus the radiation scenario. `data/fixtures/` contains the mock coordinate fixture, factual PDS control fixture and route-request fixture. Mock coordinate arithmetic does not certify scientific alignment.
+NASA/PDS evidence snapshots use a separate bounded acquisition command, from
+`backend/` in an environment with the agentic dependencies:
 
-`a0-mission.json`, `a0-profile.json` and `a0-script.json` are tracked A0 demonstration inputs. The script is an offline decision replay, not model output or scientific evidence. Per-run A0 reports and raw-result artifacts live in ignored `data/processed/a0/`; its runtime SKILL.md is a packaged application instruction asset under `backend/app/coordinator/skills/`, not a dataset.
+```bash
+python -m app.evidence.snapshots --cache-dir /absolute/path/to/dataset/evidence
+```
 
-Retain NASA/JPL/PDS/USGS credits and product-specific restrictions. General [NASA usage guidance](https://www.nasa.gov/nasa-brand-center/images-and-media/) and [JPL image policy](https://www.jpl.nasa.gov/jpl-image-use-policy/) do not imply an unrestricted license or endorsement. No raw imagery is shipped in the repository.
+This is an explicit network download. Observation and geology adapters can attach
+additional verified reports through a trusted evidence profile; see [agents](agents.md).
+The raw MSL RAD sample described in the tracked records has a labeled record-count
+issue and is excluded from baseline dose assessment. Do not silently enable it.
 
-Commands and measured results are in [Agents](agents.md).
+## Dataset layout and container paths
 
-## Verified local planning window
+A typical external root contains:
 
-The [portable profile](../data/samples/a0-planning-profile.example.json) selects
-CTX source window `[1210,2440,128,128]` (column, row, width, height), plus a
-one-pixel derivative halo. It retains the native 20 × 20 m grid, sphere radius
-3,396,190 m, standard parallel 18.4663°, zero prime/central meridians and metre
-axes. No reprojection or upsampling occurs. The embedded CRS is authoritative
-for this run; the acquisition manifest's provider-summary radius 3,396,160 m
-is a documented discrepancy, not substituted into the transform. A PDS control
-agrees in projected coordinates to 0.0000253 m, but does not prove feature
-alignment to NASA imagery.
+```text
+dataset/
+  M20_JezeroCrater_CTXDEM_20m.tif
+  Mars_MO_THEMIS-IR-Day_mosaic_global_100m_v12.tif  # optional
+  THEMIS_NightIR_ControlledMosaics_100m_v2_oct2018.tif  # optional, exact source required
+  evidence/       # optional verified manifests and source snapshots
+  registration/   # optional independent feature measurements and controls
+```
 
-The band has no unit tag. Metre elevations are an explicit host interpretation
-supported by the CTX provider metadata recorded in the acquisition manifest;
-the local file has no publisher/acquisition receipt. Metadata therefore retains
-local identity, SHA-256 and null unknown source facts. Distances and slope
-derivatives use native projected metres, with projection distortion retained.
-This is a research policy, not a calibrated physical safety model.
+The Docker launcher mounts this root read-only at `/datasets`. Evidence profiles
+must reference container-visible files; a host-only absolute path is not valid
+inside the container. Analysis-worker output paths must be writable and separate
+from these read-only inputs.
 
-All five supplied rasters were inventoried through headers. Other DEMs were
-not selected because their source identity/units require further verification.
-The THEMIS day visual mosaic remains unsuitable for calibrated temperatures.
-The latest [run report](a0-verification-report.md) records optional receipts and
-the RAD quality exclusion; none supplies a route constraint by default.
+## Units, coordinates and receipts
+
+The inspected CTX raster uses a Mars-sphere equirectangular CRS, radius
+3,396,190 m, standard parallel 18.4663 degrees and projected metre axes. A provider
+summary separately lists radius 3,396,160 m; the implementation does not silently
+replace the embedded CRS with that summary. The band has no embedded elevation
+unit tag. Metre elevations are an explicit host interpretation backed by the
+provider metadata recorded in the manifest.
+
+The [sample profile](../data/samples/a0-planning-profile.example.json) records
+these assumptions. Replacing its input requires checking source identity, CRS,
+units, NoData behavior, resolution and registration rather than renaming a file.
+See [map registration](map-registration.md) for wire/display conversions.
+
+Acquisition receipts retain source/resolved URLs, byte count, SHA-256 and time.
+Checksums identify local content and integrity; they are not publisher signatures
+or scientific certification. Unknown source facts remain unknown. Keep raw inputs
+immutable during a run and restart the backend after replacing them.
+
+## Tracked data and credits
+
+- `data/samples/` contains configuration examples, the acquisition manifest,
+  scientific source/control records and the explicit radiation scenario.
+- `data/fixtures/` contains small mock/synthetic API and planning fixtures.
+  Synthetic verified-alignment fixtures cannot establish real registration.
+- `data/raw/`, `data/cache/` and `data/processed/` hold ignored runtime data.
+
+Retain NASA/JPL-Caltech, PDS and USGS product attribution and source restrictions.
+[NASA media guidance](https://www.nasa.gov/nasa-brand-center/images-and-media/)
+and [JPL image policy](https://www.jpl.nasa.gov/jpl-image-use-policy/) do not imply
+endorsement or an unrestricted license for every product.

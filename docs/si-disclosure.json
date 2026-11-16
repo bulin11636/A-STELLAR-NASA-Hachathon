@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "project": "A-STELLAR",
+  "scope": "Project-level SI disclosure; not a per-file authorship audit.",
+  "core_concept_and_system_architecture": {
+    "origin": "Project team",
+    "basis": "Team confirmation"
+  },
+  "development_assistance": [
+    {
+      "tool": "OpenAI Codex",
+      "uses": [
+        "Application implementation",
+        "Debugging",
+        "Test development",
+        "Refactoring",
+        "Documentation, including README.md"
+      ],
+      "artifact_types": [
+        "Code",
+        "Tests",
+        "Documentation"
+      ]
+    },
+    {
+      "tool": "Google Gemini",
+      "uses": [
+        "Early standalone test-program development",
+        "Dataset exploration"
+      ],
+      "artifact_types": [
+        "Prototype code",
+        "Dataset exploration assistance"
+      ]
+    }
+  ],
+  "runtime_assistance": {
+    "service": "OpenAI model API",
+    "mode": "agentic",
+    "uses": [
+      "Request interpretation",
+      "Allowed specialist tool selection",
+      "Structured route-revision proposals",
+      "Route explanations"
+    ],
+    "boundary": "Validated host code computes A* geometry and numerical assessments."
+  },
+  "data_provenance": {
+    "source_manifest": "../data/samples/download-manifest.json",
+    "source_guide": "datasets.md",
+    "test_fixtures": "../data/fixtures/",
+    "distinction": "Scientific source data, host-derived numerical results, synthetic test fixtures and SI-generated explanations are distinct artifact categories."
+  },
+  "demo_narration": {
+    "tool": "ElevenLabs",
+    "si_generated": true,
+    "credit": "Narration generated with ElevenLabs (AI).",
+    "public_demo_url": "https://www.youtube.com/watch?v=DzHkKI60o0Y",
+    "publication_status": "Demo URL recorded; the team manages delivered-media credits and metadata.",
+    "required_credit_locations": [
+      "Published demo description or credits",
+      "Audio/video metadata"
+    ]
+  },
+  "publication_requirements": {
+    "si_generated_images_and_video": "Include a visible SI-generation watermark if used.",
+    "si_generated_audio": "Acknowledge SI generation in descriptive text and media metadata.",
+    "si_assisted_code_and_data": "Retain this project disclosure with distributed source and data provenance; distinguish synthetic or SI-generated material from scientific observations.",
+    "nasa_branding": "SI-generated content must not use, contain or modify NASA branding or design elements."
+  }
+}

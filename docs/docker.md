@@ -1,107 +1,117 @@
 # Docker runtime
 
-The multi-stage image builds the React UI and serves it with the FastAPI API on
-one origin. Scientific data and credentials are runtime inputs. The build-context
-allowlist includes only application source, frontend build inputs and runtime
-dependency metadata. The image does not include datasets, `.env` files, local
-environments, test output or route records.
+The multi-stage Dockerfile builds the React frontend and serves it with FastAPI
+on one origin. Raw datasets, private `.env` files, local environments, test output
+and application state are excluded from the image by the build-context allowlist.
 
-The runtime installs `libexpat1`, required by the terrain dependencies on the
-slim base image. The build imports Rasterio and PyProj so missing shared
-libraries fail during image construction rather than first use.
+## Requirements
 
-## Start
+Use Docker Engine/Desktop with Compose v2 and Linux container support. On Windows,
+Docker Desktop can use the WSL 2 backend; enable integration for the distribution
+when running commands from WSL. Intel and AMD x86-64 hosts can use the same
+`linux/amd64` image. The launcher also needs a local Python 3.10+ interpreter.
 
-Install Docker Engine/Desktop with Compose v2. In WSL, enable Docker Desktop's
-integration for the selected distribution. Run these commands from the repository
-root as your regular user:
+Prepare the required [dataset](datasets.md) and copy `.env.example` to a private
+runtime file. The default planning profile expects
+`M20_JezeroCrater_CTXDEM_20m.tif` directly inside the supplied dataset directory.
+Run the launcher as an unprivileged host user.
+
+## Build and start
+
+From the repository root, Bash / WSL:
 
 ```bash
 python scripts/run_docker.py \
-  --env-file /absolute/path/to/private.env \
-  --dataset-dir /absolute/path/to/dataset
+  --env-file "$PWD/.env" \
+  --dataset-dir /absolute/path/to/dataset \
+  --mode agentic
 ```
 
-Open `http://127.0.0.1:8080`. The default planning profile selects
-`M20_JezeroCrater_CTXDEM_20m.tif` relative to the supplied dataset directory.
-Use `--planning-profile /path/to/profile.json` for another supported profile;
-its `dem` must be relative to the dataset root and resolve inside it.
+PowerShell, with paths replaced for the local machine:
 
-The private runtime file uses the same assignment syntax as native startup.
-Supply `OPENAI_API_KEY` for the default agentic mode. Model settings and optional
-trusted evidence bindings can be configured there. An evidence profile must use
-container-visible paths such as `/datasets/...`; a single verified snapshot
-under the DEM's sibling `evidence/` directory is also discoverable automatically.
-No credential value is passed as a command-line argument or Compose build input.
+```powershell
+python scripts/run_docker.py --env-file .env --dataset-dir C:\data\jezero --mode agentic
+```
 
-For an isolated acceptance run with no model generation, use
-`python scripts/verify_docker.py --synthetic`. See the
-[backend handoff](backend-handoff.md) for real-data acceptance and the distinction
-between fixture preparation and an actual image run. The normal image tag can
-be overridden with `A_STELLAR_IMAGE`; the verifier uses a unique test tag.
+Open **http://localhost:8080**. The default action executes `docker compose up -d
+--build`; it rebuilds changed application layers and updates the service. Build
+caches may be reused. You do not need a separate Vite server in this mode.
 
-For offline terrain planning, add `--mode deterministic`. For another HTTP port,
-add `--port 8081`. Use `--dry-run` to validate mount inputs without starting Docker,
-and `--no-build` to reuse an existing image.
+Agentic mode requires the user's configured backend API credential and provider
+access. Use `--mode deterministic` for computed terrain planning without live
+model calls; its conversation/revision support is narrower. No credentials are
+needed at image-build time.
 
-## Configuration and persistence
+## Input and runtime options
 
-The launcher passes paths to Compose through its process environment. It does
-not source, print or ask Compose to interpolate the private runtime file.
-The backend reads that file through a read-only mount.
+| Option | Purpose |
+| --- | --- |
+| `--env-file PATH` | Private runtime configuration, mounted read-only |
+| `--dataset-dir PATH` | Scientific input root, mounted read-only at `/datasets` |
+| `--planning-profile PATH` | Approved profile; defaults to the tracked CTX example |
+| `--mode agentic` or `deterministic` | Select model-assisted or offline host planning |
+| `--port 8081` | Choose another localhost HTTP port |
+| `--project-name NAME` | Isolate a separate application/state instance |
+| `--no-build` | Reuse an existing image rather than build it |
+| `--dry-run` | Validate inputs and display the Compose command without starting Docker |
 
-Native startup precedence is process environment over the selected runtime file.
-In Compose, the launcher-selected A0 mode and fixed container paths override
-matching values in the file: routing is computed, datasets are `/datasets`, the
-profile is `/run/a-stellar/planning.json`, routes/chat/evidence are under
-`/var/lib/a-stellar`, and the production UI is `/app/frontend/dist`.
-Other backend settings, including the model and optional evidence profile, come
-from the runtime file. Restart the container to reload changed configuration.
+The profile's `dem` must be dataset-relative and resolve inside the mounted root.
+Source identity, units and coordinates still require validation for another DEM.
+Evidence profiles must use container-visible input paths and writable output
+paths. The standard image does not include every optional geology dependency or
+the ignored native geology cache; see [dataset limitations](datasets.md).
 
-Dataset, profile and runtime-file mounts are read-only. A project-scoped named
-volume stores routes, their validation/provenance artifacts, chat messages and
-application counters. Ordinary `down`, rebuild and restart operations retain it.
-Removing the volume deletes those records; make a backup before doing so.
+For a prebuilt image, first pull its approved version, set `A_STELLAR_IMAGE` to
+that exact image/tag, and run the launcher with `--no-build`. No public image/tag
+is assumed by the default local-build setup.
 
-On POSIX hosts the launcher uses the host user's UID/GID so private `0600` files
-remain readable without changing their permissions. The image also has a
-non-root default UID of 10001 for direct use. The state-volume root is sticky and
-writable; application subdirectories belong to the runtime user. Keep the same
-UID when reusing a state volume. The launcher rejects root execution.
-The service binds to localhost and drops all Linux capabilities.
+## Configuration precedence
 
-Use the same input arguments with `--action status`, `logs`, `restart` or `down`:
+The launcher passes mount paths through its environment and explicitly prevents
+Compose from interpolating the private runtime file. The backend reads the
+read-only file as data; it is not sourced as shell code.
+
+Native startup uses process environment over the selected runtime file. In
+Compose, the launcher-selected mode and fixed container paths override matching
+file values: routing is computed, data are `/datasets`, the profile is
+`/run/a-stellar/planning.json`, persistent state is under `/var/lib/a-stellar`, and
+the production frontend is `/app/frontend/dist`. Other settings, such as model
+configuration and trusted evidence bindings, come from the runtime file.
+
+Restart after runtime configuration changes. Recreating with `--action up` is
+appropriate when a bind-mounted file was replaced atomically or mount inputs
+changed. Do not put the API credential in build arguments or the Dockerfile.
+
+## Persistent state and lifecycle
+
+A project-scoped named volume stores routes, evidence artifacts, chat messages
+and application request/accounting state. Ordinary restart, rebuild and `down`
+retain it. Deleting the volume deletes those records; back it up before removal.
+Application/provider limits are distinct and do not reset just because the
+container restarts.
+
+Use the same env/dataset/project arguments with an action:
 
 ```bash
-python scripts/run_docker.py --env-file /path/to/private.env \
-  --dataset-dir /path/to/dataset --action logs
+python scripts/run_docker.py --env-file .env --dataset-dir /path/to/dataset --action status
+python scripts/run_docker.py --env-file .env --dataset-dir /path/to/dataset --action logs
+python scripts/run_docker.py --env-file .env --dataset-dir /path/to/dataset --action restart
+python scripts/run_docker.py --env-file .env --dataset-dir /path/to/dataset --action down
 ```
 
-Stop/status/log operations remain available if an input file was removed.
-Changing a bind-mounted file by atomic replacement can require container
-recreation (`--action up`) rather than a process restart.
+The service binds to localhost, drops Linux capabilities and runs as a non-root
+user. On POSIX hosts the launcher uses the host UID/GID so private files can remain
+readable without loosening their permissions. Keep a consistent UID when reusing
+state. Windows uses the launcher's non-root fallback identity.
 
-## Verification
+## Readiness and verification
 
-`GET /api/v1/health` is process liveness. `GET /api/v1/ready` returns HTTP 200 only
-when the local planning configuration is usable and agentic mode has a key;
-otherwise it returns HTTP 503 with boolean checks. Neither endpoint makes a
-provider request, verifies provider access, or certifies NASA map registration.
-The image health check uses readiness.
+- `/api/v1/health` checks process liveness.
+- `/api/v1/ready` checks usable local planning configuration, storage and the
+  required local credential configuration for the selected mode.
+- Neither endpoint makes a model request, verifies provider credit or certifies
+  NASA map alignment. The container health check uses readiness.
 
-The automated backend checks cover production assets, API routing/error/cache
-boundaries, missing DEM/profile, missing credentials, external-file precedence,
-portable source paths and secret-free launcher arguments. The regional and
-browser verifiers exercise the production UI/API, durable records and real DEM.
-See [regional verification](regional-verification.md).
-
-Actual image build/run passed in Docker Desktop with WSL integration on
-2026-11-15, using both a synthetic fixture and the real Jezero DEM. The real-data
-verifier uses the advertised crater-scale example when available; this run
-computed a 60.04 km route. Non-root execution, read-only mounts, health checks,
-named-volume initialization and persistence after restart/recreation passed.
-These container checks use deterministic mode and make no model requests; the
-separate live A0 check is recorded in the [current checkpoint](backend-verification.md).
-
-The packaging follows Docker's [multi-stage build](https://docs.docker.com/build/building/multi-stage/)
-and [Compose service/mount](https://docs.docker.com/reference/compose-file/services/) documentation.
+Run `python scripts/verify_docker.py --synthetic` for isolated image acceptance,
+or use `--dataset-dir /path/to/dataset` for real terrain data. The verifier tests
+its own project and state; see [verification](verification.md) for scope and reports.
