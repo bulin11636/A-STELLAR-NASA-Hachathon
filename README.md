@@ -42,13 +42,17 @@ understand its supporting evidence and refine a mission plan in one workspace.
 
 **SI audio disclosure:** The demo narration was generated with ElevenLabs.
 
+
 ## Link to Final Project
 
-The final project source and run instructions are available in the
-[A-STELLAR GitHub repository](https://github.com/bulin11636/A-STELLAR-NASA-Hachathon).
-This repository is the project link; a hosted application URL can be added here
-if the team publishes one. Reviewers can follow [Get started](#get-started) to
-run the application with the required external inputs.
+The complete source code, documentation, and setup instructions for A-STELLAR are available in our GitHub repository:
+
+**[A-STELLAR — GitHub Repository](https://github.com/bulin11636/A-STELLAR-NASA-Hachathon)**
+
+Reviewers can follow the [Get Started](#get-started) section to set up and run the application locally.
+
+**Project Demo:** [Watch on YouTube](https://www.youtube.com/watch?v=DzHkKI60o0Y)
+
 
 ## Detailed Project Description
 
@@ -70,8 +74,6 @@ planners:
   treating a result as decision support.
 - Export a briefing and retain the relationship between earlier and revised routes.
 
-The demo demonstrates this workflow with Jezero data, focusing on terrain,
-walking-time assumptions, scientific context and conversational route revision.
 
 ### Mission workspace
 
