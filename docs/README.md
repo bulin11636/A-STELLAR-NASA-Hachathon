@@ -8,6 +8,7 @@ understand and verify the current implementation.
 | --- | --- |
 | [Development setup](setup.md) | Python/Vite environments, native startup and local checks |
 | [Docker runtime](docker.md) | Build/run commands, external configuration, datasets and persistent state |
+| [Releases and packages](releases.md) | Publish versions, download prebuilt images and test a deployment |
 | [Datasets](datasets.md) | Required terrain data, optional sources, acquisition and provenance |
 | [Architecture](architecture.md) | Production data flow, route computation, assessment and persistence |
 | [Specialist agents](agents.md) | Tool selection, typed worker results, scientific limits and extensions |

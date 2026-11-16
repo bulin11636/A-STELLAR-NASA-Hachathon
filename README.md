@@ -312,6 +312,9 @@ source terms. For the official evaluation framework, consult the
 
 ## Get started
 
+For versioned prebuilt images and deployment downloads, see
+[Releases and packages](docs/releases.md).
+
 The Docker image serves the production frontend and API together. You need
 Docker with Compose v2, Python 3.10+ for the launcher, the configured Jezero DEM,
 and a private runtime file. See [datasets](docs/datasets.md) for acquisition and
