@@ -1,6 +1,6 @@
 // Presentation names only. API identifiers and stored evidence stay unchanged.
 export const DOMAIN_NAMES:Readonly<Record<string,string>>={
-  A0:'Mission Planning Assistant',A1:'Terrain & Traversability',A2:'Thermal Environment',
+  A0:'Mission planning Agent',A1:'Terrain & Traversability',A2:'Thermal Environment',
   A3:'Radiation Exposure',A4:'Geology & Science',A5:'Surface Obstacles',A6:'Rover Operations & Observations',
 };
 export function domainName(id:string,fallback?:string) {return DOMAIN_NAMES[id] ?? readableText(fallback ?? id);}

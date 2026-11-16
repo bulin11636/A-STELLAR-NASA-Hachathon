@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {domainName,readableText,errorTitle} from '../src/services/domainNames.ts';
 test('internal identifiers in explanations and recovery messages use professional display names',()=>{
-  assert.equal(domainName('A0'),'Mission Planning Assistant');
+  assert.equal(domainName('A0'),'Mission planning Agent');
   assert.equal(domainName('A3'),'Radiation Exposure');
   const text=readableText('A0 needs A1 and A3. Update A_STELLAR_A0_MAX_REQUESTS. A0_BUDGET_EXHAUSTED');
   assert(text.includes('Terrain & Traversability') && text.includes('Radiation Exposure'));

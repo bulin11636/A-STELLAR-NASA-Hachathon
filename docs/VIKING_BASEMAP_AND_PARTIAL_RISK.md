@@ -20,7 +20,7 @@ Only available spatial layers appear in the map control list. Non-spatial A3
 radiation scenarios remain part of route assessment/briefing rather than map
 layers. Spatial groups remain in A1, A2, A4 and A6 order; A5 is merged into A1.
 User-facing labels omit internal agent identifiers. The interface uses Mission
-Planning Assistant, Terrain & Traversability, Thermal Environment, Radiation
+planning Agent, Terrain & Traversability, Thermal Environment, Radiation
 Exposure, Geology & Science, Surface Obstacles, and Rover Operations &
 Observations. Internal protocol IDs are retained for compatibility; dynamic
 messages, warnings, specialist traces and recovery errors use display names.
