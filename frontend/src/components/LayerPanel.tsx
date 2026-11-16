@@ -13,17 +13,20 @@ export default function LayerPanel({ layers, onLayerChange, availability = {}, i
   onLayerChange: (id: string, change: Partial<LayerDisplayState>) => void;
 }) {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const groups=LAYER_GROUPS.map(group=>({...group,layers:EVIDENCE_LAYERS.filter(layer=>
+    (group.ids as readonly string[]).includes(layer.id) && (availability[layer.id] ?? canToggleLayer(layer)))}))
+    .filter(group=>group.layers.length>0);
   return (
     <section className="layer-panel" aria-labelledby="layer-panel-title">
       <div className="info-heading">
         <h2 id="layer-panel-title">Layers & evidence</h2>
         <span className="badge">F2</span>
       </div>
-      <p className="panel-intro">Layer availability is explicit. Disabled controls have no browser-ready artifact to display.</p>
-      {LAYER_GROUPS.map(group=><section className="layer-group" key={group.label} aria-label={group.label}>
+      <p className="panel-intro">Show or hide available map layers. Global Mars terrain provides wide-area context; high-resolution Jezero imagery shows local surface detail.</p>
+      {groups.map(group=><section className="layer-group" key={group.label} aria-label={group.label}>
       <h3>{group.label}</h3>
       <ul className="layer-list">
-        {EVIDENCE_LAYERS.filter(layer=>(group.ids as readonly string[]).includes(layer.id)).map((layer) => {
+        {group.layers.map((layer) => {
           const control = layers[layer.id] ?? { visible: false, opacity: 1 };
           const toggleable = availability[layer.id] ?? canToggleLayer(layer);
           const open = expanded === layer.id;

@@ -52,7 +52,7 @@ try {
   assert(zoom.y>fit.y+fit.height);
   await page.getByRole('tab',{name:'Evidence',exact:true}).click();
   summary.stage='layers';
-  for (const name of ['Mars Trek basemap','High-resolution Jezero imagery','Jezero DEM coverage','Initial DEM example window','M20 DEM elevation preview','THEMIS daytime visual context','THEMIS nighttime visual context','SIM 3464 geology','Perseverance science POIs','Perseverance traverse','Perseverance stops & Navcam references','Route & mission stops']) {
+  for (const name of ['Global Mars terrain (MOLA)','High-resolution Jezero imagery','Jezero DEM coverage','Initial DEM example window','M20 DEM elevation preview','THEMIS daytime visual context','THEMIS nighttime visual context','SIM 3464 geology','Perseverance science POIs','Perseverance traverse','Perseverance stops & Navcam references','Route & mission stops']) {
     const checkbox=page.getByRole('checkbox',{name:'Show '+name,exact:true});
     await checkbox.waitFor();
     await checkbox.setChecked(false);
