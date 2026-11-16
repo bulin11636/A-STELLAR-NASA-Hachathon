@@ -148,6 +148,8 @@ preserves the route, assessment, source context and unknown values for review.
 
 
 ### Planning workflow
+<img width="1800" height="960" alt="image" src="https://github.com/user-attachments/assets/cfdcfc56-accd-4348-af39-48e5b6d1969f" />
+
 
 ```mermaid
 flowchart TD
