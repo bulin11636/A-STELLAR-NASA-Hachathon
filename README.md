@@ -93,7 +93,8 @@ The planner supports regional requests across the configured DEM source, rather
 than restricting every route to the small initial example window. Actual routes
 remain subject to data coverage, traversability and search limits.
 
-<!-- Screenshot: Plan tab with ordered waypoints and Advanced mission settings. -->
+<img width="422" height="441" alt="image" src="https://github.com/user-attachments/assets/d0bab840-97e1-4863-92de-4f5a545ebacc" />
+
 
 #### Explore Mars and its evidence
 
@@ -110,7 +111,8 @@ alongside the imagery and terrain inputs.
 Computed routes are displayed on NASA imagery using the implemented coordinate
 conversion. Route metadata records the coordinate and pixel-registration status.
 
-<!-- Screenshot: Evidence tab with independently controlled map layers. -->
+<img width="426" height="677" alt="image" src="https://github.com/user-attachments/assets/78108478-54d1-4f9c-bc5f-0e9cf0e5db67" />
+
 
 #### Understand the route
 
@@ -123,7 +125,8 @@ partial score excludes missing factors rather than assigning them zero risk.
 Evidence coverage represents the share of profile weight supported by assessed factors.
 Blocked or unassessed mission requirements remain visible.
 
-<!-- Screenshot: Route tab showing legs, partial assessment, confidence and limitations. -->
+<img width="432" height="467" alt="image" src="https://github.com/user-attachments/assets/ab757a29-d5f5-46f6-917f-24248175c790" />
+
 
 #### Discuss and revise the plan
 
@@ -137,7 +140,8 @@ planning available without live model calls and offers a narrower explanation
 workflow. Request status and explicit recovery controls help retrieve completed
 work without automatically repeating a paid generation request.
 
-<!-- Screenshot: Mission Planner conversation explaining a route or revising its stops. -->
+<img width="387" height="685" alt="image" src="https://github.com/user-attachments/assets/e3125e26-c7f6-4bd3-8dc3-343a67de25aa" />
+
 
 #### Share a mission briefing
 
@@ -145,7 +149,8 @@ The Briefing view organizes **known conditions**, **attention areas** and
 **limitations**, with technical details available separately. JSON export
 preserves the route, assessment, source context and unknown values for review.
 
-<!-- Screenshot: Mission Briefing with known conditions, attention areas and limitations. -->
+<img width="426" height="662" alt="image" src="https://github.com/user-attachments/assets/80f53f1b-af1f-4968-a02d-89370812e928" />
+
 
 ### Planning workflow
 
