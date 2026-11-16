@@ -366,4 +366,3 @@ scripts/            Launchers, acquisition tools and verification commands
 
 Start with the [documentation index](docs/README.md), [API guide](docs/api.md)
 and [provider troubleshooting](docs/provider-troubleshooting.md).
-The [remaining work](docs/TODO.md) lists pending capabilities and validation.

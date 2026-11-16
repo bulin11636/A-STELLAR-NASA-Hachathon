@@ -16,7 +16,6 @@ understand and verify the current implementation.
 | [Map coordinates and registration](map-registration.md) | Coordinate conversion, demo overlays and independent feature controls |
 | [Provider troubleshooting](provider-troubleshooting.md) | Application/provider limits, proposal errors and diagnostics |
 | [SI disclosure metadata](si-disclosure.json) | Confirmed SI tool use, scientific-data distinctions and demo narration credit |
-| [Remaining work](TODO.md) | Pending product, engineering and scientific-validation tasks |
 
 Runtime schemas are available from FastAPI at `/docs` and `/openapi.json`.
 Generated frontend contracts live in `frontend/src/types/`. Source manifests and
