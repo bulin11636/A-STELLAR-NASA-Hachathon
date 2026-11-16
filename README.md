@@ -11,8 +11,9 @@
 
 **A-STELLAR**
 
-- **Team:** Pending; add the public team name and member names before submission.
-- **Challenge:** Pending; add the official English challenge title and link.
+- **Team:** A-STELLAR (Agentic Safe Terrain Exploration through Learning and Layered Autonomous Routing)
+- **Team Members:** Sheng and Sam
+- **Challenge:** [Interplanetary Survival Guide: Martian Map](https://www.spaceappschallenge.org/2026/challenges/interplanetary-survival-guide-martian-map/)
 
 ## High-Level Project Summary
 <img width="1902" height="791" alt="image" src="https://github.com/user-attachments/assets/afbc3330-7eaa-45e7-9dc4-165f3d1aa412" />
@@ -34,20 +35,12 @@ the result; a deterministic Python host computes and checks the A* route.
 This demo helps astronauts and ground planners explore a proposed journey,
 understand its supporting evidence and refine a mission plan in one workspace.
 
-<!-- Screenshot: Mission workspace with a Jezero route, selected stops and mission summary. -->
 
 ## Link to Project Demo
 
 [![Watch the A-STELLAR Demo](https://img.youtube.com/vi/DzHkKI60o0Y/maxresdefault.jpg)](https://www.youtube.com/watch?v=DzHkKI60o0Y)
 
-Use either a **video of 30 seconds or less** or a **slide deck of up to seven
-slides, including the title and introduction**. The link must open without a
-password, access request or registration. Use English slides, or English
-subtitles if the video is spoken in another language.
-
 **SI audio disclosure:** The demo narration was generated with ElevenLabs.
-Include the credit **“Narration generated with ElevenLabs (AI).”** in the
-published demo description or credits and in the audio/video metadata.
 
 ## Link to Final Project
 
