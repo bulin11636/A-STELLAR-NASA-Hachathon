@@ -38,7 +38,7 @@ understand its supporting evidence and refine a mission plan in one workspace.
 
 ## Link to Project Demo
 
-[Watch the A-STELLAR project demo on YouTube](https://www.youtube.com/watch?v=DzHkKI60o0Y).
+[![Watch the A-STELLAR Demo](https://img.youtube.com/vi/DzHkKI60o0Y/maxresdefault.jpg)](https://www.youtube.com/watch?v=DzHkKI60o0Y)
 
 Use either a **video of 30 seconds or less** or a **slide deck of up to seven
 slides, including the title and introduction**. The link must open without a
